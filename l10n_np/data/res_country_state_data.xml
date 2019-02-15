@@ -1,4 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
+     <!--
+        Resource: res.country.state
+        Update states
+        -->
+        <record id="state_1" model="res.country.state">
+            <field name="code">1</field>
+            <field name="name">1</field>
+            <field name="country_id" ref="base.np"/>
+        </record>
+        <record id="state_2" model="res.country.state">
+            <field name="code">2</field>
+            <field name="name">2</field>
+            <field name="country_id" ref="base.np"/>
+        </record>
+        <record id="state_3" model="res.country.state">
+            <field name="code">3</field>
+            <field name="name">3</field>
+            <field name="country_id" ref="base.np"/>
+        </record>
+        <record id="state_4" model="res.country.state">
+            <field name="code">4</field>
+            <field name="name">4</field>
+            <field name="country_id" ref="base.np"/>
+        </record>
+        <record id="state_5" model="res.country.state">
+            <field name="code">5</field>
+            <field name="name">5</field>
+            <field name="country_id" ref="base.np"/>
+        </record>
+        <record id="state_6" model="res.country.state">
+            <field name="code">6</field>
+            <field name="name">6</field>
+            <field name="country_id" ref="base.np"/>
+        </record>
+        <record id="state_7" model="res.country.state">
+            <field name="code">7</field>
+            <field name="name">7</field>
+            <field name="country_id" ref="base.np"/>
+        </record>
 </odoo>
