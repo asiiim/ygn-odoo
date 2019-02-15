@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!--
+        Resource: res.country.district
+        Update states
+        -->
+        <record id="district_01" model="res.country.district">
+            <field name="name">Taplejung</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_1"/>
+        </record>
+        <record id="district_02" model="res.country.district">
+            <field name="name">Panchthar</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_1"/>
+        </record>
+        <record id="district_03" model="res.country.district">
+            <field name="name">Ilam</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_1"/>
+        </record>
+        <record id="district_04" model="res.country.district">
+            <field name="name">Sankhuwasabha</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_1"/>
+        </record>
+        <record id="district_05" model="res.country.district">
+            <field name="name">Terhathum</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_1"/>
+        </record>
+        <record id="district_06" model="res.country.district">
+            <field name="name">Dhankutta</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_1"/>
+        </record>
+        <record id="district_07" model="res.country.district">
+            <field name="name">Bhojpur</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_1"/>
+        </record>
+        <record id="district_08" model="res.country.district">
+            <field name="name">Khotang</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_1"/>
+        </record>
+        <record id="district_09" model="res.country.district">
+            <field name="name">Solukhumbu</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_1"/>
+        </record>
+        <record id="district_10" model="res.country.district">
+            <field name="name">Okhaldunga</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_1"/>
+        </record>
+        <record id="district_11" model="res.country.district">
+            <field name="name">Udaypur</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_1"/>
+        </record>
+        <record id="district_12" model="res.country.district">
+            <field name="name">Jhapa</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_1"/>
+        </record>
+        <record id="district_13" model="res.country.district">
+            <field name="name">Morang</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_1"/>
+        </record>
+        <record id="district_14" model="res.country.district">
+            <field name="name">Sunsari</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_1"/>
+        </record>
+        <record id="district_15" model="res.country.district">
+            <field name="name">Saptari</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_2"/>
+        </record>
+        <record id="district_16" model="res.country.district">
+            <field name="name">Siraha</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_2"/>
+        </record>
+        <record id="district_17" model="res.country.district">
+            <field name="name">Dhanusa</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_2"/>
+        </record>
+        <record id="district_18" model="res.country.district">
+            <field name="name">Mahottari</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_2"/>
+        </record>
+        <record id="district_19" model="res.country.district">
+            <field name="name">Sarlahi</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_2"/>
+        </record>
+        <record id="district_20" model="res.country.district">
+            <field name="name">Rauthat</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_2"/>
+        </record>
+        <record id="district_21" model="res.country.district">
+            <field name="name">Bara</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_2"/>
+        </record>
+        <record id="district_22" model="res.country.district">
+            <field name="name">Parsa</field>
+            <field name="country_id" ref="base.np"/>
+        </record>
+        <record id="district_23" model="res.country.district">
+            <field name="name">Dolkha</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_3"/>
+        </record>
+        <record id="district_24" model="res.country.district">
+            <field name="name">Ramechhap</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_3"/>
+        </record>
+        <record id="district_25" model="res.country.district">
+            <field name="name">Sindhuli</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_3"/>
+        </record>
+        <record id="district_26" model="res.country.district">
+            <field name="name">Kavreplanchauk</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_3"/>
+        </record>
+        <record id="district_27" model="res.country.district">
+            <field name="name">Sindhupalchauk</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_3"/>
+        </record>
+        <record id="district_28" model="res.country.district">
+            <field name="name">Rasuwa</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_3"/>
+        </record>
+        <record id="district_29" model="res.country.district">
+            <field name="name">Nuwakot</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_3"/>
+        </record>
+        <record id="district_30" model="res.country.district">
+            <field name="name">Dhading</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_3"/>
+        </record>
+        <record id="district_31" model="res.country.district">
+            <field name="name">Chitwan</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_3"/>
+        </record>
+        <record id="district_32" model="res.country.district">
+            <field name="name">Makwanpur</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_3"/>
+        </record>
+        <record id="district_33" model="res.country.district">
+            <field name="name">Bhaktapur</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_3"/>
+        </record>
+        <record id="district_34" model="res.country.district">
+            <field name="name">Lalitpur</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_3"/>
+        </record>
+        <record id="district_35" model="res.country.district">
+            <field name="name">Kathmandu</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_3"/>
+        </record>
+        <record id="district_36" model="res.country.district">
+            <field name="name">Gorkha</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_4"/>
+        </record>
+        <record id="district_37" model="res.country.district">
+            <field name="name">Lamjung</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_4"/>
+        </record>
+        <record id="district_38" model="res.country.district">
+            <field name="name">Tanahun</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_4"/>
+        </record>
+        <record id="district_39" model="res.country.district">
+            <field name="name">Kaski</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_4"/>
+        </record>
+        <record id="district_40" model="res.country.district">
+            <field name="name">Manag</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_4"/>
+        </record>
+        <record id="district_41" model="res.country.district">
+            <field name="name">Mustang</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_4"/>
+        </record>
+        <record id="district_42" model="res.country.district">
+            <field name="name">Parbat</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_4"/>
+        </record>
+        <record id="district_43" model="res.country.district">
+            <field name="name">Syangja</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_4"/>
+        </record>
+        <record id="district_44" model="res.country.district">
+            <field name="name">Myagdi</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_4"/>
+        </record>
+        <record id="district_45" model="res.country.district">
+            <field name="name">Baglung</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_4"/>
+        </record>
+        <record id="district_46" model="res.country.district">
+            <field name="name">Nawalpur</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_4"/>
+        </record>
+        <record id="district_47" model="res.country.district">
+            <field name="name">Nawalparasi</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_5"/>
+        </record>
+        <record id="district_48" model="res.country.district">
+            <field name="name">Rupandehi</field>
+            <field name="country_id" ref="base.np"/>
+        </record>
+        <record id="district_49" model="res.country.district">
+            <field name="name">Kapilvastu</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_5"/>
+        </record>
+        <record id="district_50" model="res.country.district">
+            <field name="name">Palpa</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_5"/>
+        </record>
+        <record id="district_51" model="res.country.district">
+            <field name="name">Arghakhanchi</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_5"/>
+        </record>
+        <record id="district_52" model="res.country.district">
+            <field name="name">Gulmi</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_5"/>
+        </record>
+        <record id="district_53" model="res.country.district">
+            <field name="name">Rukumkot</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_5"/>
+        </record>
+        <record id="district_54" model="res.country.district">
+            <field name="name">Rolpa</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_5"/>
+        </record>
+        <record id="district_55" model="res.country.district">
+            <field name="name">Pyuthan</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_5"/>
+        </record>
+        <record id="district_56" model="res.country.district">
+            <field name="name">Dang</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_5"/>
+        </record>
+        <record id="district_57" model="res.country.district">
+            <field name="name">Banke</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_5"/>
+        </record>
+        <record id="district_58" model="res.country.district">
+            <field name="name">Bardiya</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_5"/>
+        </record>
+        <record id="district_59" model="res.country.district">
+            <field name="name">Rukum</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_6"/>
+        </record>
+        <record id="district_60" model="res.country.district">
+            <field name="name">Salyan</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_6"/>
+        </record>
+        <record id="district_61" model="res.country.district">
+            <field name="name">Dolpa</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_6"/>
+        </record>
+        <record id="district_62" model="res.country.district">
+            <field name="name">Jumla</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_6"/>
+        </record>
+        <record id="district_63" model="res.country.district">
+            <field name="name">Mugu</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_6"/>
+        </record>
+        <record id="district_64" model="res.country.district">
+            <field name="name">Humla</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_6"/>
+        </record>
+        <record id="district_65" model="res.country.district">
+            <field name="name">Kalikot</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_6"/>
+        </record>
+        <record id="district_66" model="res.country.district">
+            <field name="name">Jajarkot</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_6"/>
+        </record>
+        <record id="district_67" model="res.country.district">
+            <field name="name">Dailekh</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_6"/>
+        </record>
+        <record id="district_68" model="res.country.district">
+            <field name="name">Surkhet</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_6"/>
+        </record>
+        <record id="district_69" model="res.country.district">
+            <field name="name">Bajura</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_7"/>
+        </record>
+        <record id="district_70" model="res.country.district">
+            <field name="name">Bajhang</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_7"/>
+        </record>
+        <record id="district_71" model="res.country.district">
+            <field name="name">Doti</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_7"/>
+        </record>
+        <record id="district_72" model="res.country.district">
+            <field name="name">Achham</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_7"/>
+        </record>
+        <record id="district_73" model="res.country.district">
+            <field name="name">Darchula</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_7"/>
+        </record>
+        <record id="district_74" model="res.country.district">
+            <field name="name">Baitadi</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_7"/>
+        </record>
+        <record id="district_75" model="res.country.district">
+            <field name="name">Dadeldhura</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_7"/>
+        </record>
+        <record id="district_76" model="res.country.district">
+            <field name="name">Kanchanpur</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_7"/>
+        </record>
+        <record id="district_77" model="res.country.district">
+            <field name="name">Kailali</field>
+            <field name="country_id" ref="base.np"/>
+            <field name="state_ids" ref="l10n_np.state_7"/>
+        </record>
+</odoo>
