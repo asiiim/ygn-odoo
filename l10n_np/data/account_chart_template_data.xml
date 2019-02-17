@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Chart template -->
+    <record id="l10nnp_chart_template" model="account.chart.template">
+        <field name="name">Nepalese Account Chart Template</field>
+        <field name="transfer_account_id" ref="trans"/>
+        <field name="currency_id" ref="base.NPR"/>
+        <field name="spoken_languages" eval="'nl_EN'"/>
+    </record>
+</odoo>

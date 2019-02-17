@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Tax Tags, used in VAT report-->
+    <record id="tax_tag_vat_13" model="account.account.tag">
+        <field name="name">Nepal VAT 13%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
+    <!-- account.tax.template -->
+    <record id="template_vat_13" model="account.tax.template">
+        <field name="sequence">1</field>
+        <field name="description">VAT 13%</field>
+        <field name="name">13% VAT</field>
+        <!-- <field name="refund_account_id" ref="a451054"/> -->
+        <!-- <field name="account_id" ref="a451054"/> -->
+        <field name="price_include" eval="0"/>
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="python_compute">result=base_amount * 0.13</field>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="False"/>
+        <!-- <field name="chart_template_id" ref="l10nnp_chart_template"/> -->
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_vat_13')])]"/>
+        <field name="tax_group_id" ref="tax_group_vat_13"/>
+    </record>
 </odoo>
