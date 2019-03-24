@@ -1,0 +1,25 @@
+<odoo>
+
+    <record id="add_chamber_in_form_view" model="ir.ui.view">
+        <field name="name">add chamber in form view</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+      <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="chamber"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="add_street_3_in_list_view" model="ir.ui.view">
+      <field name="name">add street 3 in list view</field>
+      <field name="model">res.company</field>
+      <field name="inherit_id" ref="base.view_company_tree"/>
+      <field name="arch" type="xml">
+        <field name="name" position="after">
+          <field name="chamber"/>
+        </field>
+      </field>
+    </record>
+
+</odoo>
