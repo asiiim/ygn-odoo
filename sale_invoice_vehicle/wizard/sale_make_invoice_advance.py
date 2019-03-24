@@ -20,6 +20,4 @@ class SaleAdvancePaymentInv(models.TransientModel):
         invoice.write({
             'tanker_vehicle_number': order.tanker_vehicle_number,
         })
-
-        _logger.warning("=======================================================")
         return invoice
