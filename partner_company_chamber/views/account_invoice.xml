@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <search position="inside">
                  <field name="related_chamber" string="Chamber No."/>
+                 <filter string="Chamber No." name='related_chamber' context="{'group_by':'related_chamber'}"/>
             </search>
         </field>
     </record>

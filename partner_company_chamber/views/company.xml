@@ -30,6 +30,7 @@
           <search string="Companies">
               <field name="name" string="Company Name"/>
               <field name="chamber" string="Chamber No."/>
+              <filter string="Chamber No." name='chamber' context="{'group_by':'chamber'}"/>
           </search>
       </field>
     </record>
