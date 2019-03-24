@@ -3,7 +3,7 @@ from odoo import api, fields, models
 
 class ResCompany(models.Model):
     """Add chamber number field in company model"""
-    _inherit = "res.company"
+    _inherit = "res.partner"
 
     chamber = fields.Char('Chamber Number')
 
