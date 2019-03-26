@@ -5,3 +5,13 @@ l10n_np/models/__pycache__/models.cpython-35.pyc
 l10n_np/models/__pycache__/res_company.cpython-35.pyc
 l10n_np/models/__pycache__/res_country_district.cpython-35.pyc
 l10n_np/models/__pycache__/res_partner.cpython-35.pyc
+invoice_report_vehicle_chamber/models/__pycache__/__init__.cpython-35.pyc
+invoice_report_vehicle_chamber/models/__pycache__/models.cpython-35.pyc
+oil_bundle/controllers/__pycache__/__init__.cpython-35.pyc
+oil_bundle/controllers/__pycache__/controllers.cpython-35.pyc
+oil_bundle/models/__pycache__/__init__.cpython-35.pyc
+oil_bundle/models/__pycache__/models.cpython-35.pyc
+partner_company_chamber/models/__pycache__/company.cpython-35.pyc
+partner_company_chamber/models/__pycache__/partner.cpython-35.pyc
+sale_invoice_vehicle/models/__pycache__/sale.cpython-35.pyc
+sale_invoice_vehicle/wizard/__pycache__/sale_make_invoice_advance.cpython-35.pyc
