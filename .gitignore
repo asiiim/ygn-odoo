@@ -15,3 +15,7 @@ partner_company_chamber/models/__pycache__/company.cpython-35.pyc
 partner_company_chamber/models/__pycache__/partner.cpython-35.pyc
 sale_invoice_vehicle/models/__pycache__/sale.cpython-35.pyc
 sale_invoice_vehicle/wizard/__pycache__/sale_make_invoice_advance.cpython-35.pyc
+partner_company_chamber/models/__pycache__/company.cpython-35.pyc
+partner_company_chamber/models/__pycache__/partner.cpython-35.pyc
+sale_invoice_vehicle/models/__pycache__/sale.cpython-35.pyc
+sale_invoice_vehicle/wizard/__pycache__/sale_make_invoice_advance.cpython-35.pyc
