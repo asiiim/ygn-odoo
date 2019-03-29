@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="add_vehicle_number_in_invoice_form" model="ir.ui.view">
+            <field name="name">add account number in invoice form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="tanker_vehicle_number" />
+                </field>
+            </field>
+        </record>
+        <record id="add_vehicle_number_in_invoice_tree" model="ir.ui.view">
+            <field name="name">add account number in invoice tree</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="tanker_vehicle_number" />
+                </field>
+            </field>
+        </record>
+        <record id="add_vehicle_number_in_account_invoice_search_view" model="ir.ui.view">
+            <field name="name">add chamber in account invoice search view</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <search position="inside">
+                    <field name="tanker_vehicle_number" />
+                    <filter string="Vehicle No." name='tanker_vehicle_number' context="{'group_by':'tanker_vehicle_number'}"/>
+                </search>
+            </field>
+        </record>
+
+</odoo>
