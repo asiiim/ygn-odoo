@@ -19,18 +19,16 @@
       <field name="model">res.country.district</field>
       <field name="arch" type="xml">
         <form>
-            <sheet>
-                <group string="District Information">
-                    <field name="name"/>
-                    <field name="country_id"/>
-                    <field name="state_ids"/>
-                </group>
-            </sheet>
+          <sheet>
+            <group string="District Information">
+              <field name="name"/>
+              <field name="country_id"/>
+              <field name="state_ids"/>
+            </group>
+          </sheet>
         </form>
       </field>
     </record>
-
-
 
     <record model="ir.actions.act_window" id="l10n_np_district_action_window">
       <field name="name">District</field>
@@ -50,10 +48,8 @@
     -->
     <!-- actions -->
     <!--
-    <menuitem name="List" id="l10n_np.menu_1_list" parent="l10n_np.menu_1"
-              action="l10n_np.action_window"/>
-    <menuitem name="Server to list" id="l10n_np" parent="l10n_np.menu_2"
-              action="l10n_np.action_server"/>
+    <menuitem name="List" id="l10n_np.menu_1_list" parent="l10n_np.menu_1" action="l10n_np.action_window"/>
+    <menuitem name="Server to list" id="l10n_np" parent="l10n_np.menu_2" action="l10n_np.action_server"/>
     -->
   </data>
 </odoo>

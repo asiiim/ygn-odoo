@@ -1,4 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Tax Tags, used in VAT report-->
+    <record id="tax_tag_st0" model="account.account.tag">
+        <field name="name">Tax 0% S.</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_st1" model="account.account.tag">
+        <field name="name">Tax 1% S.</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_st2" model="account.account.tag">
+        <field name="name">Tax 5% S.</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_st3" model="account.account.tag">
+        <field name="name">Tax 13% S.</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_pt0" model="account.account.tag">
+        <field name="name">Tax 0% P.</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_pt1" model="account.account.tag">
+        <field name="name">Tax 1% P.</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_pt2" model="account.account.tag">
+        <field name="name">Tax 5% P.</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_pt3" model="account.account.tag">
+        <field name="name">Tax 13% P.</field>
+        <field name="applicability">taxes</field>
+    </record>
 
+    <!-- account.tax.template -->
+    <record id="tax_sale_15" model="account.tax.template">
+        <field name="sequence">10</field>
+        <field name="description">Tax 15%</field>
+        <field name="name">Tax 15%</field>
+        <field name="refund_account_id" ref="n2200"/>
+        <field name="account_id" ref="n2200"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">15</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10nnp_chart_template"/>
+    </record>
+    <record id="tax_sale_0" model="account.tax.template">
+        <field name="sequence">40</field>
+        <field name="description">Vat 0%</field>
+        <field name="name">Vat 0%</field>
+        <field name="refund_account_id" ref="n2200"/>
+        <field name="account_id" ref="n2200"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10nnp_chart_template"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_st0'),])]"/>
+        <field name="tax_group_id" ref="tax_group_tax_0"/>
+    </record>
+    <record id="tax_sale_1" model="account.tax.template">
+        <field name="sequence">30</field>
+        <field name="description">Education Service Fee 1%</field>
+        <field name="name">Tax 1%</field>
+        <field name="refund_account_id" ref="n2200"/>
+        <field name="account_id" ref="n2200"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">1</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10nnp_chart_template"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_st1'),])]"/>
+        <field name="tax_group_id" ref="tax_group_tax_1"/>
+    </record>
+    <record id="tax_sale_5" model="account.tax.template">
+        <field name="sequence">50</field>
+        <field name="description">Health Service Tax 5%</field>
+        <field name="name">Tax 5%</field>
+        <field name="refund_account_id" ref="n2200"/>
+        <field name="account_id" ref="n2200"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10nnp_chart_template"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_st2'),])]"/>
+        <field name="tax_group_id" ref="tax_group_tax_5"/>
+    </record>
+    <record id="tax_sale_13" model="account.tax.template">
+        <field name="sequence">20</field>
+        <field name="description">Vat 13%</field>
+        <field name="name">Vat 13%</field>
+        <field name="refund_account_id" ref="n2200"/>
+        <field name="account_id" ref="n2200"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10nnp_chart_template"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_st3'),])]"/>
+        <field name="tax_group_id" ref="tax_group_tax_13"/>
+    </record>
+
+    <!-- Purchases Taxes -->
+    <record id="tax_purchase_15" model="account.tax.template">
+        <field name="sequence">11</field>
+        <field name="description">Tax 15%</field>
+        <field name="name">Tax 15%</field>
+        <field name="refund_account_id" ref="n2200"/>
+        <field name="account_id" ref="n2200"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">15</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10nnp_chart_template"/>
+    </record>
+    <record id="tax_purchase_0" model="account.tax.template">
+        <field name="sequence">41</field>
+        <field name="description">Vat 0%</field>
+        <field name="name">Vat 0%</field>
+        <field name="refund_account_id" ref="n2013"/>
+        <field name="account_id" ref="n2013"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10nnp_chart_template"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_pt0'),])]"/>
+        <field name="tax_group_id" ref="tax_group_tax_0"/>
+    </record>
+    <record id="tax_purchase_1" model="account.tax.template">
+        <field name="sequence">31</field>
+        <field name="description">Education Service Fee 1%</field>
+        <field name="name">Tax 1%</field>
+        <field name="refund_account_id" ref="n2013"/>
+        <field name="account_id" ref="n2013"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">1</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10nnp_chart_template"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_pt1'),])]"/>
+        <field name="tax_group_id" ref="tax_group_tax_1"/>
+    </record>
+    <record id="tax_purchase_5" model="account.tax.template">
+        <field name="sequence">51</field>
+        <field name="description">Health Service Tax 5%</field>
+        <field name="name">Tax 5%</field>
+        <field name="refund_account_id" ref="n2013"/>
+        <field name="account_id" ref="n2013"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10nnp_chart_template"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_pt2'),])]"/>
+        <field name="tax_group_id" ref="tax_group_tax_5"/>
+    </record>
+    <record id="tax_purchase_13" model="account.tax.template">
+        <field name="sequence">21</field>
+        <field name="description">Vat 13%</field>
+        <field name="name">Vat 13%</field>
+        <field name="refund_account_id" ref="n2013"/>
+        <field name="account_id" ref="n2013"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10nnp_chart_template"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_pt3'),])]"/>
+        <field name="tax_group_id" ref="tax_group_tax_13"/>
+    </record>
 </odoo>

@@ -1,20 +1,51 @@
 <odoo>
-  <data>
-    <record id="view_res_company_form_inherit" model="ir.ui.view">
-      <field name="name">view.res.company.form.inherit</field>
-      <field name="model">res.company</field>
-      <field name="inherit_id" ref="base.view_company_form"/>
-      <field name="arch" type="xml">
-          <xpath expr="//field[@name='country_id']" position="replace">
-          </xpath>
-          <xpath expr="//field[@name='state_id']" position="replace">
-          </xpath>
-          <xpath expr="//field[@name='city']" position="before">
-              <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}'/>
-              <field name="district_id" placeholder="District"/>
-              <field name="l10n_np_state_ids" placeholder="State"/>
-          </xpath>
-      </field>
-    </record>
-  </data>
+	<data>
+		<record id="view_res_company_form_inherit" model="ir.ui.view">
+			<field name="name">view.res.company.form.inherit</field>
+			<field name="model">res.company</field>
+			<field name="inherit_id" ref="base.view_company_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='country_id']" position="replace">
+				</xpath>
+				<xpath expr="//field[@name='state_id']" position="replace">
+				</xpath>
+				<xpath expr="//field[@name='city']" position="before">
+					<field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}'/>
+					<field name="district_id" placeholder="District"/>
+					<field name="l10n_np_state_ids" placeholder="State"/>
+				</xpath>
+			</field>
+		</record>
+
+		<!-- Add our custom external report layout to the company view -->
+		<record id="view_company_report_form_custom" model="ir.ui.view">
+            <field name="name">res.company.report.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_report_form" />
+            <field name="arch" type="xml">
+				<field style="margin-right: 40px;" name="external_report_layout" widget="image_selection" options="{
+                            'background': {
+                                'image_link': '/base/static/img/preview_background.png',
+                                'preview_link': '/base/static/pdf/preview_background.pdf'
+                            },
+                            'boxed': {
+                                'image_link': '/base/static/img/preview_boxed.png',
+                                'preview_link': '/base/static/pdf/preview_boxed.pdf'
+                            },
+                            'clean': {
+                                'image_link': '/base/static/img/preview_clean.png',
+                                'preview_link': '/base/static/pdf/preview_clean.pdf'
+                            },
+                            'standard': {
+                                'image_link': '/base/static/img/preview_standard.png',
+                                'preview_link': '/base/static/pdf/preview_standard.pdf'
+                            },
+							'boxed2': {
+								'image_link': '/l10n_np/static/img/preview_boxed2.png',
+								'preview_link': '/l10n_np/static/pdf/preview_boxed2/png'
+							}
+                        }"/>
+			</field>
+        </record>
+	</data>
 </odoo>

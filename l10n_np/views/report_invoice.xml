@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="l10n_np_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <xpath expr="//p[@t-if='o.comment']" position="before">
+            <t t-if="o.company_id.country_id.code == 'NP'">
+                <p id="total_in_words" class="mb16">
+                    <strong>Total (In Words): </strong>
+                    <span t-field="o.amount_total_words"/>
+                </p>
+                <hr/>
+                <p id="due_amount" class="text-right mb16">
+                    <strong>Previous Amount Due: </strong>
+                    <span t-field="o.partner_id.credit" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                </p>
+            </t>
+        </xpath>
+        
+        <!-- Use this one if asked by customers -->
+        <!-- <xpath expr="//tr[@class='border-black'][last()]" position="before">
+            <tr class="border-black">
+                <td style="font-weight: bold;"><strong>Amount Due</strong></td>
+                <td style="font-weight: bold;" class="text-right">
+                    <span t-field="o.partner_id.credit" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                </td>
+            </tr>
+        </xpath> -->
+    </template>
+</odoo>

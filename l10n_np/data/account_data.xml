@@ -3,6 +3,20 @@
     <data noupdate="1">
 
         <!-- Account Tax Group -->
-        
+        <record id="tax_group_tax_0" model="account.tax.group">
+		    <field name="name">Tax 0%</field>
+		</record>
+
+        <record id="tax_group_tax_1" model="account.tax.group">
+		    <field name="name">Tax 1%</field>
+		</record>
+
+        <record id="tax_group_tax_5" model="account.tax.group">
+		    <field name="name">Tax 5%</field>
+		</record>
+
+        <record id="tax_group_tax_13" model="account.tax.group">
+		    <field name="name">Tax 13%</field>
+		</record>
     </data>
 </odoo>
