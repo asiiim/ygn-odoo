@@ -2,12 +2,14 @@
 
 from odoo import models, fields, api
 
-class District(models.Model):
+class CountryDistrict(models.Model):
     _name="res.country.district"
+    _description = 'District'
+    _order = 'name'
 
     name=fields.Char(string="Name")
     country_id = fields.Many2one('res.country', string="Country")
-    state_ids = fields.Many2one('res.country.state', string="States")
+    state_id = fields.Many2one('res.country.state', string="State")
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
@@ -18,3 +20,15 @@ class District(models.Model):
         search_domain = [('name', operator, name)]
         records = self.search(search_domain + args, limit=limit)
         return [(record.id, record.display_name) for record in records]
+
+
+class CountryState(models.Model):
+    _inherit = 'res.country.state'
+
+    disctrict_ids = fields.One2many('res.country.district', 'state_id', string='Districts')
+
+
+class Country(models.Model):
+    _inherit = 'res.country'
+
+    disctrict_ids = fields.One2many('res.country.district', 'state_id', string='Districts')

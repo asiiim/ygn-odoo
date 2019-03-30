@@ -1,55 +1,45 @@
 <odoo>
-  <data>
-    <!-- explicit list view definition -->
+	<data>
+		<!-- explicit list view definition -->
 
-    <record model="ir.ui.view" id="l10n_np.list">
-      <field name="name">l10n_np list</field>
-      <field name="model">res.country.district</field>
-      <field name="arch" type="xml">
-        <tree>
-          <field name="name"/>
-          <field name="country_id"/>
-          <field name="state_ids"/>
-        </tree>
-      </field>
-    </record>
+		<record model="ir.ui.view" id="view_country_district_tree">
+			<field name="name">res.country.district.tree</field>
+			<field name="model">res.country.district</field>
+			<field name="arch" type="xml">
+				<tree string="District">
+					<field name="name"/>
+					<field name="state_id"/>
+					<field name="country_id"/>
+				</tree>
+			</field>
+		</record>
 
-    <record model="ir.ui.view" id="l10n_np.form">
-      <field name="name">l10n_np form</field>
-      <field name="model">res.country.district</field>
-      <field name="arch" type="xml">
-        <form>
-          <sheet>
-            <group string="District Information">
-              <field name="name"/>
-              <field name="country_id"/>
-              <field name="state_ids"/>
-            </group>
-          </sheet>
-        </form>
-      </field>
-    </record>
+		<record model="ir.ui.view" id="view_country_district_form">
+			<field name="name">res.country.district.form</field>
+			<field name="model">res.country.district</field>
+			<field name="arch" type="xml">
+				<form string="District">
+					<group string="Information">
+						<field name="name"/>
+						<field name="state_id"/>
+						<field name="country_id"/>
+					</group>
+				</form>
+			</field>
+		</record>
 
-    <record model="ir.actions.act_window" id="l10n_np_district_action_window">
-      <field name="name">District</field>
-      <field name="res_model">res.country.district</field>
-      <field name="view_mode">tree,form</field>
-    </record>
+		<record model="ir.actions.act_window" id="action_country_district">
+			<field name="name">Districts</field>
+			<field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.country.district</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_country_district_tree"/>
+            <field name="help">If you are working on the Nepali market, you can manage the different districts you are working on from here. Each district is attached to one country and one state.</field>
+		</record>
 
-
-    <!-- Top menu item -->
-    <!--
-    <menuitem name="l10n_np" id="l10n_np.menu_root"/>
-    -->
-    <!-- menu categories -->
-    <!--
-    <menuitem name="Menu 1" id="l10n_np.menu_1" parent="l10n_np.menu_root"/>
-    <menuitem name="Menu 2" id="l10n_np.menu_2" parent="l10n_np.menu_root"/>
-    -->
-    <!-- actions -->
-    <!--
-    <menuitem name="List" id="l10n_np.menu_1_list" parent="l10n_np.menu_1" action="l10n_np.action_window"/>
-    <menuitem name="Server to list" id="l10n_np" parent="l10n_np.menu_2" action="l10n_np.action_server"/>
-    -->
-  </data>
+		<menuitem id="menu_country_district_partner"
+        action="action_country_district"
+        parent="contacts.menu_localisation"
+        sequence="4"/>
+	</data>
 </odoo>
