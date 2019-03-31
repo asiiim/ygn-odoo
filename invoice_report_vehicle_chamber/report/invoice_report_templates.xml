@@ -7,7 +7,7 @@
             <div style="font-size: 15px; font-weight: 700;" name="invoice_address" class="col-xs-5 ">
                 <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
             </div>
-            <div style="font-size: 15px; font-weight: 700;" class="col-xs-4">
+            <div style="font-size: 14px; font-weight: 700;" class="col-xs-4">
                 <div class="row">
                     <p>Chamber No: <span t-field="o.partner_id.coc_registration_number" /></p>
                 </div>
