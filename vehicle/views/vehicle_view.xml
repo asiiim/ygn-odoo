@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vehicle_tree" model="ir.ui.view">
+        <field name="name">vehicle.vehicle.tree</field>
+        <field name="model">vehicle.vehicle</field>
+        <field name="arch" type="xml">
+            <tree string="Vehicles">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vehicle_form" model="ir.ui.view">
+        <field name="name">vehicle.vehicle.form</field>
+        <field name="model">vehicle.vehicle</field>
+        <field name="arch" type="xml">
+            <form string="Vehicle">
+                <group>
+                    <group name="main_fields">
+                        <label for="name" string="Vehicle No."/>
+                        <field name="name" nolabel="1"/>
+                        <field name="sequence"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vehicle" model="ir.actions.act_window">
+        <field name="name">Vehicles</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">vehicle.vehicle</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create a Vehicle.
+            </p><p>
+                Once a vehicle is created you can use it in 
+                <i>Sales Orders</i> or <i>Invoices</i>.
+            </p>
+        </field>
+    </record>
+
+    <menuitem name="Vehicles"
+        id="menu_vehicle"
+        sequence="7"
+        web_icon="vehicle,static/description/icon.png"
+        groups="base.group_user,base.group_partner_manager"/>
+    
+    <menuitem id="vehicle_menu_vehicle"
+        name="Vehicles"
+        action="action_vehicle"
+        parent="menu_vehicle"
+        sequence="2"/>
+</odoo>
