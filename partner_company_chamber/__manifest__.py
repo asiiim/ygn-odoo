@@ -15,11 +15,10 @@
     'version': '11.0.0.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'account', 'sale'],
+    'depends': ['account', 'sale', 'partner_coc'],
 
     # always loaded
     'data': [
-        'views/company.xml',
         'views/partner.xml',
         'views/account_invoice.xml',
         'views/sale.xml',

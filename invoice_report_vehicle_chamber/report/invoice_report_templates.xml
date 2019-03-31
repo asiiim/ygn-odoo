@@ -9,7 +9,7 @@
             </div>
             <div style="font-size: 15px; font-weight: 700;" class="col-xs-4">
                 <div class="row">
-                    <p>Chamber No: <span t-field="o.partner_id.chamber" /></p>
+                    <p>Chamber No: <span t-field="o.partner_id.coc_registration_number" /></p>
                 </div>
                 <div class="row">
                     <p>Vehicle No: <span t-field="o.vehicle_id" /></p>

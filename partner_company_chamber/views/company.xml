@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="add_chamber_in_form_view" model="ir.ui.view">
-        <field name="name">add chamber in form view</field>
-        <field name="model">res.company</field>
-        <field name="inherit_id" ref="base.view_company_form"/>
-      <field name="arch" type="xml">
-            <xpath expr="//field[@name='vat']" position="after">
-                <field name="chamber" string="Chamber No."/>
-            </xpath>
-        </field>
-    </record>
+	<record id="add_chamber_in_form_view" model="ir.ui.view">
+		<field name="name">add chamber in form view</field>
+		<field name="model">res.company</field>
+		<field name="inherit_id" ref="base.view_company_form"/>
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='vat']" position="after">
+				<field name="chamber" string="Chamber No."/>
+			</xpath>
+		</field>
+	</record>
 
-    <record id="add_chamber_in_list_view" model="ir.ui.view">
-      <field name="name">add chamaber in list view</field>
-      <field name="model">res.company</field>
-      <field name="inherit_id" ref="base.view_company_tree"/>
-      <field name="arch" type="xml">
-        <field name="name" position="after">
-          <field name="chamber" string="Chamber No."/>
-        </field>
-      </field>
-    </record>
+	<record id="add_chamber_in_list_view" model="ir.ui.view">
+		<field name="name">add chamaber in list view</field>
+		<field name="model">res.company</field>
+		<field name="inherit_id" ref="base.view_company_tree"/>
+		<field name="arch" type="xml">
+			<field name="name" position="after">
+				<field name="chamber" string="Chamber No."/>
+			</field>
+		</field>
+	</record>
 
-    <record id="add_chamber_in_search_view" model="ir.ui.view">
-      <field name="name">add chamaber in search view</field>
-      <field name="model">res.company</field>
-      <field name="arch" type="xml">
-          <search string="Companies">
-              <field name="name" string="Company Name"/>
-              <field name="chamber" string="Chamber No."/>
-              <filter string="Chamber No." name='chamber' context="{'group_by':'chamber'}"/>
-          </search>
-      </field>
-    </record>
+	<record id="add_chamber_in_search_view" model="ir.ui.view">
+		<field name="name">add chamaber in search view</field>
+		<field name="model">res.company</field>
+		<field name="arch" type="xml">
+			<search string="Companies">
+				<field name="name" string="Company Name"/>
+				<field name="chamber" string="Chamber No."/>
+				<filter string="Chamber No." name='chamber' context="{'group_by':'chamber'}"/>
+			</search>
+		</field>
+	</record>
 
 </odoo>

@@ -1,24 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="add_chamber_in_form_view" model="ir.ui.view">
-        <field name="name">add chamber in form view</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_form"/>
-      <field name="arch" type="xml">
-            <xpath expr="//field[@name='vat']" position="after">
-                <field name="chamber" string="Chamber No." attrs="{'invisible': [('is_company','=', False)]}"/>
-            </xpath>
-        </field>
-    </record>
-
     <record id="add_chamber_in_list_view" model="ir.ui.view">
       <field name="name">add chamaber in list view</field>
       <field name="model">res.partner</field>
       <field name="inherit_id" ref="base.view_partner_tree"/>
       <field name="arch" type="xml">
         <field name="display_name" position="after">
-          <field name="chamber" string="Chamber No."/>
+          <field name="coc_registration_number" string="Chamber No."/>
         </field>
       </field>
     </record>
@@ -29,8 +18,8 @@
         <field name="inherit_id" ref="base.view_res_partner_filter"/>
         <field name="arch" type="xml">
             <search position="inside">
-                <field name="chamber" string="Chamber No."/>
-                <filter string="Chamber No." name='chamber' context="{'group_by':'chamber'}"/>
+                <field name="coc_registration_number" string="Chamber No."/>
+                <filter string="Chamber No." name='coc_registration_number' context="{'group_by':'coc_registration_number'}"/>
             </search>
         </field>
     </record>
