@@ -2,7 +2,8 @@
 
 from odoo import models, fields, api
 
+
 class AccountInvoice(models.Model):
     _inherit = "account.invoice"
 
-    tanker_vehicle_number = fields.Char('Vehicle No.')
+    vehicle_id = fields.Many2one('vehicle.vehicle', string="Vehicle", ondelete='restrict')

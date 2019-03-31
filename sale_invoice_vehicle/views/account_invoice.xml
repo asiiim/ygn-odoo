@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="after">
-                    <field name="tanker_vehicle_number" />
+                    <field name="vehicle_id" />
                 </field>
             </field>
         </record>
@@ -17,7 +17,7 @@
             <field name="inherit_id" ref="account.invoice_tree"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="after">
-                    <field name="tanker_vehicle_number" />
+                    <field name="vehicle_id" />
                 </field>
             </field>
         </record>
@@ -27,8 +27,8 @@
             <field name="inherit_id" ref="account.view_account_invoice_filter"/>
             <field name="arch" type="xml">
                 <search position="inside">
-                    <field name="tanker_vehicle_number" />
-                    <filter string="Vehicle No." name='tanker_vehicle_number' context="{'group_by':'tanker_vehicle_number'}"/>
+                    <field name="vehicle_id" />
+                    <filter string="Vehicle" name='vehicle_id' context="{'group_by':'vehicle_id'}"/>
                 </search>
             </field>
         </record>

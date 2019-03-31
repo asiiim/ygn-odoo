@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
-                <field name="tanker_vehicle_number" />
+                <field name="vehicle_id" />
             </field>
         </field>
     </record>
@@ -19,7 +19,7 @@
         <field name="inherit_id" ref="sale.view_order_tree"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
-                <field name="tanker_vehicle_number" />
+                <field name="vehicle_id" />
             </field>
         </field>
     </record>
@@ -31,7 +31,7 @@
         <field name="inherit_id" ref="sale.view_quotation_tree"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
-                <field name="tanker_vehicle_number" />
+                <field name="vehicle_id" />
             </field>
         </field>
     </record>
@@ -42,19 +42,8 @@
         <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
         <field name="arch" type="xml">
             <search position="inside">
-                <field name="tanker_vehicle_number" />
-                <filter string="Vehicle No." name='tanker_vehicle_number' context="{'group_by':'tanker_vehicle_number'}"/>
-            </search>
-        </field>
-    </record>
-    <record id="add_vehicle_in_sale_order_search_view_sale" model="ir.ui.view">
-        <field name="name">add chamber in account invoice search view sale</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_sale"/>
-        <field name="arch" type="xml">
-            <search position="inside">
-                <field name="related_chamber" />
-                <filter string="Vehicle No." name='tanker_vehicle_number' context="{'group_by':'tanker_vehicle_number'}"/>
+                <field name="vehicle_id" />
+                <filter string="Vehicle No." name='vehicle_id' context="{'group_by':'vehicle_id'}"/>
             </search>
         </field>
     </record>
