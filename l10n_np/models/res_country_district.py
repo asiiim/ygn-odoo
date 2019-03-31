@@ -25,10 +25,10 @@ class CountryDistrict(models.Model):
 class CountryState(models.Model):
     _inherit = 'res.country.state'
 
-    disctrict_ids = fields.One2many('res.country.district', 'state_id', string='Districts')
+    district_ids = fields.One2many('res.country.district', 'state_id', string='Districts')
 
 
 class Country(models.Model):
     _inherit = 'res.country'
 
-    disctrict_ids = fields.One2many('res.country.district', 'state_id', string='Districts')
+    district_ids = fields.One2many('res.country.district', 'country_id', string='Districts')

@@ -3,6 +3,11 @@
     <data noupdate="1">
         <record id="base.np" model="res.country">
             <field name="vat_label">TPIN</field>
+            <field name="address_view_id" ref="l10n_np.view_res_partner_form_address_fields"/>
+            <field name="address_format">%(street)s&#10;%(street2)s&#10;%(city)s %(state_code)s %(zip)s&#10;%(country_name)s</field>
         </record>
+        <function id="country_default_set"
+            model="ir.default" name="set"
+            eval="('res.partner', 'country_id', ref('base.np'))"/>
     </data>
 </odoo>

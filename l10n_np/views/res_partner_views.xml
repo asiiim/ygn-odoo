@@ -1,20 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <data>
-    <record id="view_res_partner_form_inherit" model="ir.ui.view">
-      <field name="name">view.res.partner.form.inherit</field>
-      <field name="model">res.partner</field>
-      <field name="inherit_id" ref="base.view_partner_form"/>
-      <field name="arch" type="xml">
-          <xpath expr="//field[@name='country_id']" position="replace">
-          </xpath>
-          <!-- <xpath expr="//field[@name='state_id']" position="replace">
-          </xpath> -->
-          <xpath expr="//field[@name='city']" position="before">
-              <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}'/>
-              <field name="district_id" placeholder="District"/>
-              <field name="l10n_np_state_ids" placeholder="State"/>
-          </xpath>
-      </field>
-    </record>
-  </data>
+	<data>
+		<record id="view_res_partner_form_address_fields" model="ir.ui.view">
+			<field name="name">res.partner.form.address.fields</field>
+			<field name="model">res.partner</field>
+			<field name="arch" type="xml">
+				<form string="Partner Address">
+					<div class="o_address_format">
+						<field name="street" placeholder="Street..." class="o_address_street"/>
+						<field name="street2" placeholder="Street 2..." class="o_address_street"/>
+						<field name="city" placeholder="City" class="o_address_city"/>
+						<field name="state_id" class="o_address_state" placeholder="State" options="{&quot;no_open&quot;: True}"/>
+						<field name="zip" placeholder="ZIP" class="o_address_zip"/>
+						<field name="district_id" placeholder="District" class="o_address_district" options="{&quot;no_open&quot;: True}"/>
+						<field name="country_id" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+					</div>
+				</form>
+			</field>
+		</record>
+	</data>
 </odoo>

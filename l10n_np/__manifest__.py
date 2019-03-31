@@ -12,7 +12,7 @@ This is the base module to manage the accounting chart for Nepal in Odoo.
     """,
     'depends': ['account_tax_python', 'contacts'],
     'data': [
-            'data/res_country_data.xml',
+            'security/ir.model.access.csv',
             'data/account_chart_template_data.xml',
             'data/l10n_np_chart_data.xml',
             'data/account_data.xml',
@@ -26,6 +26,9 @@ This is the base module to manage the accounting chart for Nepal in Odoo.
             'views/res_country_district_views.xml',
             'views/res_company_views.xml',
             'views/report_templates.xml',
-            'security/ir.model.access.csv',
+            'views/res_partner_views.xml',
+            'data/res_country_data.xml',
+            'views/res_country_view.xml',
+            'views/webclient_templates.xml',
     ],
 }
