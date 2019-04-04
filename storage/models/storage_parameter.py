@@ -18,14 +18,14 @@ class StorageParameter(models.Model):
 
     name = fields.Char("Name")
 
-    length = fields.Float(string="Length", help="Length of the Storage.", default=0.0)
-    breadth = fields.Float(string="Breadth", help="Breadth of the Storage.", default=0.0)
-    height = fields.Float(string="Height", help="Height of the Storage.", default=0.0)
-    radius = fields.Float(string="Radius", help="Radius or Input the Half of the Diameter Value.", default=0.0)
+    length = fields.Float(string="Length (in meter)", help="Length of the Storage.", default=0.0)
+    breadth = fields.Float(string="Breadth (in meter)", help="Breadth of the Storage.", default=0.0)
+    height = fields.Float(string="Height (in meter)", help="Height of the Storage.", default=0.0)
+    radius = fields.Float(string="Radius (in meter)", help="Radius or Input the Half of the Diameter Value.", default=0.0)
     pi = fields.Float(string="PI", default=3.142857142857143)
 
     formula_id = fields.Many2one('storage.logic', string="Formula")
-    volume = fields.Float(compute="_calc_volume", string="Volume", help="Volume of the Storage", store=True)
+    volume = fields.Float(compute="_calc_volume", string="Volume (in Kilolitre)", help="Volume of the Storage", store=True)
 
     @api.model
     def _param_fields(self):
@@ -65,6 +65,6 @@ class StorageParameter(models.Model):
                     rec.volume = result
                 return result
             except:
-                _logger.warning(_("Please provide parameter value greater than 0.0"))
+                _logger.info(_("Please provide parameter value greater than 0.0"))
 
 
