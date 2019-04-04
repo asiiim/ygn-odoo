@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 
 from pyparsing import (Literal, CaselessLiteral, Word, Combine, Group, Optional,
                        ZeroOrMore, Forward, nums, alphas, oneOf)
@@ -18,10 +18,10 @@ class StorageParameter(models.Model):
 
     name = fields.Char("Name")
 
-    length = fields.Float(string="Length", help="Length of the Storage.")
-    breadth = fields.Float(string="Breadth", help="Breadth of the Storage.")
-    height = fields.Float(string="Height", help="Height of the Storage.")
-    radius = fields.Float(string="Radius", help="Radius or Input the Half of the Diameter Value.")
+    length = fields.Float(string="Length", help="Length of the Storage.", default=0.0)
+    breadth = fields.Float(string="Breadth", help="Breadth of the Storage.", default=0.0)
+    height = fields.Float(string="Height", help="Height of the Storage.", default=0.0)
+    radius = fields.Float(string="Radius", help="Radius or Input the Half of the Diameter Value.", default=0.0)
     pi = fields.Float(string="PI", default=3.142857142857143)
 
     formula_id = fields.Many2one('storage.logic', string="Formula")
@@ -58,9 +58,13 @@ class StorageParameter(models.Model):
             for field in self._param_fields():
                 if field:
                     args[field] = getattr(self, field) or ''
-            result = eval(str(formula_format % args))
             
-            for rec in self:
-                rec.volume = result
+            try:
+                result = eval(str(formula_format % args))
+                for rec in self:
+                    rec.volume = result
+                return result
+            except:
+                _logger.warning(_("Please provide parameter value greater than 0.0"))
 
-            return result
+
