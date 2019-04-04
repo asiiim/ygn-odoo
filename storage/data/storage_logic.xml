@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="horizontal_cylinder_tank" model="storage.logic">
+        <field name="name">Horizontal Cylinder Tank</field>
+        <field name="storage_type">Horizontal Cylinder</field>
+        <field name="formula">%(pi)f*%(radius)f*%(radius)f*%(length)f</field>
+    </record>
+    <record id="vertical_cylinder_tank" model="storage.logic">
+        <field name="name">Vertical Cylinder Tank</field>
+        <field name="storage_type">Vertical Cylinder</field>
+        <field name="formula">%(pi)f*%(radius)f*%(radius)f*%(height)f</field>
+    </record>
+    <record id="rectangle_tank" model="storage.logic">
+        <field name="name">Rectangle Tank</field>
+        <field name="storage_type">Rectangle Cylinder</field>
+        <field name="formula">%(length)f*%(breadth)f*%(height)f</field>
+    </record>
+    <record id="horizontal_oval_tank" model="storage.logic">
+        <field name="name">Horizontal Oval Tank</field>
+        <field name="storage_type">Horizontal Oval Tank</field>
+        <field name="formula">((%(pi)f*%(height)f*%(height)f*0.25)+(%(height)f*(abs(%(breadth)f-%(height)f)))*%(length)f)</field>
+    </record>
+    <record id="vertical_oval_tank" model="storage.logic">
+        <field name="name">Vertical Oval Tank</field>
+        <field name="storage_type">Vertical Oval Tank</field>
+        <field name="formula">((%(pi)f*%(breadth)f*%(breadth)f*0.25)+(%(breadth)f*(abs(%(height)f-%(breadth)f)))*%(length)f)</field>
+    </record>
+    <record id="horizontal_capsule_tank" model="storage.logic">
+        <field name="name">Horizontal Capsule Tank</field>
+        <field name="storage_type">Horizontal Capsule Tank</field>
+        <field name="formula">%(pi)f*%(radius)f*%(radius)f*(((4/3)*%(radius)f)+%(length)f)</field>
+    </record>
+    <record id="vertical_capsule_tank" model="storage.logic">
+        <field name="name">Vertical Capsule Tank</field>
+        <field name="storage_type">Vertical Capsule Tank</field>
+        <field name="formula">%(pi)f*%(radius)f*%(radius)f*(((4/3)*%(radius)f)+%(height)f)</field>
+    </record>
+</odoo>

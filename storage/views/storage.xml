@@ -1,0 +1,94 @@
+<odoo>
+  <data>
+
+    <!-- explicit list view definition -->
+    
+    <record model="ir.ui.view" id="storage_paremeter_list">
+      <field name="name">storage parameter list</field>
+      <field name="model">storage.parameter</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="id"/>
+          <field name="name"/>
+          <field name="volume"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="storage_logic_list">
+      <field name="name">storage logic list</field>
+      <field name="model">storage.logic</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="id"/>
+          <field name="name"/>
+          <field name="storage_type"/>
+          <field name="formula"/>
+        </tree>
+      </field>
+    </record>
+    
+    <!-- explicit form view definition -->
+    
+    <record model="ir.ui.view" id="storage_parameter_form">
+      <field name="name">storage parameter form</field>
+      <field name="model">storage.parameter</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <group>
+              <field name="name"/>
+              <field name="length"/>
+              <field name="breadth"/>
+              <field name="height"/>
+              <field name="radius"/>
+              <field name="pi" invisible="1"/>
+              <field name="formula_id"/>
+              <field name="volume" attrs="{'invisible': [('formula_id', '==', False)]}"/>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="storage_logic_form">
+      <field name="name">storage logic form</field>
+      <field name="model">storage.logic</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <group>
+              <field name="name"/>
+              <field name="storage_type"/>
+              <field name="formula"/>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+    
+    <!-- actions opening views on models -->
+    
+    <record model="ir.actions.act_window" id="storage_parameter_action_window">
+      <field name="name">Storage Parameter</field>
+      <field name="res_model">storage.parameter</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="storage_logic_action_window">
+      <field name="name">Storage Logic</field>
+      <field name="res_model">storage.logic</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    
+    <!-- Top menu item -->
+    
+    <menuitem name="Storage" id="storage.menu_root"/>
+    
+    <!-- Other menu -->
+    
+    <menuitem name="Parameter" id="storage.menu_parameter" parent="storage.menu_root" action="storage_parameter_action_window"/>
+    <menuitem name="Logic" id="storage.menu_logic" parent="storage.menu_root" action="storage_logic_action_window"/>
+    
+  </data>
+</odoo>
