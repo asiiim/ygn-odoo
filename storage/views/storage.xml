@@ -8,7 +8,6 @@
       <field name="model">storage.parameter</field>
       <field name="arch" type="xml">
         <tree>
-          <field name="id"/>
           <field name="name"/>
           <field name="volume"/>
         </tree>
@@ -20,7 +19,6 @@
       <field name="model">storage.logic</field>
       <field name="arch" type="xml">
         <tree>
-          <field name="id"/>
           <field name="name"/>
           <field name="storage_type"/>
           <field name="formula"/>
@@ -36,15 +34,19 @@
       <field name="arch" type="xml">
         <form>
           <sheet>
-            <group>
-              <field name="name"/>
-              <field name="length"/>
-              <field name="breadth"/>
-              <field name="height"/>
-              <field name="radius"/>
-              <field name="pi" invisible="1"/>
-              <field name="formula_id"/>
-              <field name="volume" attrs="{'invisible': [('formula_id', '==', False)]}"/>
+            <group colspan="2">
+              <group>
+                <field name="name"/>
+                <field name="length"/>
+                <field name="breadth"/>
+                <field name="height"/>
+                <field name="radius"/>
+              </group>
+              <group>
+                <field name="pi" invisible="1"/>
+                <field name="formula_id"/>
+                <field name="volume" attrs="{'invisible': [('formula_id', '==', False)]}"/>
+              </group>
             </group>
           </sheet>
         </form>
