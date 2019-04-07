@@ -1,0 +1,66 @@
+<odoo>
+  <data>
+    <record id="station_kanaban_view" model="ir.ui.view">
+        <field name="name">station kanban view</field>
+        <field name="model">stock.location</field>
+        <field name="arch" type="xml">
+            <kanban create="0">
+                <field name="name"/>
+                <field name="meter_reading"/>
+                <field name="shrinkage_value"/>
+                <field name="product_ids"/>
+                <field name="product_quantity"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <div>
+                                <div t-attf-class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary o_kanban_record_headings">
+                                            <h4>
+                                                <field name="name"/>
+                                            </h4>
+                                        </div>
+                                        <div class="o_secondary">
+                                            <label for="meter_reading">Meter Reading</label>
+                                            <field name="meter_reading"/><br />
+                                            
+                                            <label for="shrinkage_value">Shrinkage Value</label>
+                                            <field name="shrinkage_value"/><br />
+
+                                            <!-- <label for="product_ids">Products</label>
+                                            <field name="product_ids"/><br /> -->
+
+                                            <label for="product_quantity">On Hand</label>
+                                            <field name="product_quantity"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="action_station_kanban" model="ir.actions.act_window">
+        <field name="name">Stations</field>
+        <field name="res_model">stock.location</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="station_kanaban_view"/>
+        <field name="search_view_id" ref="stock.view_location_search"/>
+        <field name="context">{'search_default_in_location':1}</field>
+    </record>
+    
+    <!-- Top menu item -->
+    
+    <menuitem name="Station" id="station.menu_root" web_icon="station,logo.jpg"/>
+    
+    <!-- Other menu -->
+    
+    <menuitem name="Stations" id="station.menu_station" parent="station.menu_root" action="action_station_kanban"/>
+    
+  </data>
+</odoo>
