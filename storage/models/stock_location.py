@@ -22,7 +22,7 @@ class Location(models.Model):
     diameter = fields.Float(string="Diameter (in meter)", help="Diameter of the Storage.", default=0.0)
     pi = fields.Float(string="PI", default=3.142857142857143)
 
-    formula_id = fields.Many2one('storage.category', string="Formula")
+    formula_id = fields.Many2one('storage.category', string="Storage Category")
     volume = fields.Float(compute="_calc_volume", string="Volume (in Kilolitre)", help="Volume of the Storage", store=True)
 
     @api.model
