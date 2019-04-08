@@ -1,0 +1,106 @@
+<odoo>
+  <data>
+
+    <!-- explicit list view definition -->
+    
+    <record model="ir.ui.view" id="storage_storage_list">
+      <field name="name">storage storage list</field>
+      <field name="model">stock.location</field>
+      <field name="inherit_id" ref="stock.view_location_tree2"/>
+      <field name="arch" type="xml">
+        <field name="usage" position="after">
+          <field name="formula_id"/>
+          <field name="volume"/>
+        </field>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="storage_category_list">
+      <field name="name">storage category list</field>
+      <field name="model">storage.category</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="sequence"/>
+          <field name="name"/>
+          <field name="formula"/>
+        </tree>
+      </field>
+    </record>
+    
+    <!-- explicit form view definition -->
+    
+    <record model="ir.ui.view" id="storage_storage_form">
+      <field name="name">storage storage form</field>
+      <field name="model">stock.location</field>
+      <field name="inherit_id" ref="stock.view_location_form"/>
+      <field name="arch" type="xml">
+        <field name="location_id" position="after">
+          <group string="Storage Volume Parameter" colspan="2">
+              <group>
+                <field name="length"/>
+                <field name="breadth"/>
+                <field name="height"/>
+                <field name="diameter"/>
+              </group>
+              <group>
+                <field name="pi" invisible="1"/>
+                <field name="formula_id"/>
+                <field name="volume" attrs="{'invisible': [('formula_id', '==', False)]}"/>
+              </group>
+            </group>
+        </field>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="storage_category_form">
+      <field name="name">storage category form</field>
+      <field name="model">storage.category</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <group>
+              <field name="sequence"/>
+              <field name="name"/>
+              <field name="formula"/>
+              <div>
+                <p>
+                  Formula to calculate the volume of the storage. <br />
+                  You can include the possible parameter with logical expressions in the field <br />
+                  (for example, use '%(length)f' to display the field 'length') plus
+                  <br />%(breadth)f: the breadth of the storage
+                  <br />%(height)f: the height of the storage
+                  <br />%(diameter)f: the diameter of the storage
+                  <br />%(PI)f: value of the Pi.
+                </p>
+              </div>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+    
+    <!-- actions opening views on models -->
+    
+    <!-- <record model="ir.actions.act_window" id="storage_storage_action_window">
+      <field name="name">Storage storage</field>
+      <field name="res_model">storage.storage</field>
+      <field name="view_mode">tree,form</field>
+    </record> -->
+
+    <record model="ir.actions.act_window" id="storage_category_action_window">
+      <field name="name">Storage category</field>
+      <field name="res_model">storage.category</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    
+    <!-- Top menu item -->
+    
+    <menuitem name="Storage" id="storage.menu_root" web_icon="storage,logo.jpg"/>
+    
+    <!-- Other menu -->
+    
+    <!-- <menuitem name="Storage" id="storage.menu_storage" parent="storage.menu_root" action="storage_storage_action_window"/> -->
+    <menuitem name="Category" id="storage.menu_category" parent="storage.menu_root" action="storage_category_action_window"/>
+    
+  </data>
+</odoo>
