@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# Part of Ygen. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
@@ -28,6 +28,6 @@ class Company(models.Model):
         address.update({'district_id' : partner.district_id})
         return address
 
-    def _inverse_state(self):
+    def _inverse_district(self):
         for company in self:
             company.partner_id.district_id = company.district_id
