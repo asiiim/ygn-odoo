@@ -19,7 +19,9 @@
             <field name="model">res.company</field>
             <field name="inherit_id" ref="base.view_company_report_form" />
             <field name="arch" type="xml">
-				<field style="margin-right: 40px;" name="external_report_layout" widget="image_selection" options="{
+                <xpath expr="//field[@name='external_report_layout']" position="attributes">
+                    <attribute name="options">
+                        {
                             'background': {
                                 'image_link': '/base/static/img/preview_background.png',
                                 'preview_link': '/base/static/pdf/preview_background.pdf'
@@ -40,7 +42,9 @@
 								'image_link': '/l10n_np/static/img/preview_boxed2.png',
 								'preview_link': '/l10n_np/static/pdf/preview_boxed2/png'
 							}
-                        }"/>
+                        }
+                    </attribute>
+                </xpath>
 			</field>
         </record>
 	</data>
