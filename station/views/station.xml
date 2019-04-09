@@ -20,6 +20,12 @@
       <field name="model">stock.location</field>
       <field name="inherit_id" ref="stock.view_location_form"/>
       <field name="arch" type="xml">
+        <field name="name" position="after">
+          <div>
+            <label for="product_id" class="oe_edit_only"/>
+            <field name="product_id"/>
+          </div>
+        </field>
         <field name="location_id" position="after">
           <group string="Storage Volume Parameter" colspan="2">
               <group>
@@ -54,7 +60,6 @@
                 <field name="name"/>
                 <field name="meter_reading"/>
                 <field name="shrinkage_value"/>
-                <field name="product_ids"/>
                 <field name="product_quantity"/>
                 <field name="volume"/>
                 <!-- <field name="filled_volume" invisible="1"/> -->
@@ -75,9 +80,6 @@
                                             
                                             <label for="shrinkage_value">Shrinkage Value</label>
                                             <field name="shrinkage_value"/><br />
-
-                                            <!-- <label for="product_ids">Products</label>
-                                            <field name="product_ids"/><br /> -->
 
                                             <label for="product_quantity">On Hand</label>
                                             <field name="product_quantity"/><br />

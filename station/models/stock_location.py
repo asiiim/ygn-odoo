@@ -77,11 +77,12 @@ class Location(models.Model):
 
     meter_reading = fields.Float(string="Meter Reading")
     shrinkage_value = fields.Float(string="Shrinkage Value")
-    product_ids = fields.Many2many('product.template', 'stock_station_product', 'station_id', 'product_id', 'Products')
     product_quantity = fields.Float(related="quant_ids.quantity", string="On Hand")
     dip = fields.Float(string="Dip Value (in meter)", help="Value of the Dip Test.", default=0.0)
     is_dip = fields.Boolean(default=False)
     filled_volume = fields.Float(compute="_calc_filled_volume", string="Remaining Volume (in Kilolitre)", help="Remaining 'Volume in the storage.", store=True)
+
+    product_id = fields.Many2one('product.product', 'Inventoried Product', help="Specify Product to focus your inventory on a particular Product.")
 
     @api.multi
     @api.depends('formula_id', 'dip')
@@ -103,6 +104,8 @@ class Location(models.Model):
         for station in current_station:
             station.write({'dip': self.dip})
 
+        _logger.warning("Number of Locations------- " + str(len(current_station)))
+
         for location in current_station:
             formula_format = location.formula_id.diptest_formula
             if formula_format:
@@ -121,13 +124,28 @@ class Location(models.Model):
                 try:
                     on_hand = eval(str(formula_format % args))
                     self.filled_volume = on_hand
-                    self._make_inv_adjustment(on_hand)
+                    self._make_inv_adjustment(on_hand, location)
+                    return on_hand
                 except:
                     _logger.info(_("Please provide parameter value greater than 0.0"))
                     # raise UserError(_("Please provide parameter value greater than 0.0"))
-
-    def _make_inv_adjustment(self, qty):
+    @api.multi
+    def _make_inv_adjustment(self, qty, location):
         _logger.warning("Adjustment -------------------------- " + str(qty))
+        vals = {
+            'name': 'Test Inventory',
+            'filter': 'product',
+            'state': 'draft',
+            'location_id':  location.id,
+            'product_id': location.product_id.id,
+        }
+        inv_adjust = self.env['stock.inventory'].create(vals)
+        inv_adjust.action_start()
+        line_ids = self.env['stock.inventory.line'].search([('inventory_id', '=', inv_adjust.id)])
+        
+        for line in line_ids:
+            line.write({ 'product_qty': qty })
+        inv_adjust.action_done()
 
     def _get_action(self, action_xmlid):
         action = self.env.ref(action_xmlid).read()[0]

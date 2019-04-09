@@ -2,10 +2,6 @@
 
 from odoo import models, fields, api
 
-import logging
-
-_logger = logging.getLogger(__name__)
-
 class DipTestWizard(models.TransientModel):
     """ A wizard to take the dip value to calulate the filled volume in the storage. """
     _name = "station.diptest.wizard"
