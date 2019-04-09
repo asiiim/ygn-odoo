@@ -1,5 +1,51 @@
 <odoo>
   <data>
+
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="station_location_list">
+      <field name="name">station location list</field>
+      <field name="model">stock.location</field>
+      <field name="inherit_id" ref="stock.view_location_tree2"/>
+      <field name="arch" type="xml">
+        <field name="usage" position="after">
+          <field name="formula_id"/>
+          <field name="volume"/>
+        </field>
+      </field>
+    </record>
+
+    <!-- explicit form view definition -->
+    <record model="ir.ui.view" id="station_location_form">
+      <field name="name">station location form</field>
+      <field name="model">stock.location</field>
+      <field name="inherit_id" ref="stock.view_location_form"/>
+      <field name="arch" type="xml">
+        <field name="location_id" position="after">
+          <group string="Storage Volume Parameter" colspan="2">
+              <group>
+                <field name="length"/>
+                <field name="breadth"/>
+                <field name="height"/>
+                <field name="diameter"/>
+                <field name="dip" invisible="1"/>
+              </group>
+              <group>
+                <field name="pi" invisible="1"/>
+                <field name="formula_id"/>
+                <field name="volume" attrs="{'invisible': [('formula_id', '==', False)]}"/>
+                <!-- <field name="filled_volume" attrs="{'invisible': [('dip', '==', 0.0)]}"/> -->
+                <field name="is_length" invisible="1"/>
+                <field name="is_breadth" invisible="1"/>
+                <field name="is_height" invisible="1"/>
+                <field name="is_diameter" invisible="1"/>
+              </group>
+            </group>
+        </field>
+      </field>
+    </record>
+
+
+
     <record id="station_kanaban_view" model="ir.ui.view">
         <field name="name">station kanban view</field>
         <field name="model">stock.location</field>
@@ -10,6 +56,8 @@
                 <field name="shrinkage_value"/>
                 <field name="product_ids"/>
                 <field name="product_quantity"/>
+                <field name="volume"/>
+                <!-- <field name="filled_volume" invisible="1"/> -->
                 <templates>
                     <t t-name="kanban-box">
                         <div>
@@ -32,7 +80,16 @@
                                             <field name="product_ids"/><br /> -->
 
                                             <label for="product_quantity">On Hand</label>
-                                            <field name="product_quantity"/>
+                                            <field name="product_quantity"/><br />
+
+                                            <label for="volume">Storage Capacity</label>
+                                            <field name="volume"/><br />
+
+                                            <!-- <label for="filled_volume">Remaining Capacity</label>
+                                            <field name="filled_volume"/> -->
+                                        </div>
+                                        <div class="o_primary">
+                                            <a type="object" name="get_diptest_wizard_action">Dip Test</a>
                                         </div>
                                     </div>
                                 </div>

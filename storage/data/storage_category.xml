@@ -11,6 +11,7 @@
     <record id="rectangle_tank" model="storage.category">
         <field name="name">Rectangle Tank</field>
         <field name="formula">%(length)f*%(breadth)f*%(height)f</field>
+        <field name="diptest_formula">%(length)f*%(breadth)f*%(dip)f</field>
     </record>
     <record id="horizontal_oval_tank" model="storage.category">
         <field name="name">Horizontal Oval Tank</field>

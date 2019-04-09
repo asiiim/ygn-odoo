@@ -22,8 +22,13 @@ class Location(models.Model):
     diameter = fields.Float(string="Diameter (in meter)", help="Diameter of the Storage.", default=0.0)
     pi = fields.Float(string="PI", default=3.142857142857143)
 
+    is_length = fields.Boolean(default=False)
+    is_breadth = fields.Boolean(default=False)
+    is_height = fields.Boolean(default=False)
+    is_diameter = fields.Boolean(default=False)
+
     formula_id = fields.Many2one('storage.category', string="Storage Category")
-    volume = fields.Float(compute="_calc_volume", string="Volume (in Kilolitre)", help="Volume of the Storage", store=True)
+    volume = fields.Float(compute="_calc_volume", string="Volume (in Kilolitre)", help="Volume of the Storage.", store=True)
 
     @api.model
     def _param_fields(self):
@@ -64,5 +69,3 @@ class Location(models.Model):
                     return result
                 except:
                     _logger.info(_("Please provide parameter value greater than 0.0"))
-
-
