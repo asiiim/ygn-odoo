@@ -50,13 +50,43 @@
       </field>
     </record>
 
+    <record id="view_location_quick_form" model="ir.ui.view">
+      <field name="name">stock.location.quick.form</field>
+      <field name="model">stock.location</field>
+      <field name="arch" type="xml">
+        <form string="Stock Location">
+          <sheet>
+              <label for="name" class="oe_edit_only"/>
+              <h1><field name="name"/></h1>
+              <label for="location_id" class="oe_edit_only"/>
+                <h2><field name="location_id" options="{'no_create': True}"/></h2>
+              <group>
+                  <field name="formula_id"/>
+                  <field name="product_id"/>
+              </group>
+              <footer>
+                  <button string="Create &amp; Edit" name="edit_dialog" type="object" class="btn-primary"/>
+                  <button string="Discard" class="btn-default" special="cancel"/>
+              </footer>
+          </sheet>
+        </form>
+      </field>
+    </record>
 
+    <record id="open_create_stock_location" model="ir.actions.act_window">
+      <field name="name">Create a Station</field>
+      <field name="res_model">stock.location</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="view_location_quick_form"/>
+      <field name="target">new</field>
+    </record>
 
-    <record id="station_kanaban_view" model="ir.ui.view">
+     <record id="station_kanaban_view" model="ir.ui.view">
         <field name="name">station kanban view</field>
         <field name="model">stock.location</field>
         <field name="arch" type="xml">
-            <kanban create="0">
+            <kanban on_create="station.open_create_stock_location">
                 <field name="name"/>
                 <field name="meter_reading"/>
                 <field name="shrinkage_value"/>
@@ -102,15 +132,16 @@
             </kanban>
         </field>
     </record>
+
     <record id="action_station_kanban" model="ir.actions.act_window">
-        <field name="name">Stations</field>
-        <field name="res_model">stock.location</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">kanban</field>
-        <field name="view_id" ref="station_kanaban_view"/>
-        <field name="search_view_id" ref="stock.view_location_search"/>
-        <field name="context">{'search_default_in_location':1}</field>
+      <field name="name">Stations</field>
+      <field name="res_model">stock.location</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">kanban,form</field>
+      <field name="view_id" ref="station_kanaban_view"/>
+      <field name="search_view_id" ref="stock.view_location_search"/>
+      <field name="context">{'search_default_in_location':1}</field>
     </record>
     
     <!-- Top menu item -->
@@ -120,6 +151,9 @@
     <!-- Other menu -->
     
     <menuitem name="Stations" id="station.menu_station" parent="station.menu_root" action="action_station_kanban"/>
+
+    <!-- <menuitem action="open_create_stock_location" id="stock.menu_action_location_form"
+        parent="stock.menu_warehouse_config" sequence="2" groups="stock.group_stock_multi_locations"/> -->
     
   </data>
 </odoo>

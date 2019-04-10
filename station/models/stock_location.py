@@ -131,9 +131,8 @@ class Location(models.Model):
                     # raise UserError(_("Please provide parameter value greater than 0.0"))
     @api.multi
     def _make_inv_adjustment(self, qty, location):
-        _logger.warning("Adjustment -------------------------- " + str(qty))
         vals = {
-            'name': 'Test Inventory',
+            'name': "[IA] " + str(location.name),
             'filter': 'product',
             'state': 'draft',
             'location_id':  location.id,
@@ -155,3 +154,19 @@ class Location(models.Model):
 
     def get_diptest_wizard_action(self):
         return self._get_action('station.diptest_wizard_action')
+
+    # @api.multi
+    # def close_dialog(self):
+    #     return {'type': 'ir.actions.act_window_close'}
+
+    @api.multi
+    def edit_dialog(self):
+        form_view = self.env.ref('stock.view_location_form')
+        return {
+            'name': _('Location'),
+            'res_model': 'stock.location',
+            'res_id': self.id,
+            'views': [(form_view.id, 'form'),],
+            'type': 'ir.actions.act_window',
+            'target': 'inline'
+        }
