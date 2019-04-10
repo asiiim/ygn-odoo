@@ -142,9 +142,19 @@ class Location(models.Model):
         inv_adjust = self.env['stock.inventory'].create(vals)
         inv_adjust.action_start()
         line_ids = self.env['stock.inventory.line'].search([('inventory_id', '=', inv_adjust.id)])
-        
-        for line in line_ids:
-            line.write({ 'product_qty': qty })
+
+        if line_ids:
+            for line in line_ids:
+                line.write({ 'product_qty': qty })
+        else:
+            vals = {
+                'inventory_id': inv_adjust.id,
+                'location_id': location.id,
+                'product_id': location.product_id.id,
+                'product_qty': qty,
+                'theoretical_qty': qty
+            }
+            line = self.env['stock.inventory.line'].create(vals)
         inv_adjust.action_done()
 
     def _get_action(self, action_xmlid):
