@@ -129,6 +129,7 @@ class Location(models.Model):
                 except:
                     _logger.info(_("Please provide parameter value greater than 0.0"))
                     # raise UserError(_("Please provide parameter value greater than 0.0"))
+    
     @api.multi
     def _make_inv_adjustment(self, qty, location):
         vals = {
@@ -170,3 +171,27 @@ class Location(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'inline'
         }
+
+    @api.multi
+    @api.depends('formula_id')
+    def _set_volume_param(self):
+
+        '''
+        The purpose of this function is to set the param for the storage calculations on the
+        basis of the chosen formula format.
+
+        :param address: formula format from the active location in the context
+        :returns: set the boolean for the param
+        :rtype: bool
+        '''
+
+        lenght = False
+        breadth = False
+        height = False
+        radius = False
+
+        current_station = self.env['stock.location'].browse(self._context.get('active_id'))
+        
+        for station in current_station:
+            formula = station.formula_id.formula
+            _logger.warning("Formula ------------------------ " + str(formula))
