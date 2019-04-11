@@ -70,7 +70,7 @@ class Location(models.Model):
                     location.volume = result
                     return result
                 except:
-                    _logger.info(_("Please provide parameter value greater than 0.0"))
+                    raise UserError(_("Please set the parameter values rather than 0.0 !"))
 
     
     ############################################################################################
@@ -126,11 +126,14 @@ class Location(models.Model):
                     self._make_inv_adjustment(on_hand, location)
                     return on_hand
                 except:
-                    _logger.info(_("Please provide parameter value greater than 0.0"))
-                    # raise UserError(_("Please provide parameter value greater than 0.0"))
+                    raise UserError(_("On Hand quantity seems more than the Storage Capacity.\n Please consider to perform the Dip Test again with correct Dip Value."))
     
     @api.multi
     def _make_inv_adjustment(self, qty, location):
+
+        if qty > location.volume:
+            raise UserError(_("On Hand quantity seems more than the Storage Capacity.\n Please consider to perform the Dip Test again with correct Dip Value."))
+        
         vals = {
             'name': "[IA] " + str(location.name),
             'filter': 'product',
@@ -138,6 +141,7 @@ class Location(models.Model):
             'location_id':  location.id,
             'product_id': location.product_id.id,
         }
+
         inv_adjust = self.env['stock.inventory'].create(vals)
         inv_adjust.action_start()
         line_ids = self.env['stock.inventory.line'].search([('inventory_id', '=', inv_adjust.id)])
