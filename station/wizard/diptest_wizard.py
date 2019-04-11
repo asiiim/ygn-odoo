@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class DipTestWizard(models.TransientModel):
     """ A wizard to take the dip value to calulate the filled volume in the storage. """
     _name = "station.diptest.wizard"
-    _inherit = "stock.location"
     _description = "Oil Station Tank Diptest Wizard"
 
     name = fields.Char(string="Remarks")
@@ -19,6 +21,7 @@ class DipTestWizard(models.TransientModel):
 
     @api.multi
     def apply_dip_value(self):
+        _logger.warning("Applying Dip Value ---------------------- ")
         self.station_id.write({
             'dip': self.dip,
         })

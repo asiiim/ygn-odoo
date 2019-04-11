@@ -10,6 +10,10 @@
                     <field name="dip"/>
                     <field name="station_id" readonly="1"/>
                 </group>
+                <footer>
+                <button string="Apply" name="apply_dip_value" type="object" class="btn-primary"/>
+                <button string="Cancel" class="btn-default" special="cancel"/>
+              </footer>
             </form>
         </field>
     </record>

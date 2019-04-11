@@ -29,7 +29,8 @@ class Location(models.Model):
     is_diameter = fields.Boolean(default=False)
 
     formula_id = fields.Many2one('storage.category', string="Storage Category")
-    volume = fields.Float(compute="_calc_volume", string="Volume (in Kilolitre)", help="Volume of the Storage.", store=True)
+    volume = fields.Float(string="Volume (in Kilolitre)", help="Volume of the Storage.", store=True)
+    color = fields.Integer('Color')
 
     @api.model
     def _param_fields(self):
@@ -37,8 +38,7 @@ class Location(models.Model):
         return list(STORAGE_PARAM)
 
     @api.multi
-    @api.depends('formula_id')
-    def _calc_volume(self):
+    def calc_volume(self):
 
         '''
         The purpose of this function is to calculate the volume of the storage.
@@ -49,6 +49,7 @@ class Location(models.Model):
         '''
         # get the information that will be injected into the volume calculation
         # get the formula
+
         for location in self:
             formula_format = location.formula_id.formula
             if formula_format:
@@ -103,8 +104,6 @@ class Location(models.Model):
         current_station = self.env['stock.location'].browse(self._context.get('active_id'))
         for station in current_station:
             station.write({'dip': self.dip})
-
-        _logger.warning("Number of Locations------- " + str(len(current_station)))
 
         for location in current_station:
             formula_format = location.formula_id.diptest_formula
@@ -166,9 +165,9 @@ class Location(models.Model):
     def get_diptest_wizard_action(self):
         return self._get_action('station.diptest_wizard_action')
 
-    # @api.multi
-    # def close_dialog(self):
-    #     return {'type': 'ir.actions.act_window_close'}
+    @api.multi
+    def close_dialog(self):
+        return {'type': 'ir.actions.act_window_close'}
 
     @api.multi
     def edit_dialog(self):
@@ -184,7 +183,7 @@ class Location(models.Model):
 
     @api.multi
     @api.depends('formula_id')
-    def _set_volume_param(self):
+    def _set_volume_param(self, formula_id):
 
         '''
         The purpose of this function is to set the param for the storage calculations on the
@@ -195,13 +194,64 @@ class Location(models.Model):
         :rtype: bool
         '''
 
-        lenght = False
+        length = False
         breadth = False
         height = False
-        radius = False
-
-        current_station = self.env['stock.location'].browse(self._context.get('active_id'))
+        diameter = False
         
-        for station in current_station:
-            formula = station.formula_id.formula
-            _logger.warning("Formula ------------------------ " + str(formula))
+        formula_format = self.env['storage.category'].search([('id', '=', formula_id)]).formula
+        if formula_format:
+            if "length" in formula_format: length = True
+            if "breadth" in formula_format: breadth = True
+            if "height" in formula_format: height = True
+            if "diameter" in formula_format: diameter = True
+        
+        vals = {
+            'is_length': length,
+            'is_breadth': breadth,
+            'is_height': height,
+            'is_diameter': diameter
+        }
+        _logger.warning("Param Values ------------------------- " + str(vals))
+
+        return vals
+
+    @api.model
+    def create(self, vals):
+        _logger.warning("VALSSSSSSSSSSSS ------------------------ " + str(vals))
+        if 'location_id' in vals:
+            _logger.warning("VALSSSSSSSSSSSS ------------------------ " + str(vals))
+            _logger.warning("VALS ------------------------ " + str(vals['formula_id']))
+            param_vals = self._set_volume_param(vals['formula_id'])
+            vals.update(param_vals)
+            _logger.warning("PARAMS ------------------------ " + str(param_vals))
+            _logger.warning("VALSSSSSSSSSSSS ------------------------ " + str(vals))
+            
+            return super(Location, self).create(vals)
+
+    @api.onchange('formula_id')
+    def _set_volume_param_onchange(self):
+
+        _logger.warning("Changed Formula ------------------------- " + str(self.formula_id.name))
+
+        length = False
+        breadth = False
+        height = False
+        diameter = False
+        
+        formula_format = self.formula_id.formula
+        if formula_format:
+            if "length" in formula_format: length = True
+            if "breadth" in formula_format: breadth = True
+            if "height" in formula_format: height = True
+            if "diameter" in formula_format: diameter = True
+        
+        self.is_length = length
+        self.is_breadth = breadth
+        self.is_height = height
+        self.is_diameter = diameter
+        
+        _logger.warning("Length ------------------------- " + str(self.is_length))
+        _logger.warning("Breadth ------------------------- " + str(self.is_breadth))
+        _logger.warning("Height ------------------------- " + str(self.is_height))
+        _logger.warning("Diameter ------------------------- " + str(self.is_diameter))
