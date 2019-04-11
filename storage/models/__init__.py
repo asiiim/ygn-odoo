@@ -2,4 +2,4 @@
 
 from . import models
 from . import category
-from . import stock_location
+

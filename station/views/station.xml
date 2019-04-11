@@ -1,57 +1,153 @@
 <odoo>
   <data>
-    <record id="station_kanaban_view" model="ir.ui.view">
+
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="station_location_list">
+      <field name="name">station location list</field>
+      <field name="model">stock.location</field>
+      <field name="inherit_id" ref="stock.view_location_tree2"/>
+      <field name="arch" type="xml">
+        <field name="usage" position="after">
+          <field name="formula_id"/>
+          <field name="volume"/>
+        </field>
+      </field>
+    </record>
+
+    <!-- explicit form view definition -->
+    <record model="ir.ui.view" id="station_location_form">
+      <field name="name">station location form</field>
+      <field name="model">stock.location</field>
+      <field name="inherit_id" ref="stock.view_location_form"/>
+      <field name="arch" type="xml">
+        <field name="name" position="after">
+          <div>
+            <label for="product_id" class="oe_edit_only"/>
+            <field name="product_id"/>
+          </div>
+        </field>
+        <field name="location_id" position="after">
+          <group string="Storage Volume Parameter" colspan="2">
+              <group>
+                <field name="length" attrs="{'invisible': [('is_length', '==', False)]}"/>
+                <field name="breadth" attrs="{'invisible': [('is_breadth', '==', False)]}"/>
+                <field name="height" attrs="{'invisible': [('is_height', '==', False)]}"/>
+                <field name="diameter" attrs="{'invisible': [('is_diameter', '==', False)]}"/>
+                <field name="dip" invisible="1"/>
+              </group>
+              <group>
+                <field name="pi" invisible="1"/>
+                <field name="formula_id"/>
+                  <!-- <label for="volume" class="oe_edit_only"/> -->
+                <field name="volume" attrs="{'invisible': [('formula_id', '==', False)]}" readonly="1"/>
+                <button class="oe_stat_button" string="Update Storage Volume" icon="fa-bitbucket" name="calc_volume" type="object"/>
+
+                <!-- <field name="filled_volume" attrs="{'invisible': [('dip', '==', 0.0)]}"/> -->
+                <field name="is_length" invisible="1"/>
+                <field name="is_breadth" invisible="1"/>
+                <field name="is_height" invisible="1"/>
+                <field name="is_diameter" invisible="1"/>
+                <field name="max_shrinkage_loss" invisible="1"/>
+              </group>
+            </group>
+        </field>
+      </field>
+    </record>
+
+    <record id="view_location_quick_form" model="ir.ui.view">
+      <field name="name">stock.location.quick.form</field>
+      <field name="model">stock.location</field>
+      <field name="arch" type="xml">
+        <form string="Stock Location">
+          <sheet>
+              <label for="name" class="oe_edit_only"/>
+              <h1><field name="name"/></h1>
+              <label for="location_id" class="oe_edit_only"/>
+                <h2><field name="location_id" options="{'no_create': True}"/></h2>
+              <group>
+                  <field name="formula_id" options="{'no_create': True}"/>
+                  <field name="product_id" options="{'no_create': True}"/>
+              </group>
+              <footer>
+                <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
+                <button string="Create &amp; Edit" name="edit_dialog" type="object" class="btn-primary"/>
+                <button string="Discard" class="btn-default" special="cancel"/>
+              </footer>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="open_create_stock_location" model="ir.actions.act_window">
+      <field name="name">Create a Station</field>
+      <field name="res_model">stock.location</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="view_location_quick_form"/>
+      <field name="target">new</field>
+    </record>
+
+     <record id="station_kanaban_view" model="ir.ui.view">
         <field name="name">station kanban view</field>
         <field name="model">stock.location</field>
         <field name="arch" type="xml">
-            <kanban create="0">
-                <field name="name"/>
-                <field name="meter_reading"/>
-                <field name="shrinkage_value"/>
-                <field name="product_ids"/>
-                <field name="product_quantity"/>
-                <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <div>
-                                <div t-attf-class="o_kanban_card_header">
-                                    <div class="o_kanban_card_header_title">
-                                        <div class="o_primary o_kanban_record_headings">
-                                            <h4>
-                                                <field name="name"/>
-                                            </h4>
-                                        </div>
-                                        <div class="o_secondary">
-                                            <label for="meter_reading">Meter Reading</label>
-                                            <field name="meter_reading"/><br />
-                                            
-                                            <label for="shrinkage_value">Shrinkage Value</label>
-                                            <field name="shrinkage_value"/><br />
+          <kanban on_create="station.open_create_stock_location">
+              <field name="name"/>
+              <field name="meter_reading"/>
+              <field name="shrinkage_value"/>
+              <field name="product_quantity"/>
+              <field name="volume"/>
+              <field name="color"/>
+              <!-- <field name="filled_volume" invisible="1"/> -->
+              <templates>
+                  <t t-name="kanban-box">
+                      <div>
+                          <div>
+                              <div t-attf-class="o_kanban_card_header">
+                                  <div class="o_kanban_card_header_title">
+                                      <div class="o_primary o_kanban_record_headings">
+                                          <h4>
+                                              <field name="name"/>
+                                          </h4>
+                                      </div>
+                                      <div class="o_secondary">
+                                          <label for="meter_reading">Meter Reading</label>
+                                          <field name="meter_reading"/><br />
+                                          
+                                          <label for="shrinkage_value">Shrinkage Value</label>
+                                          <field name="shrinkage_value"/><br />
 
-                                            <!-- <label for="product_ids">Products</label>
-                                            <field name="product_ids"/><br /> -->
+                                          <label for="product_quantity">On Hand</label>
+                                          <field name="product_quantity"/><br />
 
-                                            <label for="product_quantity">On Hand</label>
-                                            <field name="product_quantity"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
+                                          <label for="volume">Storage Capacity</label>
+                                          <field name="volume"/><br />
+
+                                          <!-- <label for="filled_volume">Remaining Capacity</label>
+                                          <field name="filled_volume"/> -->
+                                      </div>
+                                      <div class="o_primary">
+                                          <a type="object" name="get_diptest_wizard_action">Dip Test</a>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </t>
+              </templates>
+          </kanban>
         </field>
     </record>
+
     <record id="action_station_kanban" model="ir.actions.act_window">
-        <field name="name">Stations</field>
-        <field name="res_model">stock.location</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">kanban</field>
-        <field name="view_id" ref="station_kanaban_view"/>
-        <field name="search_view_id" ref="stock.view_location_search"/>
-        <field name="context">{'search_default_in_location':1}</field>
+      <field name="name">Stations</field>
+      <field name="res_model">stock.location</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">kanban,form</field>
+      <field name="view_id" ref="station_kanaban_view"/>
+      <field name="search_view_id" ref="stock.view_location_search"/>
+      <field name="context">{'search_default_in_location':1}</field>
     </record>
     
     <!-- Top menu item -->
@@ -61,6 +157,9 @@
     <!-- Other menu -->
     
     <menuitem name="Stations" id="station.menu_station" parent="station.menu_root" action="action_station_kanban"/>
+
+    <!-- <menuitem action="open_create_stock_location" id="stock.menu_action_location_form"
+        parent="stock.menu_warehouse_config" sequence="2" groups="stock.group_stock_multi_locations"/> -->
     
   </data>
 </odoo>

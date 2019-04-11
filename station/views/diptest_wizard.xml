@@ -1,0 +1,29 @@
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="diptest_wizard_form_view">
+        <field name="name">diptest.wizard.form</field>
+        <field name="model">station.diptest.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Dip Value" create="false" edit="false">
+                <group>
+                    <field name="name"/>
+                    <field name="dip"/>
+                    <field name="station_id" readonly="1"/>
+                </group>
+                <footer>
+                <button string="Apply" name="apply_dip_value" type="object" class="btn-primary"/>
+                <button string="Cancel" class="btn-default" special="cancel"/>
+              </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window id="diptest_wizard_action"
+                name="Place Dip Value"
+                src_model="stock.location"
+                res_model="station.diptest.wizard"
+                view_mode="form"
+                target="new"
+                key2="client_action_multi"/>
+  </data>
+</odoo>
