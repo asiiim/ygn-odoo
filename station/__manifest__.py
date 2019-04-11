@@ -27,6 +27,7 @@
         'views/templates.xml',
         'views/station.xml',
         'views/diptest_wizard.xml',
+        'views/res_config_settings.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

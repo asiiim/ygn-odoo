@@ -29,8 +29,10 @@ class Location(models.Model):
     is_diameter = fields.Boolean(default=False)
 
     formula_id = fields.Many2one('storage.category', string="Storage Category")
-    volume = fields.Float(string="Volume (in Kilolitre)", help="Volume of the Storage.", store=True)
+    volume = fields.Float(string="Volume (in litre)", help="Volume of the Storage.", store=True)
     color = fields.Integer('Color')
+
+    max_shrinkage_loss = fields.Float(string="Maximum Shrinkage Loss", default=0.0)
 
     @api.model
     def _param_fields(self):
@@ -131,34 +133,41 @@ class Location(models.Model):
     @api.multi
     def _make_inv_adjustment(self, qty, location):
 
+        shrinkage_loss = abs(location.volume - qty)
+        _logger.warning("Shrinkage Loss -------------------- " + str(shrinkage_loss))
+
+        max_shrinkage_loss = self.env['ir.config_parameter'].sudo().get_param('station.max_shrinkage_loss') and self.env.user.company_id.max_shrinkage_loss or 0.0
+        _logger.warning("Max Shrinkage Loss -------------- " + str(max_shrinkage_loss))
+
         if qty > location.volume:
             raise UserError(_("On Hand quantity seems more than the Storage Capacity.\n Please consider to perform the Dip Test again with correct Dip Value."))
         
-        vals = {
-            'name': "[IA] " + str(location.name),
-            'filter': 'product',
-            'state': 'draft',
-            'location_id':  location.id,
-            'product_id': location.product_id.id,
-        }
-
-        inv_adjust = self.env['stock.inventory'].create(vals)
-        inv_adjust.action_start()
-        line_ids = self.env['stock.inventory.line'].search([('inventory_id', '=', inv_adjust.id)])
-
-        if line_ids:
-            for line in line_ids:
-                line.write({ 'product_qty': qty })
-        else:
+        if shrinkage_loss >= max_shrinkage_loss:
             vals = {
-                'inventory_id': inv_adjust.id,
-                'location_id': location.id,
+                'name': "[IA] " + str(location.name),
+                'filter': 'product',
+                'state': 'draft',
+                'location_id':  location.id,
                 'product_id': location.product_id.id,
-                'product_qty': qty,
-                'theoretical_qty': qty
             }
-            line = self.env['stock.inventory.line'].create(vals)
-        inv_adjust.action_done()
+
+            inv_adjust = self.env['stock.inventory'].create(vals)
+            inv_adjust.action_start()
+            line_ids = self.env['stock.inventory.line'].search([('inventory_id', '=', inv_adjust.id)])
+
+            if line_ids:
+                for line in line_ids:
+                    line.write({ 'product_qty': qty })
+            else:
+                vals = {
+                    'inventory_id': inv_adjust.id,
+                    'location_id': location.id,
+                    'product_id': location.product_id.id,
+                    'product_qty': qty,
+                    'theoretical_qty': qty
+                }
+                line = self.env['stock.inventory.line'].create(vals)
+            inv_adjust.action_done()
 
     def _get_action(self, action_xmlid):
         action = self.env.ref(action_xmlid).read()[0]

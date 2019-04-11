@@ -47,6 +47,7 @@
                 <field name="is_breadth" invisible="1"/>
                 <field name="is_height" invisible="1"/>
                 <field name="is_diameter" invisible="1"/>
+                <field name="max_shrinkage_loss" invisible="1"/>
               </group>
             </group>
         </field>
