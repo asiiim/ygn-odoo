@@ -34,7 +34,7 @@
                     <br />%(breadth)f: the breadth of the storage
                     <br />%(height)f: the height of the storage
                     <br />%(diameter)f: the diameter of the storage
-                    <br />%(PI)f: value of the Pi.
+                    <br />%(pi)f: value of the Pi.
                   </p>
                 </div>
               </group>
@@ -48,7 +48,7 @@
                     <br />%(breadth)f: the breadth of the storage
                     <br />%(height)f: the height of the storage
                     <br />%(diameter)f: the diameter of the storage
-                    <br />%(PI)f: value of the Pi.
+                    <br />%(pi)f: value of the Pi.
                   </p>
                 </div>
               </group>

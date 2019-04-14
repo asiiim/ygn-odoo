@@ -29,7 +29,7 @@ class Location(models.Model):
     is_diameter = fields.Boolean(default=False)
 
     formula_id = fields.Many2one('storage.category', string="Storage Category")
-    volume = fields.Float(string="Volume (in litre)", help="Volume of the Storage.", store=True)
+    volume = fields.Float(string="Volume (in Kilolitre)", help="Volume of the Storage.", store=True)
     color = fields.Integer('Color')
 
     max_shrinkage_loss = fields.Float(string="Maximum Shrinkage Loss", default=0.0)
@@ -122,25 +122,31 @@ class Location(models.Model):
                 for field in self._param_fields():
                     if field:
                         args[field] = getattr(location, field) or ''
+                
+                _logger.warning("Filled Volume ARGS @@@@@@@@@@@@@@@@@@@@@@ " + str(eval(str(formula_format % args))))
+
                 try:
                     on_hand = eval(str(formula_format % args))
                     self.filled_volume = on_hand
                     self._make_inv_adjustment(on_hand, location)
                     return on_hand
                 except:
-                    raise UserError(_("On Hand quantity seems more than the Storage Capacity.\n Please consider to perform the Dip Test again with correct Dip Value."))
+                    # raise UserError(_("On Hand quantity seems more than the Storage Capacity.\n Please consider to perform the Dip Test again with correct Dip Value."))
+                    _logger.warning("Exceptionnnnnnnnnnnnnnnnnnnn")
     
     @api.multi
     def _make_inv_adjustment(self, qty, location):
 
-        shrinkage_loss = abs(location.volume - qty)
+        _logger.warning("Filled Quantity Result -------------------- " + str(qty))
+
+        if qty > location.volume:
+            raise UserError(_("On Hand quantity seems more than the Storage Capacity.\n Please consider to perform the Dip Test again with correct Dip Value."))
+
+        shrinkage_loss = location.volume - qty
         _logger.warning("Shrinkage Loss -------------------- " + str(shrinkage_loss))
 
         max_shrinkage_loss = self.env['ir.config_parameter'].sudo().get_param('station.max_shrinkage_loss') and self.env.user.company_id.max_shrinkage_loss or 0.0
         _logger.warning("Max Shrinkage Loss -------------- " + str(max_shrinkage_loss))
-
-        if qty > location.volume:
-            raise UserError(_("On Hand quantity seems more than the Storage Capacity.\n Please consider to perform the Dip Test again with correct Dip Value."))
         
         if shrinkage_loss >= max_shrinkage_loss:
             vals = {
@@ -188,7 +194,7 @@ class Location(models.Model):
         return {
             'name': _('Location'),
             'res_model': 'stock.location',
-            'res_id': self.id,
+            'res_1000000id': self.id,
             'views': [(form_view.id, 'form'),],
             'type': 'ir.actions.act_window',
             'target': 'inline'

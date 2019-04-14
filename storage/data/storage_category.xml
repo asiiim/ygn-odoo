@@ -3,10 +3,12 @@
     <record id="horizontal_cylinder_tank" model="storage.category">
         <field name="name">Horizontal Cylinder Tank</field>
         <field name="formula">0.25*%(pi)f*%(diameter)f*%(diameter)f*%(length)f</field>
+        <field name="diptest_formula">0.25*%(length)f*%(diameter)f*%(diameter)f*(%(pi)f-(math.acos(abs((%(diameter)f-(2*%(dip)f))/%(diameter)f)))+(0.5*math.sin((math.acos(abs(%(diameter)f-(2*%(dip)f))/%(diameter)f)))))</field>
     </record>
     <record id="vertical_cylinder_tank" model="storage.category">
         <field name="name">Vertical Cylinder Tank</field>
         <field name="formula">0.25*%(pi)f*%(diameter)f*%(diameter)f*%(height)f</field>
+        <field name="diptest_formula">0.25*%(pi)f*%(diameter)f*%(diameter)f*%(dip)f</field>
     </record>
     <record id="rectangle_tank" model="storage.category">
         <field name="name">Rectangle Tank</field>
@@ -16,6 +18,7 @@
     <record id="horizontal_oval_tank" model="storage.category">
         <field name="name">Horizontal Oval Tank</field>
         <field name="formula">((%(pi)f*%(height)f*%(height)f*0.25)+(%(height)f*(abs(%(breadth)f-%(height)f)))*%(length)f)</field>
+        <field name="diptest_formula">(0.25*%(length)f*%(diameter)f*%(diameter)f*(%(pi)f-(math.acos(abs((%(diameter)f-(2*%(dip)f))/%(diameter)f)))+(0.5*math.sin((math.acos(abs(%(diameter)f-(2*%(dip)f))/%(diameter)f))))))+(%(length)f*%(breadth)f*%(dip)f)</field>
     </record>
     <record id="vertical_oval_tank" model="storage.category">
         <field name="name">Vertical Oval Tank</field>
