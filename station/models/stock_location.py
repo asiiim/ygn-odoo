@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Ygen. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError
 from odoo import models, fields, api, _
@@ -86,6 +87,8 @@ class Location(models.Model):
     filled_volume = fields.Float(compute="_calc_filled_volume", string="Remaining Volume (in Kilolitre)", help="Remaining 'Volume in the storage.", store=True)
 
     product_id = fields.Many2one('product.product', 'Inventoried Product', help="Specify Product to focus your inventory on a particular Product.")
+
+    is_product_filter = fields.Boolean('Is Filter = "product"', default=False)
 
     @api.multi
     @api.depends('formula_id', 'dip')
@@ -240,6 +243,7 @@ class Location(models.Model):
     def create(self, vals):
         _logger.warning("VALSSSSSSSSSSSS ------------------------ " + str(vals))
         if 'location_id' in vals:
+            vals['is_product_filter'] = True
             _logger.warning("VALSSSSSSSSSSSS ------------------------ " + str(vals))
             _logger.warning("VALS ------------------------ " + str(vals['formula_id']))
             param_vals = self._set_volume_param(vals['formula_id'])

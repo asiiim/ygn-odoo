@@ -34,6 +34,7 @@
                 <field name="height" attrs="{'invisible': [('is_height', '==', False)]}"/>
                 <field name="diameter" attrs="{'invisible': [('is_diameter', '==', False)]}"/>
                 <field name="dip" invisible="1"/>
+                <field name="is_product_filter" invisible="1"/>
               </group>
               <group>
                 <field name="pi" invisible="1"/>
