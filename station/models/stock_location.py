@@ -145,8 +145,9 @@ class Location(models.Model):
         shrinkage_loss = location.volume - qty
         _logger.warning("Shrinkage Loss -------------------- " + str(shrinkage_loss))
 
-        max_shrinkage_loss = self.env['ir.config_parameter'].sudo().get_param('station.max_shrinkage_loss') and self.env.user.company_id.max_shrinkage_loss or 0.0
+        max_shrinkage_loss = self.env.user.company_id.max_shrinkage_loss or 0.0
         _logger.warning("Max Shrinkage Loss -------------- " + str(max_shrinkage_loss))
+        _logger.warning(self.env.user.company_id.max_shrinkage_loss)
         
         if shrinkage_loss >= max_shrinkage_loss:
             vals = {
@@ -194,7 +195,7 @@ class Location(models.Model):
         return {
             'name': _('Location'),
             'res_model': 'stock.location',
-            'res_1000000id': self.id,
+            'res_id': self.id,
             'views': [(form_view.id, 'form'),],
             'type': 'ir.actions.act_window',
             'target': 'inline'
