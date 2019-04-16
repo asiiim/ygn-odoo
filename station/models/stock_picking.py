@@ -45,31 +45,25 @@ class Picking(models.Model):
             _logger.warning("Moving Products --------- " + str(len(vals['move_lines'])))
             
         res = super(Picking, self).create(vals)
-        # res._autoconfirm_picking()
         return res
 
     @api.multi
     def write(self, vals):
+        _logger.warning("Write SELF---------- " + str(self.name))
+
+        if self.location_id.is_product_filter and self.location_dest_id.is_product_filter:
+            
+            # NEED TO WORK HERE --------------------------------------------------------
+
+            if vals.get('move_lines'):
+                _logger.warning("Vals get move lines -------- ")
+                if len(vals['move_lines']) > 1:
+                    _logger.warning("Total Move Lines Vals -------- " + str(len(vals['move_lines'])))
+
+                    raise UserError(_('Please keep only one product in the move line.'))
+
+            # ---------------------------------------------------------------------------
+
         res = super(Picking, self).write(vals)
-        # Change locations of moves if those of the picking change
-        after_vals = {}
-        if vals.get('location_id'):
-            after_vals['location_id'] = vals['location_id']
-        if vals.get('location_dest_id'):
-            after_vals['location_dest_id'] = vals['location_dest_id']
-        if after_vals:
-            self.mapped('move_lines').filtered(lambda move: not move.scrapped).write(after_vals)
-        if vals.get('move_lines'):
-            # Do not run autoconfirm if any of the moves has an initial demand. If an initial demand
-            # is present in any of the moves, it means the picking was created through the "planned
-            # transfer" mechanism.
-            pickings_to_not_autoconfirm = self.env['stock.picking']
-            for picking in self:
-                if picking.state != 'draft':
-                    continue
-                for move in picking.move_lines:
-                    if not float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
-                        pickings_to_not_autoconfirm |= picking
-                        break
-            (self - pickings_to_not_autoconfirm)._autoconfirm_picking()
+        
         return res
