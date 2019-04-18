@@ -25,6 +25,8 @@
         'invoice_report_vehicle_chamber',
         'sale_management',
         'account_invoicing',
+        'tank_chamber',
+        'tank_seal',
     ],
 
     # always loaded
