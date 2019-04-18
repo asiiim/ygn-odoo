@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_chamber_tree" model="ir.ui.view">
+        <field name="name">chamber.chamber.tree</field>
+        <field name="model">chamber.chamber</field>
+        <field name="arch" type="xml">
+            <tree string="Chambers">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_chamber_form" model="ir.ui.view">
+        <field name="name">chamber.chamber.form</field>
+        <field name="model">chamber.chamber</field>
+        <field name="arch" type="xml">
+            <form string="Chamber">
+                <group>
+                    <group name="main_fields">
+                        <label for="name" string="Chamber"/>
+                        <field name="name" nolabel="1"/>
+                        <field name="sequence"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_chamber" model="ir.actions.act_window">
+        <field name="name">Chambers</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">chamber.chamber</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create a Chamber.
+            </p><p>
+                Once a chamber is created you can use it in Seal line.
+            </p>
+        </field>
+    </record>
+
+    <menuitem name="Chambers"
+        id="menu_chamber"
+        sequence="7"
+        web_icon="tank_chamber,static/description/icon.png"
+        groups="base.group_user,base.group_partner_manager"/>
+    
+    <menuitem id="chamber_menu_chamber"
+        name="Chambers"
+        action="action_chamber"
+        parent="menu_chamber"
+        sequence="2"/>
+</odoo>
