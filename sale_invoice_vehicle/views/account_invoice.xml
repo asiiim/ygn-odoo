@@ -1,36 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-        <record id="add_vehicle_number_in_invoice_form" model="ir.ui.view">
-            <field name="name">add account number in invoice form</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.invoice_form"/>
-            <field name="arch" type="xml">
-                <field name="partner_id" position="after">
-                    <field name="vehicle_id" />
-                </field>
+    <record id="add_vehicle_number_in_invoice_form" model="ir.ui.view">
+        <field name="name">add account number in invoice form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="vehicle_id" />
             </field>
-        </record>
-        <record id="add_vehicle_number_in_invoice_tree" model="ir.ui.view">
-            <field name="name">add account number in invoice tree</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.invoice_tree"/>
-            <field name="arch" type="xml">
-                <field name="partner_id" position="after">
-                    <field name="vehicle_id" />
-                </field>
+            <xpath expr="//notebook" position="inside">
+                <page name="seal_line" string="Seal Lines">
+                    <field name="seal_line_ids" nolabel="1" widget="one2many_list" mode="tree" context="{'default_invoice_id': id}">
+                        <tree string="Seal Lines" editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="seal_type"/>
+                            <field name="is_master" invisible="1"/>
+                            <field name="chamber_id" attrs="{'readonly': [('is_master', '=', True)]}"/>
+                            <field name="name"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <record id="add_vehicle_number_in_invoice_tree" model="ir.ui.view">
+        <field name="name">add account number in invoice tree</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="vehicle_id" />
             </field>
-        </record>
-        <record id="add_vehicle_number_in_account_invoice_search_view" model="ir.ui.view">
-            <field name="name">add chamber in account invoice search view</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
-            <field name="arch" type="xml">
-                <search position="inside">
-                    <field name="vehicle_id" />
-                    <filter string="Vehicle" name='vehicle_id' context="{'group_by':'vehicle_id'}"/>
-                </search>
-            </field>
-        </record>
-
+        </field>
+    </record>
+    <record id="add_vehicle_number_in_account_invoice_search_view" model="ir.ui.view">
+        <field name="name">add chamber in account invoice search view</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <search position="inside">
+                <field name="vehicle_id" />
+                <filter string="Vehicle" name='vehicle_id' context="{'group_by':'vehicle_id'}"/>
+            </search>
+        </field>
+    </record>
 </odoo>
