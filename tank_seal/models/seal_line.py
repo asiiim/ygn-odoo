@@ -13,7 +13,3 @@ class SealLine(models.Model):
     sequence = fields.Integer("Sequence")
     invoice_id = fields.Many2one('account.invoice', string='Invoice Reference', ondelete='cascade', index=True)
     is_master = fields.Boolean(related='seal_type.is_master', string="Master Seal?")
-
-    # _sql_constraints = [
-    #     ('unique_seal_number', 'UNIQUE(seal_type, chamber_id, invoice_id, name)', 'You can have only one seal number with same seal type and chamber number.'),
-    # ]
