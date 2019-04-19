@@ -43,5 +43,4 @@ class AccountInvoice(models.Model):
         res = []
         for seal_line in self.seal_line_ids.filtered(lambda r: r.chamber_id):
             res.append(seal_line.chamber_id.name)
-        _logger.warning("Chamber list called from up seal line ----- " + str(res))
         return list(dict.fromkeys(res))

@@ -26,11 +26,9 @@ class ResConfigSettings(models.TransientModel):
         res.update(
             use_max_shrinkage_loss=self.env['ir.config_parameter'].sudo().get_param('station.use_max_shrinkage_loss')
         )
-        _logger.warning("AAAFTER RES CONFIG VALUES ----------------- " + str(res))
-        _logger.warning("RES PARAM GET ----------------- " + str(self.env['ir.config_parameter'].sudo().get_param('station.max_shrinkage_loss')))
+        
         return res
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         self.env['ir.config_parameter'].sudo().set_param('station.use_max_shrinkage_loss', self.use_max_shrinkage_loss)
-        # self.env['ir.config_parameter'].sudo().set_param('station.max_shrinkage_loss', self.max_shrinkage_loss)

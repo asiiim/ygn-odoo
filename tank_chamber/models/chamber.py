@@ -10,6 +10,3 @@ class TankChamber(models.Model):
     name = fields.Integer("Name")
     
     sequence = fields.Integer("Sequence")
-
-
-

@@ -125,8 +125,6 @@ class Location(models.Model):
                 for field in self._param_fields():
                     if field:
                         args[field] = getattr(location, field) or ''
-                
-                _logger.warning("Filled Volume ARGS @@@@@@@@@@@@@@@@@@@@@@ " + str(eval(str(formula_format % args))))
 
                 try:
                     on_hand = eval(str(formula_format % args))
@@ -135,22 +133,17 @@ class Location(models.Model):
                     return on_hand
                 except:
                     # raise UserError(_("On Hand quantity seems more than the Storage Capacity.\n Please consider to perform the Dip Test again with correct Dip Value."))
-                    _logger.warning("Exceptionnnnnnnnnnnnnnnnnnnn")
+                    _logger.warning("Exception")
     
     @api.multi
     def _make_inv_adjustment(self, qty, location):
-
-        _logger.warning("Filled Quantity Result -------------------- " + str(qty))
 
         if qty > location.volume:
             raise UserError(_("On Hand quantity seems more than the Storage Capacity.\n Please consider to perform the Dip Test again with correct Dip Value."))
 
         shrinkage_loss = location.volume - qty
-        _logger.warning("Shrinkage Loss -------------------- " + str(shrinkage_loss))
 
         max_shrinkage_loss = self.env.user.company_id.max_shrinkage_loss or 0.0
-        _logger.warning("Max Shrinkage Loss -------------- " + str(max_shrinkage_loss))
-        _logger.warning(self.env.user.company_id.max_shrinkage_loss)
         
         if shrinkage_loss >= max_shrinkage_loss:
             vals = {
@@ -235,28 +228,20 @@ class Location(models.Model):
             'is_height': height,
             'is_diameter': diameter
         }
-        _logger.warning("Param Values ------------------------- " + str(vals))
 
         return vals
 
     @api.model
     def create(self, vals):
-        _logger.warning("VALSSSSSSSSSSSS ------------------------ " + str(vals))
         if 'location_id' in vals:
             vals['is_product_filter'] = True
-            _logger.warning("VALSSSSSSSSSSSS ------------------------ " + str(vals))
-            _logger.warning("VALS ------------------------ " + str(vals['formula_id']))
             param_vals = self._set_volume_param(vals['formula_id'])
             vals.update(param_vals)
-            _logger.warning("PARAMS ------------------------ " + str(param_vals))
-            _logger.warning("VALSSSSSSSSSSSS ------------------------ " + str(vals))
             
             return super(Location, self).create(vals)
 
     @api.onchange('formula_id')
     def _set_volume_param_onchange(self):
-
-        _logger.warning("Changed Formula ------------------------- " + str(self.formula_id.name))
 
         length = False
         breadth = False
@@ -274,8 +259,3 @@ class Location(models.Model):
         self.is_breadth = breadth
         self.is_height = height
         self.is_diameter = diameter
-        
-        _logger.warning("Length ------------------------- " + str(self.is_length))
-        _logger.warning("Breadth ------------------------- " + str(self.is_breadth))
-        _logger.warning("Height ------------------------- " + str(self.is_height))
-        _logger.warning("Diameter ------------------------- " + str(self.is_diameter))
