@@ -45,31 +45,3 @@ class AccountInvoice(models.Model):
             res.append(seal_line.chamber_id.name)
         _logger.warning("Chamber list called from up seal line ----- " + str(res))
         return list(dict.fromkeys(res))
-
-    # def report_up_seal_line(self):
-    #     res = []
-    #     chambers = self.report_chamber_list()
-        
-    #     for seal_line in sorted(self.seal_line_ids.filtered(lambda r: r.seal_type.name == "Up Seal"), key=lambda x: x.chamber_id.name):
-    #         if seal_line.chamber_id.name in chambers:
-    #             res.append(seal_line.name)
-    #         else:
-    #             res.append("-")
-    #     # unique_res = list(dict.fromkeys(res))
-    #     # sorted_res = [unique_res for _, unique_res in sorted(zip(chambers, unique_res))]
-    #     _logger.warning("Sorted Up Seal Numbers ----- " + str(res))
-    #     return res
-
-    # def report_down_seal_line(self):
-    #     res = []
-    #     chambers = self.report_chamber_list()
-    #     _logger.warning("Chamber list called from up seal line ----- " + str(chambers))
-        
-    #     for seal_line in self.seal_line_ids:
-    #         if seal_line.seal_type.name == "Down Seal":
-    #             if seal_line.chamber_id.name in chambers:
-    #                 res.append(seal_line.name)
-    #     unique_res = list(dict.fromkeys(res))
-    #     sorted_res = [unique_res for _, unique_res in sorted(zip(chambers, unique_res))]
-    #     _logger.warning("Sorted Up Seal Numbers ----- " + str(sorted_res))
-    #     return sorted_res
