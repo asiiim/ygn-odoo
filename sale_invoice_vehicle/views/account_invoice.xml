@@ -13,9 +13,9 @@
                     <field name="seal_line_ids" nolabel="1" widget="one2many_list" mode="tree" context="{'default_invoice_id': id}">
                         <tree string="Seal Lines" editable="bottom">
                             <field name="sequence" widget="handle"/>
-                            <field name="seal_type"/>
+                            <field name="seal_type" options="{'no_create_edit': True, 'no_create': True}"/>
                             <field name="is_master" invisible="1"/>
-                            <field name="chamber_id" attrs="{'readonly': [('is_master', '=', True)]}"/>
+                            <field name="chamber_id" attrs="{'readonly': [('is_master', '=', True)]}" options="{'no_create_edit': True, 'no_create': True}"/>
                             <field name="name"/>
                         </tree>
                     </field>

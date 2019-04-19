@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+from odoo.tools.translate import _
+from odoo.exceptions import UserError
+
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountInvoice(models.Model):
@@ -8,3 +14,10 @@ class AccountInvoice(models.Model):
 
     vehicle_id = fields.Many2one('vehicle.vehicle', string="Vehicle", ondelete='restrict')
     seal_line_ids = fields.One2many('seal.line', 'invoice_id', string='Invoice Lines')
+
+    @api.onchange('seal_line_ids')
+    def onchange_seal_line(self):
+        if self.seal_line_ids:
+            master_seal_len = len(self.seal_line_ids.filtered(lambda r: r.seal_type.is_master == True))
+            if master_seal_len > 1:
+                raise UserError(_("You cannot have more than one master seal number."))
