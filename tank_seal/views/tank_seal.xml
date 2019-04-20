@@ -99,9 +99,9 @@
         parent="menu_seal"
         sequence="2"/>
 
-    <menuitem id="menu_seal_line"
+    <!-- <menuitem id="menu_seal_line"
         name="Seal Lines"
         action="action_seal_line"
         parent="menu_seal"
-        sequence="3"/>
+        sequence="3"/> -->
 </odoo>

@@ -43,4 +43,4 @@ class AccountInvoice(models.Model):
         res = []
         for seal_line in self.seal_line_ids.filtered(lambda r: r.chamber_id):
             res.append(seal_line.chamber_id.name)
-        return list(dict.fromkeys(res))
+        return sorted(list(dict.fromkeys(res)))
