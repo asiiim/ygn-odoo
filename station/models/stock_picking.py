@@ -28,7 +28,8 @@ class Picking(models.Model):
                 for moveline in vals['move_lines']:
                     for move in range(len(moveline)):
                         if move == 2:
-                            if moveline[move]['product_id'] != src_loc.product_id:
+                            _logger.warning("Product in create ----- " + str(moveline[move]['product_id']))
+                            if moveline[move]['product_id'] != src_loc.product_id.id:
                                 raise UserError(_('Product doesnot match. Product must match with  that of the source and destination locations for the transfer operation.'))
 
 
@@ -40,17 +41,8 @@ class Picking(models.Model):
 
         if self.location_id.is_product_filter and self.location_dest_id.is_product_filter:
             if vals.get('move_lines'):
-
-                for moveline in vals['move_lines']:
-                    for move in range(len(moveline)):
-                        if move == 2:
-                            if moveline[move]['product_id'] != self.location_id.product_id:
-                                raise UserError(_('Product doesnot match. Product must match with  that of the source and destination locations for the transfer operation.'))
-
                 if len(vals['move_lines']) > 1:
-                    raise UserError(_('Please keep only one product in the move line.'))
+                    raise UserError(_('Products to be tansferred cannot be changed now.\nPlease click on DISCARD button and click on CREATE button to create new stock operation for the product transfer.'))
                 
-                
-
         res = super(Picking, self).write(vals)
         return res
