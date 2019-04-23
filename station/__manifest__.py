@@ -19,19 +19,14 @@
     'version': '11.0.0.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'stock', 'storage'],
+    'depends': ['base', 'stock', 'storage', 'purchase'],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        'views/views.xml',
         'views/templates.xml',
         'views/station.xml',
-        'views/diptest_wizard.xml',
+        'views/wizard.xml',
         'views/res_config_settings.xml',
-    ],
-    # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
     ],
 }
