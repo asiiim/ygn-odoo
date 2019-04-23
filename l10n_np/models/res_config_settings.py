@@ -8,6 +8,8 @@ class ResConfigSettings(models.TransientModel):
 
     _inherit = 'res.config.settings'
 
+    module_l10n_np_ird = fields.Boolean("Sync with IRD")
+    
     @api.multi
     def edit_external_header(self):
         if self.external_report_layout in ["boxed2"]:

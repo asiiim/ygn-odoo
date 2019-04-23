@@ -2,7 +2,7 @@
 {
     'name': 'Nepali - Accounting',
     'version': '2.0',
-    'author': 'Ygen Software',
+    'author': 'Ygen Software Pvt. Ltd.',
     'website': 'http://ygen.io',
     'category': 'Localization',
     'description': """
@@ -13,6 +13,7 @@ This is the base module to manage the accounting chart for Nepal in Odoo.
     'depends': ['account_tax_python', 'contacts'],
     'data': [
         'security/ir.model.access.csv',
+        'views/res_config_settings_views.xml',
         'data/account_chart_template_data.xml',
         'data/l10n_np_chart_data.xml',
         'data/account_data.xml',

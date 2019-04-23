@@ -34,6 +34,29 @@
         <field name="applicability">taxes</field>
     </record>
 
+    <!-- Vat tags for IRD -->
+    <record id="tax_tag_vat" model="account.account.tag">
+        <field name="name">vat</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_excise" model="account.account.tag">
+        <field name="name">excise</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_hst" model="account.account.tag">
+        <field name="name">hst</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_esf" model="account.account.tag">
+        <field name="name">esf</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_export" model="account.account.tag">
+        <field name="name">export_sales</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+
     <!-- account.tax.template -->
     <record id="tax_sale_15" model="account.tax.template">
         <field name="sequence">10</field>
@@ -58,7 +81,7 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
         <field name="chart_template_id" ref="l10nnp_chart_template"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_st0'),])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_st0'),ref('tax_tag_export'),])]"/>
         <field name="tax_group_id" ref="tax_group_tax_0"/>
     </record>
     <record id="tax_sale_1" model="account.tax.template">
@@ -72,7 +95,7 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
         <field name="chart_template_id" ref="l10nnp_chart_template"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_st1'),])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_st1'),ref('tax_tag_esf'),])]"/>
         <field name="tax_group_id" ref="tax_group_tax_1"/>
     </record>
     <record id="tax_sale_5" model="account.tax.template">
@@ -86,7 +109,7 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
         <field name="chart_template_id" ref="l10nnp_chart_template"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_st2'),])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_st2'),ref('tax_tag_hst'),])]"/>
         <field name="tax_group_id" ref="tax_group_tax_5"/>
     </record>
     <record id="tax_sale_13" model="account.tax.template">
@@ -100,7 +123,7 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
         <field name="chart_template_id" ref="l10nnp_chart_template"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_st3'),])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_st3'),ref('tax_tag_vat'),])]"/>
         <field name="tax_group_id" ref="tax_group_tax_13"/>
     </record>
 
@@ -128,7 +151,7 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="l10nnp_chart_template"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_pt0'),])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_pt0'),ref('tax_tag_export'),])]"/>
         <field name="tax_group_id" ref="tax_group_tax_0"/>
     </record>
     <record id="tax_purchase_1" model="account.tax.template">
@@ -142,7 +165,7 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="l10nnp_chart_template"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_pt1'),])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_pt1'),ref('tax_tag_esf'),])]"/>
         <field name="tax_group_id" ref="tax_group_tax_1"/>
     </record>
     <record id="tax_purchase_5" model="account.tax.template">
@@ -156,7 +179,7 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="l10nnp_chart_template"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_pt2'),])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_pt2'),ref('tax_tag_hst'),])]"/>
         <field name="tax_group_id" ref="tax_group_tax_5"/>
     </record>
     <record id="tax_purchase_13" model="account.tax.template">
@@ -170,7 +193,7 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="l10nnp_chart_template"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_pt3'),])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_pt3'),ref('tax_tag_vat'),])]"/>
         <field name="tax_group_id" ref="tax_group_tax_13"/>
     </record>
 </odoo>
