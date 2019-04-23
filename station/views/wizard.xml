@@ -1,0 +1,51 @@
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="diptest_wizard_form_view">
+        <field name="name">diptest.wizard.form</field>
+        <field name="model">station.diptest.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Dip Value" create="false" edit="false">
+                <group>
+                    <field name="dip"/>
+                    <field name="station_id" invisible="1"/>
+                </group>
+                <footer>
+                <button string="Apply" name="apply_dip_value" type="object" class="btn-primary"/>
+                <button string="Cancel" class="btn-default" special="cancel"/>
+              </footer>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="quick_sale_wizard_form_view">
+        <field name="name">quick.sale.wizard.form</field>
+        <field name="model">station.quick_sale.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Quick Sale" create="false" edit="false">
+                <group>
+                    <field name="quantity"/>
+                    <field name="station_id" invisible="1"/>
+                </group>
+                <footer>
+                <button string="Ok" name="apply_qty_value" type="object" class="btn-primary"/>
+                <button string="Cancel" class="btn-default" special="cancel"/>
+              </footer>
+            </form>
+        </field>
+    </record>
+    <act_window id="diptest_wizard_action"
+                name="Place Dip Value"
+                src_model="stock.location"
+                res_model="station.diptest.wizard"
+                view_mode="form"
+                target="new"
+                key2="client_action_multi"/>
+    
+    <act_window id="quick_sale_wizard_action"
+                name="Make Quick Sale"
+                src_model="stock.location"
+                res_model="station.quick_sale.wizard"
+                view_mode="form"
+                target="new"
+                key2="client_action_multi"/>
+  </data>
+</odoo>

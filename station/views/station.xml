@@ -24,6 +24,7 @@
           <div>
             <label for="product_id" class="oe_edit_only"/>
             <field name="product_id"/>
+            <field name="product_uom"/>
           </div>
         </field>
         <field name="location_id" position="after">
@@ -49,6 +50,7 @@
                 <field name="is_height" invisible="1"/>
                 <field name="is_diameter" invisible="1"/>
                 <field name="max_shrinkage_loss" invisible="1"/>
+                <field name="sold_qty" invisible="1"/>
               </group>
             </group>
         </field>
@@ -68,6 +70,8 @@
               <group>
                   <field name="formula_id" options="{'no_create': True}"/>
                   <field name="product_id" options="{'no_create': True}"/>
+                  <field name="product_uom"/>
+                  <field name="is_station" invisible="1"/>
               </group>
               <footer>
                 <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
@@ -99,7 +103,6 @@
               <field name="product_quantity"/>
               <field name="volume"/>
               <field name="color"/>
-              <!-- <field name="filled_volume" invisible="1"/> -->
               <templates>
                   <t t-name="kanban-box">
                       <div>
@@ -123,12 +126,10 @@
 
                                           <label for="volume">Storage Capacity</label>
                                           <field name="volume"/><br />
-
-                                          <!-- <label for="filled_volume">Remaining Capacity</label>
-                                          <field name="filled_volume"/> -->
                                       </div>
                                       <div class="o_primary">
                                           <a type="object" name="get_diptest_wizard_action">Dip Test</a>
+                                          <a type="object" name="get_quick_sale_wizard_action">Quick Sale</a>
                                       </div>
                                   </div>
                               </div>
@@ -140,6 +141,17 @@
         </field>
     </record>
 
+    <record id="view_location_search_station" model="ir.ui.view">
+        <field name="name">stock.location.search.station</field>
+        <field name="model">stock.location</field>
+        <field name="inherit_id" ref="stock.view_location_search"/>
+        <field name="arch" type="xml">
+          <filter name="inactive" position="after">
+            <filter string="Stations" name="is_station" domain="[('is_station', '=', True)]" help="Stations"/>
+          </filter>
+        </field>
+    </record>
+
     <record id="action_station_kanban" model="ir.actions.act_window">
       <field name="name">Stations</field>
       <field name="res_model">stock.location</field>
@@ -148,7 +160,7 @@
       <field name="view_mode">kanban,form</field>
       <field name="view_id" ref="station_kanaban_view"/>
       <field name="search_view_id" ref="stock.view_location_search"/>
-      <field name="context">{'search_default_in_location':1}</field>
+      <field name="context">{'search_default_is_station': 1}</field>
     </record>
     
     <!-- Top menu item -->
