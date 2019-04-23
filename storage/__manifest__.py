@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Ygen. See LICENSE file for full copyright and licensing details.
 {
     'name': "Storage",
 
@@ -22,7 +23,7 @@
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'views/views.xml',
         'views/storage.xml',
         'views/templates.xml',

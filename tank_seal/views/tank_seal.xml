@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Seal Type Views and Action -->
+    <record id="view_seal_type_tree" model="ir.ui.view">
+        <field name="name">seal.type.tree</field>
+        <field name="model">seal.type</field>
+        <field name="arch" type="xml">
+            <tree string="Seal Types">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_seal_type_form" model="ir.ui.view">
+        <field name="name">seal.type.form</field>
+        <field name="model">seal.type</field>
+        <field name="arch" type="xml">
+            <form string="Seal Type">
+                <group>
+                    <group name="main_fields">
+                        <field name="sequence"/>
+                        <label for="name" string="Name"/>
+                        <field name="name" nolabel="1"/>
+                        <field name="is_master"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_seal_type" model="ir.actions.act_window">
+        <field name="name">Seal Types</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">seal.type</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create a Seal Type.
+            </p>
+        </field>
+    </record>
+
+    <!-- Seal Line Views and Action -->
+    <record id="view_seal_line_tree" model="ir.ui.view">
+        <field name="name">seal.line.tree</field>
+        <field name="model">seal.line</field>
+        <field name="arch" type="xml">
+            <tree string="Seal Lines">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="seal_type"/>
+                <field name="chamber_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_seal_line_form" model="ir.ui.view">
+        <field name="name">seal.line.form</field>
+        <field name="model">seal.line</field>
+        <field name="arch" type="xml">
+            <form string="Seal Line">
+                <group>
+                    <group name="main_fields">
+                        <field name="sequence"/>
+                        <label for="name" string="Seal Number"/>
+                        <field name="name" nolabel="1"/>
+                        <field name="seal_type"/>
+                        <field name="chamber_id"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_seal_line" model="ir.actions.act_window">
+        <field name="name">Seal Lines</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">seal.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create a Seal Line.
+            </p>
+        </field>
+    </record>
+
+    <menuitem name="Seal"
+        id="menu_seal"
+        sequence="7"
+        web_icon="tank_seal,static/description/icon.png"
+        groups="base.group_user,base.group_partner_manager"/>
+    
+    <menuitem id="menu_seal_type"
+        name="Seal Types"
+        action="action_seal_type"
+        parent="menu_seal"
+        sequence="2"/>
+
+    <!-- <menuitem id="menu_seal_line"
+        name="Seal Lines"
+        action="action_seal_line"
+        parent="menu_seal"
+        sequence="3"/> -->
+</odoo>

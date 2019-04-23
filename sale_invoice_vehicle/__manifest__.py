@@ -21,6 +21,7 @@
     'data': [
         'views/sale.xml',
         'views/account_invoice.xml',
+        'views/tank_seal_line.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

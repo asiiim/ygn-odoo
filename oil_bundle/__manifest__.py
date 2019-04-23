@@ -19,8 +19,7 @@
 
     # any module necessary for this one to work correctly
     'depends': [
-        'base', 
-        'partner_company_chamber', 
+        'base',
         'sale_invoice_vehicle',
         'invoice_report_vehicle_chamber',
         'sale_management',

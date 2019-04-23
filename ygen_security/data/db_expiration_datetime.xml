@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data noupdate="1">
+    <record id="ir_db_exp_datetime" model="ir.config_parameter">
+      <field name="key">db_expiration_datetime</field>
+      <field name="value" eval="(DateTime.now() + timedelta(days=60)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+  </data>
+</odoo>

@@ -4,15 +4,47 @@
 
         <!-- Put Vehicle No., Chamber No. and TIN and make bigger font -->
         <xpath expr="//div[@name='invoice_address']" position="replace">
-            <div style="font-size: 15px; font-weight: 700;" name="invoice_address" class="col-xs-5 ">
-                <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+            <div style="font-size: 14px; font-weight: 700;" name="invoice_address" class="col-xs-4 ">
+                <address t-field="o.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}"/>
+                <p style="font-size: 13px;"><strong>Vehicle No:</strong> <span style="font-weight: 500;" t-field="o.vehicle_id"/></p>
             </div>
-            <div style="font-size: 14px; font-weight: 700;" class="col-xs-4">
-                <div class="row">
+            <div style="font-size: 14px; font-weight: 700;" class="col-xs-8">
+                <!-- <div class="row">
                     <p>Chamber No: <span t-field="o.partner_id.coc_registration_number" /></p>
-                </div>
-                <div class="row">
-                    <p>Vehicle No: <span t-field="o.vehicle_id" /></p>
+                </div> -->
+                
+                <div class="row" style="font-size: 11px;">
+                    <t t-set="seal_lines" t-value="o.report_get_seal_lines()"/>
+                    <table class="table table-condensed" name="seal_line_table">
+                        <thead>
+                            <tr>
+                                <th>Chamber</th>
+                                <th class="text-right" t-foreach="seal_lines['chamber_list']" t-as="chamber">
+                                    <span t-esc="chamber"/>
+                                </th>
+                                <th class="text-right">Master S.</th>
+                            </tr>
+                        </thead>
+                        <tbody class="seal_tbody">
+                            <tr>
+                                <td><strong>Up Seal</strong></td>
+                                <td class="text-right" t-foreach="seal_lines['upseal_list']" t-as="upseal">
+                                    <span t-esc="upseal"/>
+                                </td>
+                                <td rowspan="2">
+                                    <strong>
+                                        <span t-esc="seal_lines['masterseal']"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Down Seal</strong></td>
+                                <td class="text-right" t-foreach="seal_lines['downseal_list']" t-as="downseal">
+                                    <span t-esc="downseal"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="text-right col-xs-3">
