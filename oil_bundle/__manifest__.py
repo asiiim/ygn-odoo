@@ -24,6 +24,7 @@
         'invoice_report_vehicle_chamber',
         'sale_management',
         'account_invoicing',
+        'station',
     ],
 
     # always loaded
