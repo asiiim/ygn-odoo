@@ -81,7 +81,7 @@ class Location(models.Model):
 
 
     meter_reading = fields.Float(string="Meter Reading")
-    sold_qty = fields.Float(string="Current Sold Quantity", default=0.0)
+    sold_qty = fields.Float(string="Current Sold Quantity (in Liter)", default=0.0)
     shrinkage_value = fields.Float(string="Shrinkage Value")
     product_quantity = fields.Float(related="quant_ids.quantity", string="On Hand")
     dip = fields.Float(string="Dip Value (in meter)", help="Value of the Dip Test.", default=0.0)
@@ -89,7 +89,7 @@ class Location(models.Model):
     filled_volume = fields.Float(string="Remaining Volume (in Kilolitre)", help="Remaining 'Volume in the storage.")
 
     product_id = fields.Many2one('product.product', 'Inventoried Product', help="Specify Product to focus your inventory on a particular Product.")
-    product_uom = fields.Many2one('product.uom', 'Station Product of Measure')
+    # product_uom = fields.Many2one('product.uom', 'Station Product of Measure')
 
     is_product_filter = fields.Boolean('Is Filter = "product"', default=False)
     
@@ -144,10 +144,11 @@ class Location(models.Model):
         #     raise UserError(_("Quantity from Dip Test is greater than the quantity On Hand."))
 
         max_shrinkage_loss = self.env.user.company_id.max_shrinkage_loss or 0.0
-        shrinkage_value = abs(qty - self.product_quantity)
+        shrinkage_value = abs(qty - self.product_quantity) * 1000
         
         if shrinkage_value >= max_shrinkage_loss:
-            if self.product_quantity > qty:
+            # to discuss: does the shrinkage field take latest value or append the value?
+            if self.product_quantity > (qty * 1000):
                 self.write({'shrinkage_value': shrinkage_value})
             self._make_inv_adjustment(qty)
     
@@ -165,17 +166,18 @@ class Location(models.Model):
         inv_adjust = self.env['stock.inventory'].create(vals)
         inv_adjust.action_start()
         line_ids = self.env['stock.inventory.line'].search([('inventory_id', '=', inv_adjust.id)])
+        qty_liter = qty * 1000
 
         if line_ids:
             for line in line_ids:
-                line.write({ 'product_qty': qty })
+                line.write({ 'product_qty': qty_liter })
         else:
             vals = {
                 'inventory_id': inv_adjust.id,
                 'location_id': self.id,
                 'product_id': self.product_id.id,
-                'product_qty': qty,
-                'theoretical_qty': qty
+                'product_qty': qty_liter,
+                'theoretical_qty': qty_liter
             }
             line = self.env['stock.inventory.line'].create(vals)
         inv_adjust.action_done()
@@ -313,13 +315,10 @@ class Location(models.Model):
                     'name': '[MOVE] ' + memo,
                     'product_id': rec.product_id.id,
                     'quantity_done': rec.sold_qty,
-                    'product_uom': rec.product_uom.id
+                    'product_uom': rec.product_id.product_tmpl_id.uom_id.id
                 }
 
                 stock_pick_type = self.env['stock.picking.type'].search([('name', '=', 'Internal Transfers')], limit=1)
-                for stock in self.env['stock.picking.type'].search([]):
-                    _logger.warning(stock.name)
-                _logger.warning("Pick type :::: " + str(stock_pick_type.name))
 
                 if not stock_pick_type:
                     raise UserError(_("Multi Stock Location features is not available now.\nPlease go through the Settings > General Settings > Inventory > Storage Locations and \nbe sure to check this feature."))

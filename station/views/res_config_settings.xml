@@ -20,7 +20,7 @@
                             </div>
                             <div class="content-group">
                                 <div class="mt16" attrs="{'invisible': [('use_max_shrinkage_loss','=',False)]}">
-                                    <span>Set maximum shrikage loss  <field name="max_shrinkage_loss" class="oe_inline"/> Kilolitres</span>
+                                    <span>Set maximum shrikage loss  <field name="max_shrinkage_loss" class="oe_inline"/> Litre(s)</span>
                                 </div>
                             </div>
                         </div>
