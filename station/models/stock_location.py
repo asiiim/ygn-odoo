@@ -281,48 +281,61 @@ class Location(models.Model):
     def confirm_quick_sale(self):
         
         for rec in self:
-            total = rec.sold_qty * rec.product_id.lst_price
-            rec.meter_reading += rec.sold_qty
-            journal = self.env['account.journal'].search([('name', '=', 'Cash')])
-            now_datetime = datetime.datetime.now()
+            if rec.sold_qty > 0:
+                if rec.product_quantity == 0:
+                    raise UserError(_("On hand quantity is empty."))
 
-            memo = str(rec.product_id.name) + "/" + str(now_datetime.year) + "/" + str(now_datetime.month) + str(now_datetime.day) + str(now_datetime.hour) + str(now_datetime.minute) + str(now_datetime.second)
+                if rec.sold_qty > rec.product_quantity:
+                    raise UserError(_("Not Enough quantity for sale."))
 
-            ac_pay_vals = {
-                'amount': total,
-                'payment_date': now_datetime,
-                'journal_id': journal.id,
-                'communication': memo,
-                'payment_type': 'inbound',
-                'state': 'draft',
-                'currency_id': self.env.user.company_id.currency_id.id,
-                'payment_method_id': 1,
-                'partner_type': 'customer'
-            }
+                total = rec.sold_qty * rec.product_id.lst_price
+                rec.meter_reading += rec.sold_qty
+                journal = self.env['account.journal'].search([('name', '=', 'Cash')])
+                now_datetime = datetime.datetime.now()
 
-            dest_loc = self.env['stock.location'].search([('name', '=', 'Customers'), ('usage', '=', 'customer')], limit=1)
+                memo = str(rec.product_id.name) + "/" + str(now_datetime.year) + "/" + str(now_datetime.month) + str(now_datetime.day) + str(now_datetime.hour) + str(now_datetime.minute) + str(now_datetime.second)
 
-            stock_move_line_vals = {
-                'name': '[MOVE] ' + memo,
-                'product_id': rec.product_id.id,
-                'quantity_done': rec.sold_qty,
-                'product_uom': rec.product_uom.id
-            }
+                ac_pay_vals = {
+                    'amount': total,
+                    'payment_date': now_datetime,
+                    'journal_id': journal.id,
+                    'communication': memo,
+                    'payment_type': 'inbound',
+                    'state': 'draft',
+                    'currency_id': self.env.user.company_id.currency_id.id,
+                    'payment_method_id': 1,
+                    'partner_type': 'customer'
+                }
 
-            stock_pick_type = self.env['stock.picking.type'].search([('name', '=', 'Internal Transfers')], limit=1)
+                dest_loc = self.env['stock.location'].search([('name', '=', 'Customers'), ('usage', '=', 'customer')], limit=1)
 
-            stock_pick_vals = {
-                'location_id': rec.id,
-                'location_dest_id': dest_loc.id,
-                'move_lines': [(0, 0, stock_move_line_vals)],
-                'picking_type_id': stock_pick_type.id,
-                'origin': "[PICK] " + memo,
-                'scheduled_date': now_datetime,
-                'state': 'draft'
-            }
+                stock_move_line_vals = {
+                    'name': '[MOVE] ' + memo,
+                    'product_id': rec.product_id.id,
+                    'quantity_done': rec.sold_qty,
+                    'product_uom': rec.product_uom.id
+                }
 
-            stock_pick = self.env['stock.picking'].create(stock_pick_vals)
-            stock_pick.button_validate()
+                stock_pick_type = self.env['stock.picking.type'].search([('name', '=', 'Internal Transfers')], limit=1)
+                for stock in self.env['stock.picking.type'].search([]):
+                    _logger.warning(stock.name)
+                _logger.warning("Pick type :::: " + str(stock_pick_type.name))
 
-            ac_pay = self.env['account.payment'].create(ac_pay_vals)
-            return ac_pay.post()
+                if not stock_pick_type:
+                    raise UserError(_("Multi Stock Location features is not available now.\nPlease go through the Settings > General Settings > Inventory > Storage Locations and \nbe sure to check this feature."))
+
+                stock_pick_vals = {
+                    'location_id': rec.id,
+                    'location_dest_id': dest_loc.id,
+                    'move_lines': [(0, 0, stock_move_line_vals)],
+                    'picking_type_id': stock_pick_type.id,
+                    'origin': "[PICK] " + memo,
+                    'scheduled_date': now_datetime,
+                    'state': 'draft'
+                }
+
+                stock_pick = self.env['stock.picking'].create(stock_pick_vals)
+                stock_pick.button_validate()
+
+                ac_pay = self.env['account.payment'].create(ac_pay_vals)
+                return ac_pay.post()

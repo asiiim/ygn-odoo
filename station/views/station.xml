@@ -70,7 +70,7 @@
               <group>
                   <field name="formula_id" options="{'no_create': True}"/>
                   <field name="product_id" options="{'no_create': True}"/>
-                  <field name="product_uom"/>
+                  <field name="product_uom" options="{'no_create': True}"/>
                   <field name="is_station" invisible="1"/>
               </group>
               <footer>
