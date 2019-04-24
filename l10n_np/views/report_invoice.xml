@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="l10n_np_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <xpath expr="//h2" position="inside">
+            <t t-if="o.printed_copy_count != 0">
+                <span>|</span>
+                <span class="text-right" style="font-size: 15px; font-weight:bold;">Copy of Original</span>
+                <span>|</span>
+                <span class="text-right" style="font-size:13px;">Copy no.: <t t-esc="o.printed_copy_count"/></span>
+            </t>
+        </xpath>
         <xpath expr="//div[@id='total']/div" position="before">
             <t t-if="o.company_id.country_id.code == 'NP'">
                 <div class="col-xs-8">
