@@ -8,7 +8,7 @@ from pyparsing import (Literal, CaselessLiteral, Word, Combine, Group, Optional,
                        ZeroOrMore, Forward, nums, alphas, oneOf)
 import math
 import operator
-
+import datetime
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -32,6 +32,7 @@ class Location(models.Model):
     formula_id = fields.Many2one('storage.category', string="Storage Category")
     volume = fields.Float(string="Volume (in Kilolitre)", help="Volume of the Storage.", store=True)
     color = fields.Integer('Color')
+    is_station = fields.Boolean(string='Station', default=False)
 
     max_shrinkage_loss = fields.Float(string="Maximum Shrinkage Loss", default=0.0)
 
@@ -80,16 +81,19 @@ class Location(models.Model):
 
 
     meter_reading = fields.Float(string="Meter Reading")
+    sold_qty = fields.Float(string="Current Sold Quantity", default=0.0)
     shrinkage_value = fields.Float(string="Shrinkage Value")
     product_quantity = fields.Float(related="quant_ids.quantity", string="On Hand")
     dip = fields.Float(string="Dip Value (in meter)", help="Value of the Dip Test.", default=0.0)
     is_dip = fields.Boolean(default=False)
-    filled_volume = fields.Float(compute="_calc_filled_volume", string="Remaining Volume (in Kilolitre)", help="Remaining 'Volume in the storage.", store=True)
+    filled_volume = fields.Float(string="Remaining Volume (in Kilolitre)", help="Remaining 'Volume in the storage.")
 
     product_id = fields.Many2one('product.product', 'Inventoried Product', help="Specify Product to focus your inventory on a particular Product.")
+    product_uom = fields.Many2one('product.uom', 'Station Product of Measure')
 
     is_product_filter = fields.Boolean('Is Filter = "product"', default=False)
-
+    
+    
     @api.multi
     @api.depends('formula_id', 'dip')
     def _calc_filled_volume(self):
@@ -106,13 +110,9 @@ class Location(models.Model):
 
         on_hand = 0.0
 
-        current_station = self.env['stock.location'].browse(self._context.get('active_id'))
-        for station in current_station:
-            station.write({'dip': self.dip})
-
-        for location in current_station:
+        for location in self:
             formula_format = location.formula_id.diptest_formula
-            if formula_format:
+            if formula_format and self.dip:
                 args = {
                     'length': location.length or 0.0,
                     'breadth': location.breadth or 0.0,
@@ -126,51 +126,59 @@ class Location(models.Model):
                     if field:
                         args[field] = getattr(location, field) or ''
 
-                try:
-                    on_hand = eval(str(formula_format % args))
-                    self.filled_volume = on_hand
-                    self._make_inv_adjustment(on_hand, location)
-                    return on_hand
-                except:
-                    # raise UserError(_("On Hand quantity seems more than the Storage Capacity.\n Please consider to perform the Dip Test again with correct Dip Value."))
-                    _logger.warning("Exception")
-    
-    @api.multi
-    def _make_inv_adjustment(self, qty, location):
+                on_hand = eval(str(formula_format % args))
+                self.write({'filled_volume': on_hand})
+                self.check_product_onhand(on_hand)
+                return on_hand
+            else:
+                self.write({'filled_volume': 0.0})
+                self.check_product_onhand(on_hand)
+                return on_hand
 
-        if qty > location.volume:
-            raise UserError(_("On Hand quantity seems more than the Storage Capacity.\n Please consider to perform the Dip Test again with correct Dip Value."))
+    def check_product_onhand(self, qty):
 
-        shrinkage_loss = location.volume - qty
+        if qty > self.volume:
+            raise UserError(_("Quantity On Hand exceeds the storage capacity. \nPerform the test again with correct Dip Value."))
+        
+        # if qty > self.product_quantity:
+        #     raise UserError(_("Quantity from Dip Test is greater than the quantity On Hand."))
 
         max_shrinkage_loss = self.env.user.company_id.max_shrinkage_loss or 0.0
+        shrinkage_value = abs(qty - self.product_quantity)
         
-        if shrinkage_loss >= max_shrinkage_loss:
+        if shrinkage_value >= max_shrinkage_loss:
+            if self.product_quantity > qty:
+                self.write({'shrinkage_value': shrinkage_value})
+            self._make_inv_adjustment(qty)
+    
+    @api.multi
+    def _make_inv_adjustment(self, qty):
+
+        vals = {
+            'name': "[IA] " + str(self.name),
+            'filter': 'product',
+            'state': 'draft',
+            'location_id':  self.id,
+            'product_id': self.product_id.id,
+        }
+
+        inv_adjust = self.env['stock.inventory'].create(vals)
+        inv_adjust.action_start()
+        line_ids = self.env['stock.inventory.line'].search([('inventory_id', '=', inv_adjust.id)])
+
+        if line_ids:
+            for line in line_ids:
+                line.write({ 'product_qty': qty })
+        else:
             vals = {
-                'name': "[IA] " + str(location.name),
-                'filter': 'product',
-                'state': 'draft',
-                'location_id':  location.id,
-                'product_id': location.product_id.id,
+                'inventory_id': inv_adjust.id,
+                'location_id': self.id,
+                'product_id': self.product_id.id,
+                'product_qty': qty,
+                'theoretical_qty': qty
             }
-
-            inv_adjust = self.env['stock.inventory'].create(vals)
-            inv_adjust.action_start()
-            line_ids = self.env['stock.inventory.line'].search([('inventory_id', '=', inv_adjust.id)])
-
-            if line_ids:
-                for line in line_ids:
-                    line.write({ 'product_qty': qty })
-            else:
-                vals = {
-                    'inventory_id': inv_adjust.id,
-                    'location_id': location.id,
-                    'product_id': location.product_id.id,
-                    'product_qty': qty,
-                    'theoretical_qty': qty
-                }
-                line = self.env['stock.inventory.line'].create(vals)
-            inv_adjust.action_done()
+            line = self.env['stock.inventory.line'].create(vals)
+        inv_adjust.action_done()
 
     def _get_action(self, action_xmlid):
         action = self.env.ref(action_xmlid).read()[0]
@@ -180,6 +188,9 @@ class Location(models.Model):
 
     def get_diptest_wizard_action(self):
         return self._get_action('station.diptest_wizard_action')
+
+    def get_quick_sale_wizard_action(self):
+        return self._get_action('station.quick_sale_wizard_action')
 
     @api.multi
     def close_dialog(self):
@@ -247,6 +258,7 @@ class Location(models.Model):
         breadth = False
         height = False
         diameter = False
+        is_station = False
         
         formula_format = self.formula_id.formula
         if formula_format:
@@ -254,8 +266,76 @@ class Location(models.Model):
             if "breadth" in formula_format: breadth = True
             if "height" in formula_format: height = True
             if "diameter" in formula_format: diameter = True
+            is_station = True
         
         self.is_length = length
         self.is_breadth = breadth
         self.is_height = height
         self.is_diameter = diameter
+        self.is_station = is_station
+
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+# method for confirming the quick sale which registers the payment in the account and maintains
+# stocks in the inventory
+    def confirm_quick_sale(self):
+        
+        for rec in self:
+            if rec.sold_qty > 0:
+                if rec.product_quantity == 0:
+                    raise UserError(_("On hand quantity is empty."))
+
+                if rec.sold_qty > rec.product_quantity:
+                    raise UserError(_("Not Enough quantity for sale."))
+
+                total = rec.sold_qty * rec.product_id.lst_price
+                rec.meter_reading += rec.sold_qty
+                journal = self.env['account.journal'].search([('name', '=', 'Cash')])
+                now_datetime = datetime.datetime.now()
+
+                memo = str(rec.product_id.name) + "/" + str(now_datetime.year) + "/" + str(now_datetime.month) + str(now_datetime.day) + str(now_datetime.hour) + str(now_datetime.minute) + str(now_datetime.second)
+
+                ac_pay_vals = {
+                    'amount': total,
+                    'payment_date': now_datetime,
+                    'journal_id': journal.id,
+                    'communication': memo,
+                    'payment_type': 'inbound',
+                    'state': 'draft',
+                    'currency_id': self.env.user.company_id.currency_id.id,
+                    'payment_method_id': 1,
+                    'partner_type': 'customer'
+                }
+
+                dest_loc = self.env['stock.location'].search([('name', '=', 'Customers'), ('usage', '=', 'customer')], limit=1)
+
+                stock_move_line_vals = {
+                    'name': '[MOVE] ' + memo,
+                    'product_id': rec.product_id.id,
+                    'quantity_done': rec.sold_qty,
+                    'product_uom': rec.product_uom.id
+                }
+
+                stock_pick_type = self.env['stock.picking.type'].search([('name', '=', 'Internal Transfers')], limit=1)
+                for stock in self.env['stock.picking.type'].search([]):
+                    _logger.warning(stock.name)
+                _logger.warning("Pick type :::: " + str(stock_pick_type.name))
+
+                if not stock_pick_type:
+                    raise UserError(_("Multi Stock Location features is not available now.\nPlease go through the Settings > General Settings > Inventory > Storage Locations and \nbe sure to check this feature."))
+
+                stock_pick_vals = {
+                    'location_id': rec.id,
+                    'location_dest_id': dest_loc.id,
+                    'move_lines': [(0, 0, stock_move_line_vals)],
+                    'picking_type_id': stock_pick_type.id,
+                    'origin': "[PICK] " + memo,
+                    'scheduled_date': now_datetime,
+                    'state': 'draft'
+                }
+
+                stock_pick = self.env['stock.picking'].create(stock_pick_vals)
+                stock_pick.button_validate()
+
+                ac_pay = self.env['account.payment'].create(ac_pay_vals)
+                return ac_pay.post()

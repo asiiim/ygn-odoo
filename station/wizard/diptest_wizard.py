@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+# Part of Ygen. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -19,10 +21,12 @@ class DipTestWizard(models.TransientModel):
 
     station_id = fields.Many2one('stock.location', default=_default_station)
 
+
     @api.multi
     def apply_dip_value(self):
-        _logger.warning("Applying Dip Value ---------------------- ")
         self.station_id.write({
             'dip': self.dip,
+            'is_dip': True,
         })
+        self.station_id._calc_filled_volume()
         return {'type': 'ir.actions.act_window_close'}

@@ -38,11 +38,12 @@ class Picking(models.Model):
 
     @api.multi
     def write(self, vals):
-
-        if self.location_id.is_product_filter and self.location_dest_id.is_product_filter:
-            if vals.get('move_lines'):
-                if len(vals['move_lines']) > 1:
-                    raise UserError(_('Products to be tansferred cannot be changed now.\nPlease click on DISCARD button and click on CREATE button to create new stock operation for the product transfer.'))
-                
+        
+        for record in self:
+            if record.location_id.is_product_filter and record.location_dest_id.is_product_filter:
+                if vals.get('move_lines'):
+                    if len(vals['move_lines']) > 1:
+                        raise UserError(_('Products to be tansferred cannot be changed now.\nPlease click on DISCARD button and click on CREATE button to create new stock operation for the product transfer.'))
+                    
         res = super(Picking, self).write(vals)
         return res
