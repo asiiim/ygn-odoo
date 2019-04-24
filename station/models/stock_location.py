@@ -144,7 +144,7 @@ class Location(models.Model):
         #     raise UserError(_("Quantity from Dip Test is greater than the quantity On Hand."))
 
         max_shrinkage_loss = self.env.user.company_id.max_shrinkage_loss or 0.0
-        shrinkage_value = abs(qty - self.product_quantity) * 1000
+        shrinkage_value = abs((qty * 1000) - self.product_quantity)
         
         if shrinkage_value >= max_shrinkage_loss:
             # to discuss: does the shrinkage field take latest value or append the value?
