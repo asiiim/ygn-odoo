@@ -1,0 +1,51 @@
+<odoo>
+  <data>
+  
+    <!-- tree view -->
+    <record model="ir.ui.view" id="diptest_log_list">
+      <field name="name">diptest log list</field>
+      <field name="model">station.diptest_log</field>
+      <field name="arch" type="xml">
+        <tree create="false" delete="false">
+          <field name="name"/>
+          <field name="test_by" string="By"/>
+          <field name="test_date" string="Date"/>
+          <field name="dip_value"/>
+          <field name="station_id"/>
+          <field name="filled_volume" string="Filled Volume (in Kilolitre)"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- search view -->
+    <record id="diptest_log_search" model="ir.ui.view">
+        <field name="name">diptest log search</field>
+        <field name="model">station.diptest_log</field>
+        <field name="arch" type="xml">
+            <search string="Search Diptest Logs">
+                <field name="name"/>
+                <field name="test_by" string="By"/>
+                <field name="test_date" string="Date"/>
+                <field name="dip_value"/>
+                <field name="station_id"/>
+                <field name="filled_volume" string="Filled Volume (in Kilolitre)"/>
+                <filter string="Name" name="name"/>
+                <filter string="Test By" name="test_by"/>
+                <filter string="Test Date" name="test_date"/>
+                <filter string="Station" name="station_id"/>
+           </search>
+        </field>
+    </record>
+    
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="diptest_log_action_window">
+      <field name="name">Diptest Logs</field>
+      <field name="res_model">station.diptest_log</field>
+      <field name="view_mode">tree,search</field>
+    </record>
+    
+    <!-- Menu -->
+    <menuitem name="Diptest Logs" id="station.diptest_log" parent="station.menu_root" action="diptest_log_action_window"/>
+
+  </data>
+</odoo>
