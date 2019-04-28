@@ -31,6 +31,8 @@ class AccountInvoice(models.Model):
 
     sent_to_ird = fields.Boolean(string='Sent To IRD', readonly=True, default=False, copy=False,
         track_visibility='onchange', help="It indicates that the invoice has been sent to IRD.") 
+    is_ird_realtime = fields.Boolean(string='Is Realtime', readonly=True, default=False, copy=False,
+        track_visibility='onchange', help="It indicates whether the invoice sent to IRD is in realtime.")
 
     # Override
     @api.multi
@@ -86,22 +88,6 @@ class AccountInvoice(models.Model):
         # Assign ammount and base for respective tax group
         for amount_by_group in self._get_tax_amount_by_group():
             taxes[amount_by_group[0].lower()] = {'amount': amount_by_group[1],'base': amount_by_group[2]}
-        
-        # process export sales
-        export_sales_tag = self.env.ref('l10n_np.tax_tag_export')
-        vat_group = self.env.ref('l10n_np.tax_group_tax_vat')
-        export_sales = 0.0
-        for line in self.tax_line_ids:
-            if export_sales_tag.id in line.tax_id.tag_ids.ids and line.tax_id.tax_group_id.id == vat_group.id:
-                export_sales += line.base
-        taxes["export_sales"] = {"amount":0.0, "base":export_sales}
-
-        # process tax_exempted_sales
-        total_taxable_amount = 0.0
-        for tax_group in taxes:
-            total_taxable_amount += taxes[tax_group]["base"]
-        tax_exempted_sales = self.amount_untaxed - total_taxable_amount
-        taxes["tax_exempted_sales"] = {"amount":0.0, "base":tax_exempted_sales}
 
         return taxes
 
@@ -126,6 +112,7 @@ class AccountInvoice(models.Model):
         
         # Process and calculate for tax groups
         tax_group_amounts = self._process_prepare_taxes()
+        is_realtime = True if (datetime.datetime.now() - fields.Datetime().from_string(self.write_date)) < datetime.timedelta(minutes=10) else False
         data = {
             "username": username,
             "password": password,
@@ -142,9 +129,9 @@ class AccountInvoice(models.Model):
             "hst":tax_group_amounts["hst"]["amount"],
             "amount_for_esf":tax_group_amounts["esf"]["base"],
             "esf":tax_group_amounts["esf"]["amount"],
-            "export_sales":tax_group_amounts["export_sales"]["base"],
-            "tax_exempted_sales":tax_group_amounts["tax_exempted_sales"]["base"],
-            "isrealtime": True if (datetime.datetime.now() - fields.Datetime().from_string(self.write_date)) < datetime.timedelta(minutes=30) else False,
+            "export_sales":self.amount_export,
+            "tax_exempted_sales":self.amount_non_taxable,
+            "isrealtime": is_realtime,
             "datetimeclient": fields.Datetime().now()
         }
         if self.type == "out_invoice":
@@ -217,7 +204,7 @@ class AccountInvoice(models.Model):
                         else:
                             _logger.warning("Error returned by server with code: %s and message: %s" % (content, ird_api_codes[int(content)]))
                         if int(content) in [200,101]:
-                            invoice.write({'sent_to_ird': True})
+                            invoice.write({'sent_to_ird': True, 'is_ird_realtime': data["isrealtime"]})
                     except requests.HTTPError:
                         raise UserError(_("The IRD server cannot be found. Maybe it has been moved to new IP."))
             except Exception as e:
