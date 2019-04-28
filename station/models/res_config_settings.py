@@ -13,7 +13,7 @@ class ResConfigSettings(models.TransientModel):
 
     use_max_shrinkage_loss = fields.Boolean(string="Maximum Shrinkage Loss", help="Check this option if you want to perform the inventory adjustment only incase of maximum shrinkage loss.", default=False)
 
-    max_shrinkage_loss = fields.Float(related="company_id.max_shrinkage_loss", string="Maximum Shrikage Loss(in litres)")
+    max_shrinkage_loss = fields.Float(related="company_id.max_shrinkage_loss", string="Maximum Shrikage Loss(in Liter)")
 
     @api.onchange('use_max_shrinkage_loss')
     def _onchange_use_max_shrinkage_loss(self):

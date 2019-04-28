@@ -12,7 +12,7 @@ class QuickSaleWizard(models.TransientModel):
     _name = "station.quick_sale.wizard"
     _description = "Quick Product Sale Wizard"
 
-    quantity = fields.Float(string="Quantity", default=0.0)
+    quantity = fields.Float(string="Quantity (in Liter)", default=0.0)
 
     def _default_station(self):
         return self.env['stock.location'].browse(self._context.get('active_id'))
@@ -21,7 +21,6 @@ class QuickSaleWizard(models.TransientModel):
 
     @api.multi
     def apply_qty_value(self):
-        _logger.warning("::::::: Applying Qty Value :::::::")
         self.station_id.write({
             'sold_qty': self.quantity,
         })

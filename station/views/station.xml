@@ -24,7 +24,7 @@
           <div>
             <label for="product_id" class="oe_edit_only"/>
             <field name="product_id"/>
-            <field name="product_uom"/>
+            <!-- <field name="product_uom"/> -->
           </div>
         </field>
         <field name="location_id" position="after">
@@ -70,7 +70,7 @@
               <group>
                   <field name="formula_id" options="{'no_create': True}"/>
                   <field name="product_id" options="{'no_create': True}"/>
-                  <field name="product_uom" options="{'no_create': True}"/>
+                  <!-- <field name="product_uom" options="{'no_create': True}"/> -->
                   <field name="is_station" invisible="1"/>
               </group>
               <footer>
@@ -115,16 +115,16 @@
                                           </h4>
                                       </div>
                                       <div class="o_secondary">
-                                          <label for="meter_reading">Meter Reading</label>
+                                          <label for="meter_reading">Meter Reading (in Liter)</label>
                                           <field name="meter_reading"/><br />
                                           
-                                          <label for="shrinkage_value">Shrinkage Value</label>
+                                          <label for="shrinkage_value">Shrinkage Value (in Liter)</label>
                                           <field name="shrinkage_value"/><br />
 
-                                          <label for="product_quantity">On Hand</label>
+                                          <label for="product_quantity">On Hand (in Liter)</label>
                                           <field name="product_quantity"/><br />
 
-                                          <label for="volume">Storage Capacity</label>
+                                          <label for="volume">Storage Capacity (in Kiloliter)</label>
                                           <field name="volume"/><br />
                                       </div>
                                       <div class="o_primary">
