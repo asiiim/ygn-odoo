@@ -95,7 +95,6 @@ class Location(models.Model):
     
     
     @api.multi
-    @api.depends('formula_id', 'dip')
     def _calc_filled_volume(self):
 
         '''
@@ -119,7 +118,7 @@ class Location(models.Model):
                     'height': location.height or 0.0,
                     'diameter': location.diameter or 0.0,
                     'pi': location.pi or 0.0,
-                    'dip': location.dip or 0.0,
+                    'dip': self.dip or 0.0,
                 }
 
                 for field in self._param_fields():
@@ -151,6 +150,15 @@ class Location(models.Model):
             if self.product_quantity > (qty * 1000):
                 self.write({'shrinkage_value': shrinkage_value})
             self._make_inv_adjustment(qty)
+
+            diptest_log_vals = {
+                'dip_value': self.dip,
+                'station_id': self.id,
+                'filled_volume': self.filled_volume,
+                'test_by': self.env.user.id,
+                'test_date': datetime.datetime.now()
+            }
+            return self.env['station.diptest_log'].create(diptest_log_vals)
     
     @api.multi
     def _make_inv_adjustment(self, qty):
