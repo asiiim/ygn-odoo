@@ -26,6 +26,10 @@
         'account_invoicing'
     ],
 
+    # price
+    'price': 10.00,
+    'currency': 'EUR',
+
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',

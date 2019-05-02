@@ -11,6 +11,11 @@ This is the base module to manage the accounting chart for Nepal in Odoo.
 
     """,
     'depends': ['account_tax_python', 'contacts'],
+
+    # price
+    'price': 500.00,
+    'currency': 'EUR',
+
     'data': [
         'security/ir.model.access.csv',
         'views/res_config_settings_views.xml',

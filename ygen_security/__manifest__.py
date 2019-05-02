@@ -21,6 +21,10 @@
     # any module necessary for this one to work correctly
     'depends': ['base'],
 
+    # price
+    'price': 300.00,
+    'currency': 'EUR',
+
     # always loaded
     'data': [
         'security/ir.model.access.csv',

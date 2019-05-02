@@ -17,6 +17,10 @@
     # any module necessary for this one to work correctly
     'depends': ['account', 'sale', 'partner_coc'],
 
+    # price
+    'price': 50.00,
+    'currency': 'EUR',
+
     # always loaded
     'data': [
         'views/partner.xml',
