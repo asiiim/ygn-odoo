@@ -10,3 +10,5 @@ class TankChamber(models.Model):
     name = fields.Integer("Name")
     
     sequence = fields.Integer("Sequence")
+
+    _sql_constraints = [('unique_chamber', 'unique (name)', 'You can not have two same chambers!')]

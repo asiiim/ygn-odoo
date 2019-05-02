@@ -1,5 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_tank_seal_type_group_all,seal.type,model_seal_type,base.group_user,1,0,0,0
-access_tank_seal_type_group_user,seal.type,model_seal_type,base.group_partner_manager,1,1,1,1
+access_tank_seal_type_group_user,seal.type,model_seal_type,base.group_system,1,1,1,1
 access_tank_seal_line_group_all,seal.line,model_seal_line,base.group_user,1,0,0,0
-access_tank_seal_line_group_user,seal.line,model_seal_line,base.group_partner_manager,1,1,1,1
+access_tank_seal_line_group_user,seal.line,model_seal_line,base.group_system,1,1,1,1
