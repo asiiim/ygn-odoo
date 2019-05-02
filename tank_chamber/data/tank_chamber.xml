@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="chamber_1" model="chamber.chamber">
-        <field name="name">1</field>
-        <field name="sequence">1</field>
-    </record>
-    <record id="chamber_2" model="chamber.chamber">
-        <field name="name">2</field>
-        <field name="sequence">2</field>
-    </record>
-    <record id="chamber_3" model="chamber.chamber">
-        <field name="name">3</field>
-        <field name="sequence">3</field>
-    </record>
-    <record id="chamber_4" model="chamber.chamber">
-        <field name="name">4</field>
-        <field name="sequence">4</field>
-    </record>
-    <record id="chamber_5" model="chamber.chamber">
-        <field name="name">5</field>
-        <field name="sequence">5</field>
-    </record>
+    <data noupdate="1">
+        <record id="chamber_1" model="chamber.chamber">
+            <field name="name">1</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="chamber_2" model="chamber.chamber">
+            <field name="name">2</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="chamber_3" model="chamber.chamber">
+            <field name="name">3</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="chamber_4" model="chamber.chamber">
+            <field name="name">4</field>
+            <field name="sequence">4</field>
+        </record>
+        <record id="chamber_5" model="chamber.chamber">
+            <field name="name">5</field>
+            <field name="sequence">5</field>
+        </record>
+    </data>
 </odoo>

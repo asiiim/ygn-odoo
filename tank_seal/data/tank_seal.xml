@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="up_seal" model="seal.type">
-        <field name="name">Up Seal</field>
-        <field name="sequence">1</field>
-        <field name="is_master">False</field>
-    </record>
-    <record id="down_seal" model="seal.type">
-        <field name="name">Down Seal</field>
-        <field name="sequence">2</field>
-        <field name="is_master">False</field>
-    </record>
-    <record id="master_seal" model="seal.type">
-        <field name="name">Master Seal</field>
-        <field name="sequence">3</field>
-        <field name="is_master">True</field>
-    </record>
+    <data noupdate="1">
+        <record id="up_seal" model="seal.type">
+            <field name="name">Up Seal</field>
+            <field name="sequence">1</field>
+            <field name="is_master">False</field>
+        </record>
+        <record id="down_seal" model="seal.type">
+            <field name="name">Down Seal</field>
+            <field name="sequence">2</field>
+            <field name="is_master">False</field>
+        </record>
+        <record id="master_seal" model="seal.type">
+            <field name="name">Master Seal</field>
+            <field name="sequence">3</field>
+            <field name="is_master">True</field>
+        </record>
+    </data>
 </odoo>

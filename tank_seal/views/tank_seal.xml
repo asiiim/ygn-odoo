@@ -98,7 +98,7 @@
         action="action_seal_type"
         parent="menu_seal"
         sequence="2"
-        group="base.group_system"/>
+        groups="base.group_system"/>
 
     <!-- <menuitem id="menu_seal_line"
         name="Seal Lines"
