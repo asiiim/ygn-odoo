@@ -23,8 +23,7 @@
         'sale_invoice_vehicle',
         'invoice_report_vehicle_chamber',
         'sale_management',
-        'account_invoicing',
-        'station',
+        'account_invoicing'
     ],
 
     # always loaded
