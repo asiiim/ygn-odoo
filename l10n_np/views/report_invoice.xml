@@ -12,7 +12,7 @@
         <xpath expr="//p[@t-if='o.comment']" position="before">
             <div class="clearfix">
                 <div id="authorized-signature" class="row">
-                    <div class="col-xs-4 pull-left">
+                    <div class="col-xs-8 pull-left">
                         <div class="oe-signature-separator">
                             <t t-esc="o.user_id.name"/>
                         </div>
