@@ -27,9 +27,6 @@
         'views/views.xml',
         'views/templates.xml',
         'views/tank_seal.xml',
-    ],
-    # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
+        'data/tank_seal.xml'
     ],
 }
