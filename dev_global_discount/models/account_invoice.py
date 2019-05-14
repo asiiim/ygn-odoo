@@ -10,6 +10,7 @@ from odoo import models, fields, api, _
 import odoo.addons.decimal_precision as dp
 from datetime import datetime, timedelta
 from odoo.tools.safe_eval import safe_eval
+from odoo.exceptions import UserError, ValidationError
 
 
 class account_invoice(models.Model):
@@ -192,15 +193,9 @@ class AccountInvoiceRefund(models.TransientModel):
                     for tmpline in refund.move_id.line_ids:
                         if tmpline.account_id.id == inv.account_id.id:
                             to_reconcile_lines += tmpline
-                            to_reconcile_lines.filtered(lambda l: l.reconciled == False).reconcile()
+                    to_reconcile_lines.filtered(lambda l: l.reconciled == False).reconcile()
                     if mode == 'modify':
-                        invoice = inv.read(
-                            ['name', 'type', 'number', 'reference',
-                             'comment', 'date_due', 'partner_id',
-                             'partner_insite', 'partner_contact',
-                             'partner_ref', 'payment_term_id', 'account_id',
-                             'currency_id', 'invoice_line_ids', 'tax_line_ids',
-                             'journal_id', 'date'])
+                        invoice = inv.read(inv_obj._get_refund_modify_read_fields())
                         invoice = invoice[0]
                         del invoice['id']
                         invoice_lines = inv_line_obj.browse(invoice['invoice_line_ids'])
@@ -224,25 +219,45 @@ class AccountInvoiceRefund(models.TransientModel):
                             'sale_discount': inv.sale_discount,
                         })
 
-                        for field in ('partner_id', 'account_id', 'currency_id',
-                                      'payment_term_id', 'journal_id'):
-                            invoice[field] = invoice[field] and invoice[field][0]
+                        for field in inv_obj._get_refund_common_fields():
+                            if inv_obj._fields[field].type == 'many2one':
+                                invoice[field] = invoice[field] and invoice[field][0]
+                            else:
+                                invoice[field] = invoice[field] or False
                         inv_refund = inv_obj.create(invoice)
+                        inv_refund = inv_obj.create(invoice)
+                        body = _('Correction of <a href=# data-oe-model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s') % (inv.id, inv.number, description)
+                        inv_refund.message_post(body=body)
                         if inv_refund.payment_term_id.id:
                             inv_refund._onchange_payment_term_date_invoice()
                         created_inv.append(inv_refund.id)
-                xml_id = (inv.type in ['out_refund', 'out_invoice']) and 'action_invoice_tree1' or \
-                         (inv.type in ['in_refund', 'in_invoice']) and 'action_invoice_tree2'
-                # Put the reason in the chatter
-                subject = _("Invoice refund")
-                body = description
-                refund.message_post(body=body, subject=subject)
+                xml_id = inv.type == 'out_invoice' and 'action_invoice_out_refund' or \
+                         inv.type == 'out_refund' and 'action_invoice_tree1' or \
+                         inv.type == 'in_invoice' and 'action_invoice_in_refund' or \
+                         inv.type == 'in_refund' and 'action_invoice_tree2'
+                # # Put the reason in the chatter
+                # subject = _("Invoice refund")
+                # body = description
+                # refund.message_post(body=body, subject=subject)
         if xml_id:
             result = self.env.ref('account.%s' % (xml_id)).read()[0]
-            invoice_domain = safe_eval(result['domain'])
-            invoice_domain.append(('id', 'in', created_inv))
-            result['domain'] = invoice_domain
+            if mode == 'modify':
+                # When refund method is `modify` then it will directly open the new draft bill/invoice in form view
+                if inv_refund.type == 'in_invoice':
+                    view_ref = self.env.ref('account.invoice_supplier_form')
+                else:
+                    view_ref = self.env.ref('account.invoice_form')
+                result['views'] = [(view_ref.id, 'form')]
+                result['res_id'] = inv_refund.id
+            else:
+                invoice_domain = safe_eval(result['domain'])
+                invoice_domain.append(('id', 'in', created_inv))
+                result['domain'] = invoice_domain
             return result
+            # invoice_domain = safe_eval(result['domain'])
+            # invoice_domain.append(('id', 'in', created_inv))
+            # result['domain'] = invoice_domain
+            # return result
         return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
