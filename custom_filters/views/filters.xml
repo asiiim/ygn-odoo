@@ -77,20 +77,5 @@
                 </xpath>
             </field>
         </record>
-        <record id="view_stock_stock_move_line_view_search_inherit_search" model="ir.ui.view">
-            <field name="name">stock_stock_move_line_view_search.search.expand.filter</field>
-            <field name="model">stock.move.line</field>
-            <field name="inherit_id" ref="stock.stock_move_line_view_search"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='picking_id']" position="after">
-                    <!-- <filter name="confirmation_date" string="Today's Customers" domain="[('confirmation_date', '&gt;', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('confirmation_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/> -->
-                    <filter name="today" string="Today Product Moves" domain="[('create_date', '&gt;', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('create_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
-                    <filter string="Current Month" domain="[('create_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Product" name="product_id" domain="[]" context="{'group_by':'product_id'}"/>
-                    </group>
-                </xpath>
-            </field>
-        </record>
     </data>
 </odoo>
