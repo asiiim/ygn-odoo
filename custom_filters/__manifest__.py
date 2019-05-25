@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Ygen. See LICENSE file for full copyright and licensing details.
 {
     'name': "custom_filters",
 
@@ -20,7 +21,7 @@
     'version': '11.0',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','account_invoicing','sale_management','stock'],
+    'depends': ['base','account_invoicing','sale_management'],
 
     # always loaded
     'data': [
