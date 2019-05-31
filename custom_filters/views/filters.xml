@@ -97,7 +97,7 @@
                 <xpath expr="//field[@name='name']" position="before">
                     <filter name="date" string="Today's Account" domain="[('date', '&gt;', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
                     <filter name="today" string="Today" domain="[('create_date', '&gt;', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('create_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
-                    <filter string="Current Month" domain="[('confirmation_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]"/>
+                    <filter string="Current Month" domain="[('create_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]"/>
                 </xpath>
             </field>
         </record>
