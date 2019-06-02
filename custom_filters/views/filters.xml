@@ -47,8 +47,7 @@
             <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='my_sale_orders_filter']" position="before">
-                    <filter name="date_order" string="Today's Quotation" domain="[('date_order', '&gt;', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('date_order', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
-                    <filter name="today" string="Today" domain="[('create_date', '&gt;', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('create_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
+                    <filter name="requested_date" string="Today Quotation" domain="[('requested_date', '&gt;', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('requested_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>                    <filter name="today" string="Today" domain="[('create_date', '&gt;', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('create_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
                     <filter string="Current Month" domain="[('create_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]"/>
                 </xpath>
             </field>
@@ -84,7 +83,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="before">
                     <filter name="date" string="Today's Sales" domain="[('date', '&gt;', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
-                    <filter name="confirmation_date" string="Today Sales" domain="[('confirmation_date', '&gt;', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('confirmation_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
+                    <filter name="confirmation_date" string="Today" domain="[('confirmation_date', '&gt;', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('confirmation_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
                     <!-- <filter string="Current Month" domain="[('confirmation_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]"/> -->
                 </xpath>
             </field>
