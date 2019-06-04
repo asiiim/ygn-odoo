@@ -9,6 +9,7 @@
                     <field name="mobile"/>
                     <field name="street"/>
                     <field name="street2"/>
+                    <field name="user_id"/>
                 </xpath>
             </field>
         </record>
