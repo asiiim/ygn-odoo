@@ -13,12 +13,12 @@
                     <table class="table table-condensed">
                         <thead>
                             <tr>
-                                <th>Date</th>
+                                <th>Timestamp</th>
                                 <th class="text-center">Author</th>
                                 <th class="text-center"> From</th>
                                 <th>Message Type</th>
                                 <th>Subtype</th>
-                                <th class="text-right">Message</th>
+                                <th class="text-right">Body</th>
                             </tr>
                         </thead>
                         <tr t-foreach="o.message_ids" t-as="message_ids">
