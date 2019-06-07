@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="custom_chatter_report.report_res_partnerchatter_report">
+    <t t-call="web.external_layout">
+        <div class="page">
+            <div class="row">
+                <div class="col-xs-5 col-xs-offset-7">
+                    <span t-field="o.name"/><br/>
+                    <span t-raw="o.contact_address.replace('\n\n', '\n').replace('\n', '&lt;br&gt;')"/><br/>
+                    <span t-raw="o.mobile"/><br/> <span t-raw="o.phone"/><br/>
+                </div>
+                <t t-if="o.message_ids" >
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th class="text-center">Author</th>
+                                <th class="text-center"> From</th>
+                                <th>Message Type</th>
+                                <th>Subtype</th>
+                                <th class="text-right">Message</th>
+                            </tr>
+                        </thead>
+                        <tr t-foreach="o.message_ids" t-as="message_ids">
+                            <td>
+                                <span t-field="message_ids.date"/>
+                            </td>
+                            <td>
+                                <span t-field="message_ids.author_id"/>
+                            </td>
+                            <td>
+                                <span t-field="message_ids.email_from"/>
+                            </td>
+                            <td>
+                                <span t-field="message_ids.message_type"/>
+                            </td>
+                            <td>
+                                <span t-field="message_ids.subtype_id"/>
+                            </td>
+                            <td>
+                                <span t-field="message_ids.body"/>
+                            </td>
+                        </tr>
+                    </table>
+                </t>
+                <p t-if="not o.message_ids">
+                    <strong>There is nothing history with this customer.</strong>
+                </p>
+            </div>
+        </div>
+   </t>
+</template>
+
+<template id="report_res_partner_chatter">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="custom_chatter_report.report_res_partnerchatter_report" t-lang="o.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

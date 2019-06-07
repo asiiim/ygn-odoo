@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- QWeb Reports -->
+
+        <report 
+            id="action_report_print_res_partner_chatter"
+            model="res.partner"
+            report_type="qweb-pdf"
+            string="Activity History"
+            name="custom_chatter_report.report_res_partner_chatter"
+            file="custom_chatter_report.report_res_partner_chatter"
+            print_report_name="'History - %s' % (object.name)"
+        />
+    </data>
+</odoo>
