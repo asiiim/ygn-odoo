@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_sales_price_form_view" model="ir.ui.view">
+        <field name="name">product.template.sales.price.form</field>
+        <field name="model">product.template</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="7" />
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <!-- <xpath expr="//field[@name='purchase_ok']" postion="after">
+                <field name="is_base" />
+                <field name="can_depend_base" />
+            </xpath> -->
+            <xpath expr="//page[@name='general_information']" position="after">
+                <page name="sales_price_variation" string="Sales Price Variation">
+                    <group>
+                        <group string="Base and Variables">
+                            <field name="is_base" />
+                            <!-- <field name="base_rate" attrs="{'invisible': [('is_base', '=', False)]}" /> -->
+                            <field name="can_depend_base" attrs="{'invisible': [('is_base', '=', True)]}" />
+                            <field name="base_product_id" attrs="{'invisible': [('can_depend_base', '=', False)]}" />
+                        </group>
+                        <group string="Sales Price Logistics" attrs="{'invisible': [('is_base', '=', True)]}">
+                            <field name="weight" />
+                            <field name="loss" />
+                            <field name="wage" widget="monetary"/>
+                            <field name="gems_cost" widget="monetary" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
