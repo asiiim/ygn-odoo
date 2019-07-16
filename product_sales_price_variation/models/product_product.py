@@ -53,7 +53,7 @@ class ProductProduct(models.Model):
     @api.multi
     def unlink(self):
         for product in self:
-            if product.is_base:
+            if product.product_tmpl_id.is_base:
                 dependent_products = self.env['product.product'].search([('base_product_id', '=', product.id), ('can_depend_base', '=', True)])
                 if dependent_products:
                     raise UserError(_('You can not delete a base product which is being depended by other products! \nTry to delete the dependent products first.'))

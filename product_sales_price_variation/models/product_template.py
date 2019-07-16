@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Ygen. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, AccessError
+
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
@@ -52,6 +57,16 @@ class ProductTemplate(models.Model):
         for product in self:
             if product.is_base:
                 product.can_depend_base = False
+
+    # Prevent deleting base product if it is linked with dependent products
+    @api.multi
+    def unlink(self):
+        for product in self:
+            if product.is_base and product.product_variant_id:
+                dependent_products = self.env['product.product'].search([('base_product_id', '=', product.product_variant_id.id), ('can_depend_base', '=', True)])
+                if dependent_products:
+                    raise UserError(_('You can not delete a base product which is being depended by other products! \nTry to delete the dependent products first.'))
+        return super(ProductTemplate, self).unlink()
 
 
                 
