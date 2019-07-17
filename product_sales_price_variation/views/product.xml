@@ -15,6 +15,18 @@
                     <label for="can_depend_base"/>
                 </div>
             </xpath>
+
+            <!-- Customize Start -->
+            <xpath expr="//page[@name='general_information']" position="inside">
+                <group string="Sales Price Logistics" attrs="{'invisible': ['|', '|', ('is_base', '=', True), ('can_depend_base', '=', False), ('product_variant_count', '&gt;', 1)]}">
+                        <field name="base_product_id" />
+                        <field name="ready_weight" />
+                        <field name="loss" />
+                        <field name="wage" widget="monetary"/>
+                        <field name="gems_cost" widget="monetary" />
+                    </group>
+            </xpath>
+            <!-- End -->
         </field>
     </record>
 
