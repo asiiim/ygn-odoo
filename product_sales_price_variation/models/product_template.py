@@ -17,39 +17,35 @@ class ProductTemplate(models.Model):
     # This section is in use if the product does not have any variants.
     ready_weight = fields.Float('Readymade Weight')
     loss = fields.Float('Jarti [Loss]')
+    weight_uom_id = fields.Many2one('product.uom', string='Weight Unit')
     wage = fields.Float('Jyala [Wage]')
     gems_cost = fields.Float('Patthar [Gems] Cost')
     base_product_id = fields.Many2one('product.template', string='Base Products', domain="[('is_base','=',True)]")
 
     # Compute sales price if the products depend the base product
-    @api.onchange('ready_weight', 'loss', 'wage', 'gems_cost', 'base_product_id')
+    @api.onchange('ready_weight', 'loss', 'wage', 'gems_cost', 'base_product_id', 'weight_uom_id')
     def compute_sales_price(self):
         for product in self:
             if product.product_variant_count <= 1:
-                if product.can_depend_base:
-
-                    if product.uom_id != product.base_product_id.uom_id:
+                if product.can_depend_base and product.base_product_id:
+                    if product.weight_uom_id != product.base_product_id.uom_id:
                         raise UserError(_('The unit of measurement of this product is not same with the base product !\nMake sure it is same and then proceed.'))
                     product.list_price = ((product.ready_weight + product.loss) * product.base_product_id.list_price) + product.wage + product.gems_cost
     
     # Change all the dependent products' sales price when the sales price of the base product is changed
     @api.multi
     def write(self, values):
-        _logger.warning(self.product_variant_count)
-        if self.product_variant_count <= 1:
-            total_cost = 0.0
-            product_write = super(ProductTemplate, self).write(values)
-            if self.is_base:
-                base_rate = self.list_price
-                dependent_products = self.env['product.template'].search([('base_product_id', '=', self.id), ('can_depend_base', '=', True)])
-                
-                for product in dependent_products:
-                    if product.uom_id != product.base_product_id.uom_id:
-                        raise UserError(_('The unit of measurement of this product is not same with the base product !\nMake sure it is same and then proceed.'))
-                    total_cost = ((product.ready_weight + product.loss) * base_rate) + product.wage + product.gems_cost
-                    product.write({
-                        'list_price': total_cost
-                    })
+        total_cost = 0.0
+        product_write = super(ProductTemplate, self).write(values)
+        if self.is_base:
+            base_rate = self.list_price
+            dependent_products = self.env['product.template'].search([('base_product_id', '=', self.id), ('can_depend_base', '=', True)])
+            
+            for product in dependent_products:
+                total_cost = ((product.ready_weight + product.loss) * base_rate) + product.wage + product.gems_cost
+                product.write({
+                    'list_price': total_cost
+                })
 
     # Set dependent product boolean to false if base product changed to true
     @api.onchange('is_base')
@@ -71,5 +67,8 @@ class ProductTemplate(models.Model):
                     raise UserError(_('You can not delete a base product which is being depended by other products! \nTry to delete the dependent products first.'))
         return super(ProductTemplate, self).unlink()
 
-
-                
+    # Copy value from defalut uom to weight unit, if the product is base product
+    # @api.onchange('uom_id')
+    # def _compute_weight_unit(self):
+    #     if self.uom_id and self.is_base:
+    #         self.weight_uom_id = self.uom_id.id

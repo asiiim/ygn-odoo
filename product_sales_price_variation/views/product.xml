@@ -14,17 +14,20 @@
                     <field name="can_depend_base"/>
                     <label for="can_depend_base"/>
                 </div>
+                <group attrs="{'invisible': ['|', '|', ('is_base', '=', True), ('can_depend_base', '=', False), ('product_variant_count', '&gt;', 1)]}">
+                    <field name="base_product_id" />
+                    <field name="weight_uom_id" options="{'no_create_edit': True, 'no_create': True}" />
+                </group>
             </xpath>
 
             <!-- Customize Start -->
             <xpath expr="//page[@name='general_information']" position="inside">
                 <group string="Sales Price Logistics" attrs="{'invisible': ['|', '|', ('is_base', '=', True), ('can_depend_base', '=', False), ('product_variant_count', '&gt;', 1)]}">
-                        <field name="base_product_id" />
-                        <field name="ready_weight" />
-                        <field name="loss" />
-                        <field name="wage" widget="monetary"/>
-                        <field name="gems_cost" widget="monetary" />
-                    </group>
+                    <field name="ready_weight" />
+                    <field name="loss" />
+                    <field name="wage" widget="monetary"/>
+                    <field name="gems_cost" widget="monetary" />
+                </group>
             </xpath>
             <!-- End -->
         </field>
@@ -35,11 +38,16 @@
        <field name="inherit_id" ref="product.product_normal_form_view" />
        <field name="arch" type="xml">
             <!-- Customize Start -->
+            <xpath expr="//div[@name='options']" postion="after">
+                <group attrs="{'invisible': ['|', '|', ('is_base', '=', True), ('can_depend_base', '=', False)]}">
+                    <field name="base_product_id" />
+                    <field name="weight_uom_id" options="{'no_create_edit': True, 'no_create': True}" />
+                </group>
+            </xpath>
             <xpath expr="//page[@name='general_information']" position="inside">
                 <field name="is_base" invisible="1"/>
                 <field name="can_depend_base" invisible="1"/>
                 <group string="Sales Price Logistics" attrs="{'invisible': ['|', ('is_base', '=', True), ('can_depend_base', '=', False)]}">
-                        <field name="base_product_id" />
                         <field name="ready_weight" />
                         <field name="loss" />
                         <field name="wage" widget="monetary"/>
@@ -60,14 +68,15 @@
                     <field name="is_base" invisible="1"/>
                     <field name="can_depend_base" invisible="1"/>
                     <field name="product_tmpl_id" invisible="1" />
-                    <group>
-                        <group string="Sales Price Logistics" attrs="{'invisible': ['|', ('is_base', '=', True), ('can_depend_base', '=', False)]}">
-                            <field name="base_product_id" />
-                            <field name="ready_weight" />
-                            <field name="loss" />
-                            <field name="wage" widget="monetary"/>
-                            <field name="gems_cost" widget="monetary" />
-                        </group>
+                    <group attrs="{'invisible': ['|', ('is_base', '=', True), ('can_depend_base', '=', False)]}">
+                        <field name="base_product_id" />
+                        <field name="weight_uom_id" options="{'no_create_edit': True, 'no_create': True}" />
+                    </group>
+                    <group string="Sales Price Logistics" attrs="{'invisible': ['|', ('is_base', '=', True), ('can_depend_base', '=', False)]}">
+                        <field name="ready_weight" />
+                        <field name="loss" />
+                        <field name="wage" widget="monetary"/>
+                        <field name="gems_cost" widget="monetary" />
                     </group>
             </xpath>
             <xpath expr="//group[@name='pricing']" position="inside">
