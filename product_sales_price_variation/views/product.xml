@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_sales_price_form_view" model="ir.ui.view">
+        <field name="name">product.template.sales.price.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']" postion="after">
+                <div>
+                    <field name="is_base"/>
+                    <label for="is_base"/>
+                </div>
+                <div attrs="{'invisible': [('is_base', '=', True)]}">
+                    <field name="can_depend_base"/>
+                    <label for="can_depend_base"/>
+                </div>
+                <group attrs="{'invisible': ['|', '|', ('is_base', '=', True), ('can_depend_base', '=', False), ('product_variant_count', '&gt;', 1)]}">
+                    <field name="base_product_id" />
+                    <field name="weight_uom_id" options="{'no_create_edit': True, 'no_create': True}" />
+                </group>
+            </xpath>
+
+            <!-- Customize Start -->
+            <xpath expr="//page[@name='general_information']" position="inside">
+                <group string="Sales Price Logistics" attrs="{'invisible': ['|', '|', ('is_base', '=', True), ('can_depend_base', '=', False), ('product_variant_count', '&gt;', 1)]}">
+                    <field name="ready_weight" />
+                    <field name="loss" />
+                    <field name="wage" widget="monetary"/>
+                    <field name="gems_cost" widget="monetary" />
+                </group>
+            </xpath>
+            <!-- End -->
+        </field>
+    </record>
+
+    <record id="product_sales_variation_normal_form_view" model="ir.ui.view">
+       <field name="model">product.product</field>
+       <field name="inherit_id" ref="product.product_normal_form_view" />
+       <field name="arch" type="xml">
+            <!-- Customize Start -->
+            <xpath expr="//div[@name='options']" postion="after">
+                <group attrs="{'invisible': ['|', '|', ('is_base', '=', True), ('can_depend_base', '=', False)]}">
+                    <field name="base_product_id" />
+                    <field name="weight_uom_id" options="{'no_create_edit': True, 'no_create': True}" />
+                </group>
+            </xpath>
+            <xpath expr="//page[@name='general_information']" position="inside">
+                <field name="is_base" invisible="1"/>
+                <field name="can_depend_base" invisible="1"/>
+                <group string="Sales Price Logistics" attrs="{'invisible': ['|', ('is_base', '=', True), ('can_depend_base', '=', False)]}">
+                        <field name="ready_weight" />
+                        <field name="loss" />
+                        <field name="wage" widget="monetary"/>
+                        <field name="gems_cost" widget="monetary" />
+                    </group>
+            </xpath>
+            <!-- End -->
+       </field>
+    </record>
+
+    <record id="product_sales_variation_product_variant_easy_edit_view" model="ir.ui.view">
+        <field name="name">product.sales.variation.product.variant.easy.edit.view</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="arch" type="xml">
+            <!-- Customize Start -->
+            <xpath expr="//group[@name='pricing']" position="after">
+                    <field name="is_base" invisible="1"/>
+                    <field name="can_depend_base" invisible="1"/>
+                    <field name="product_tmpl_id" invisible="1" />
+                    <group attrs="{'invisible': ['|', ('is_base', '=', True), ('can_depend_base', '=', False)]}">
+                        <field name="base_product_id" />
+                        <field name="weight_uom_id" options="{'no_create_edit': True, 'no_create': True}" />
+                    </group>
+                    <group string="Sales Price Logistics" attrs="{'invisible': ['|', ('is_base', '=', True), ('can_depend_base', '=', False)]}">
+                        <field name="ready_weight" />
+                        <field name="loss" />
+                        <field name="wage" widget="monetary"/>
+                        <field name="gems_cost" widget="monetary" />
+                    </group>
+            </xpath>
+            <xpath expr="//group[@name='pricing']" position="inside">
+                <field name="fix_price" />
+            </xpath>
+            <!-- End -->
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,2 @@
+medical_lab_management
+https://github.com/CybroOdoo/CybroAddons.git

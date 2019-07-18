@@ -1,0 +1,2 @@
+product_variant_sale_price
+https://github.com/OCA/product-variant
