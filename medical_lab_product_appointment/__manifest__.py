@@ -24,7 +24,7 @@
 
     # always loaded
     'data': [
-        'views/lab_test.xml',
+        'views/lab.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

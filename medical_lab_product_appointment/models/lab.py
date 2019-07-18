@@ -13,6 +13,7 @@ class LabTestType(models.Model):
     _inherit = "lab.test"
 
     product_id = fields.Many2one('product.product', string="Product")
+    product_test_cost = fields.Float(related="product_id.list_price", string="Cost")
 
 
 class Appointment(models.Model):
@@ -66,6 +67,7 @@ class Appointment(models.Model):
                                 'product_id': line.lab_test.product_id.id or False,
                                 'account_id': account.id,
                                 'account_analytic_id': line.lab_test.product_id.income_analytic_account_id.id or False,
+                                'uom_id': line.lab_test.product_id.uom_id.id,
                             }
                             invoice_line_obj.create(curr_invoice_line)
 
@@ -80,3 +82,11 @@ class Appointment(models.Model):
                     'name': _('Lab Invoices'),
                     'res_id': inv_id
                 }
+
+class LabAppointmentLines(models.Model):
+    _inherit = 'lab.appointment.lines'
+
+    @api.onchange('lab_test')
+    def cost_update(self):
+        if self.lab_test:
+            self.cost = self.lab_test.product_test_cost
