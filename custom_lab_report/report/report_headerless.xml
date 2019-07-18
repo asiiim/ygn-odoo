@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            string="Lab Test Result Headerless"
+            id="print_lab_test"
+            model="lab.request"
+            report_type="qweb-pdf"
+            name="custom_lab_report.report_patient_labtest_headerless"
+            file="custom_lab_report.report_patient_labtest_headerless"
+        />
+    </data>
+</odoo>

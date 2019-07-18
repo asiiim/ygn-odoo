@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_lab_reques_form_inherit_form" model="ir.ui.view">
+            <field name="name">view.lab.reques.form.expand.filter</field>
+            <field name="model">lab.request</field>
+            <field name="inherit_id" ref="medical_lab_management.view_lab_reques_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='Note']" position="before">
+                    <page name="Text Before Result" string="Text Before Result">
+                        <field name="text_before_result" widget="html"/>
+                    </page>
+                    <page name="Text After Result" string="Text After Result">
+                        <field name="text_after_result" widget="html"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
