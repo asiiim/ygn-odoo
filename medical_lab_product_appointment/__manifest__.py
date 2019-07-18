@@ -16,7 +16,7 @@
     'version': '11.0.0.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['medical_lab_management'],
+    'depends': ['medical_lab_management', 'product_analytic'],
 
     # price
     'price': 30.00,

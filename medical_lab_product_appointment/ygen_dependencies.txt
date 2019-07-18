@@ -1,2 +1,6 @@
-medical_lab_management
+1. medical_lab_management
 https://github.com/CybroOdoo/CybroAddons.git
+
+2. product_analytic
+https://github.com/OCA/account-analytic.git
+

@@ -65,6 +65,7 @@ class Appointment(models.Model):
                                 'invoice_id': inv_id,
                                 'product_id': line.lab_test.product_id.id or False,
                                 'account_id': account.id,
+                                'account_analytic_id': line.lab_test.product_id.income_analytic_account_id.id or False,
                             }
                             invoice_line_obj.create(curr_invoice_line)
 
