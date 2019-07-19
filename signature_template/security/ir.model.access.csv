@@ -1,2 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_signature_template_signature_template,signature_template.signature_template,model_signature_template_signature_template,,1,0,0,0
+access_signature_template_signature_name,signature_template.signature_name,model_signature_name,,1,1,1,1
