@@ -19,7 +19,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','medical_lab_management'],
+    'depends': ['base','medical_lab_management','signature_template'],
 
     # always loaded
     'data': [

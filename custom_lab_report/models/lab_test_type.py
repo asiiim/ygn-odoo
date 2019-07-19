@@ -13,6 +13,17 @@ class CustomLabRequest(models.Model):
     
     text_after_result = fields.Html('Text After Result')
     text_before_result = fields.Html('Text Before Result')
+    text_before_result = fields.Html('Text Before Result')
+    specimen = fields.Selection(string='Specimen',selection=[('sp','SERUM/PLASMA'),('serum','SERUM'),('edta','EDTA BLOOD'),('fss','FRESH STERILE SAMPLE'),('fu','FRESH URINE'),('fs','FRESH STOOL'),('wb','WHOLE BODY')])
+    sample_id = fields.Char(string='Sample ID')
+    sample_id = fields.Char(string='Sample ID')
+    
+    signature_id = fields.Many2one(string='Signature', comodel_name='signature.name', ondelete='set null')
+    
+class CustomSignatureTemplate(models.Model):
+    _inherit = 'signature.name'
+    
+    request_ids = fields.One2many(string='Lab Request', comodel_name='lab.request', inverse_name='signature_id')
 
 class CustomLabTest(models.Model):
     _inherit = 'lab.test'

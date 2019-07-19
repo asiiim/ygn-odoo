@@ -13,6 +13,13 @@
                     <page name="Text After Result" string="Text After Result">
                         <field name="text_after_result" widget="html"/>
                     </page>
+                    <page name="Signature" string="Signature">
+                        <field name="signature_id"/>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='test_request']" position="before">
+                    <field name="specimen"/>
+                    <field name="sample_id"/>
                 </xpath>
             </field>
         </record>

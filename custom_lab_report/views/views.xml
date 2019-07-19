@@ -1,5 +1,10 @@
 <odoo>
   <data>
+  <menuitem name="Signature"
+          id="signature_name_conf"
+          parent="medical_lab_management.configuration_id"
+          action="signature_template.signature_name_action_window"
+          sequence="25" />
     <!-- explicit list view definition -->
     <!--
     <record model="ir.ui.view" id="custom_lab_report.list">
