@@ -5,15 +5,15 @@
             <t t-foreach="docs" t-as="o">
                  <t t-call="custom_lab_report.lab_layout">
                     <div class="page">
-                        <t t-if="o and 'company_id' in o">
+                        <!-- <t t-if="o and 'company_id' in o">
                             <t t-set="company" t-value="o.company_id"> </t>
                         </t>
                         <t t-if="not o or not 'company_id' in o">
                             <t t-set="company" t-value="res_company"> </t>
-                        </t>
-                        <h3 style="text-decoration:underline;text-align:center;"><b>Lab Test Report</b></h3>
+                        </t> -->
+                        <!-- <h3 style="text-decoration:underline;text-align:center;"><b>Lab Test Report</b></h3>
                         <br/>
-                        <br/>
+                        <br/> -->
                         <table width="99%" style="border:1px solid black;">
                             <tr>
                                 <td style="padding:5px 10px" width="20%" class="td4">Patient Name</td>
