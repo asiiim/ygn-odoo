@@ -25,6 +25,7 @@
     'data': [
         # 'security/ir.model.access.csv',
         'report/lab_test_report_headerless.xml',
+        'report/lab_test_report.xml',
         'report/report_headerless.xml',
         'views/report_templates.xml',
         'views/views.xml',

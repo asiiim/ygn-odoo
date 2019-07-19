@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="custom_report_patient_labtest" inherit_id="medical_lab_management.report_patient_labtest">
+            <xpath expr="//div[@class='page']" position="replace">
+                    <div class="page">
+                        <t t-if="o and 'company_id' in o">
+                            <t t-set="company" t-value="o.company_id"> </t>
+                        </t>
+                        <t t-if="not o or not 'company_id' in o">
+                            <t t-set="company" t-value="res_company"> </t>
+                        </t>
+                        <h3 style="text-decoration:underline;text-align:center;"><b>Lab Test Report</b></h3>
+                        <br/>
+                        <br/>
+                        <table width="99%" style="border:1px solid black;">
+                            <tr>
+                                <td style="padding:5px 10px" width="20%" class="td4">Patient Name</td>
+                                <td style="height:25px"><b><span t-att-style="style" t-esc="o.lab_requestor.patient.name"/></b></td>
+                                <td style="padding:5px 10px" width="25%" class="td4">Patient ID</td>
+                                <td style="height:25px"><b><span t-att-style="style" t-esc="o.lab_requestor.name"/></b></td>
+                                <!--<td style="width:50px;height:25px"><span>Patient: </span><span t-att-style="style" t-esc="o.lab_requestor.patient.name"/></td>-->
+                                <!--<td style="width:50px;height:25px"><span>Age/Gender: </span><span t-att-style="style" t-esc="o.lab_requestor.age"/>/ <span t-att-style="style" t-esc="o.lab_requestor.gender"/></td>-->
+                                <!--<td style="width:50px;height:25px"><span>Test  : </span><span t-att-style="style" t-esc="o.test_request.lab_test"/></td>-->
+                                <!--<td style="width:50px;height:25px"><span>Date: </span><span t-att-style="style" t-esc="o.lab_requesting_date"/></td>-->
+                            </tr>
+                            <tr>
+                                <td style="padding:5px 10px" width="20%" class="td4">Age</td>
+                                <td style="height:25px"><span t-att-style="style" t-esc="o.lab_requestor.age"/></td>
+                                <td style="padding:5px 10px" width="25%" class="td4">Sample ID</td>
+                                <td style="height:25px"><span t-att-style="style" t-esc="o.sample_id"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:5px 10px" width="20%" class="td4">Gender</td>
+                                <td style="height:25px"><span t-att-style="style" t-esc="{False: False, 'm': 'Male', 'f': 'Female', 'ot': 'Others'}[o.lab_requestor.gender]"/></td>
+                                <td style="padding:5px 10px" width="25%" class="td4">Sample Registration Date</td>
+                                <td style="height:25px"><span t-att-style="style" t-esc="o.lab_requesting_date"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:5px 10px" width="20%" class="td4">Referred By</td>
+                                <td style="height:25px"><span t-att-style="style" t-esc="o.app_id.physician_id.name"/></td>
+                                <td style="padding:5px 10px" width="25%" class="td4">Sample Reporting Date</td>
+                                <td style="height:25px"><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:5px 10px" width="20%" class="td4">Phone</td>
+                                <td style="height:25px"><span t-att-style="style" t-esc="o.lab_requestor.phone"/></td>
+                                <td style="padding:5px 10px" width="25%" class="td4">Speciment</td>
+                                <td style="height:25px"><span t-att-style="style" t-esc="{False: False, 'sp': 'SERUM/PLASMA', 'serum': 'SERUM', 'edta': 'EDTA BLOOD', 'fss':'FRESH STERILE SAMPLE','fu':'FRESH URINE','fs': 'FRESH STOOL','wb': 'WHOLE BODY'}[o.specimen]"/></td>
+                            </tr>
+                            <tr style="border:1px solid black;">
+                              <td width="20%" style="padding:5px 10px;height:25px"><b><span>Test</span></b></td>
+                              <td style="text-transform: uppercase;">
+                                <b><span t-att-style="style" t-esc="o.test_request.lab_test"/></b>
+                              </td>
+                              <td colspan="2" style="padding:5px 10px;height:30px">
+                                <img alt="barcode" t-if="o.lab_requestor.patient.barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.lab_requestor.patient.barcode, 600, 70)" style="max-height:25pt;max-width:100%;" align="center"/>
+                              </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <span t-field="o.text_before_result"/>
+                        <table width="99%" style="border:1px solid black;">
+                            <thead>
+                               <th style="border:1px solid black;text-align:center;" width="13%" class="td4">Content</th>
+                               <th style="border:1px solid black;text-align:center;" width="13%" class="td4">Unit</th>
+                               <th style="border:1px solid black;text-align:center;" width="13%" class="td4">Normal Range</th>
+                               <th style="border:1px solid black;text-align:center;" width="13%" class="td4">Result</th>
+                           </thead>
+                           <tbody>
+                               <t t-foreach="o.request_line" t-as="l">
+                                   <tr style="border:1px solid black">
+                                       <td style="border:1px solid black;text-align:center;"><span t-esc="l.test_content.content_type_name" style="font-size:16px;"/></td>
+                                       <td style="border:1px solid black;text-align:center;"><span t-esc="l.unit.code" style="font-size:16px;"/></td>
+                                       <td style="border:1px solid black;text-align:center;"><span t-esc="l.interval" style="font-size:16px;"/></td>
+                                       <td style="border:1px solid black;text-align:center;"><span t-esc="l.result" style="font-size:16px;"/></td>
+                                   </tr>
+                               </t>
+                               <t t-foreach="docs" t-as="o">
+                                   
+                               </t>
+                          </tbody>
+                        </table>
+                         <br/>
+                        <span t-field="o.text_after_result"/>
+                         <br/>
+                         <br/>
+                         <span t-field="o.signature_id.signature"/>
+                    </div>
+                    <p style="page-break-after:always"/>
+               </xpath>
+        </template>
+    </data>
+</openerp>
