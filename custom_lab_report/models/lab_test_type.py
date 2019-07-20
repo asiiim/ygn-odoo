@@ -30,6 +30,12 @@ class CustomLabTest(models.Model):
     
     text_after_result = fields.Html('Text After Result')
     text_before_result = fields.Html('Text Before Result')
+    text_before_result = fields.Html('Text Before Result')
+
+class CustomLabTestAttribute(models.Model):
+    _inherit = 'lab.test.attribute'
+
+    method = fields.Char(string="Method")
 
 class CustomLabAppointment(models.Model):
     _inherit = 'lab.appointment'

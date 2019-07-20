@@ -21,6 +21,9 @@
                     <field name="specimen"/>
                     <field name="sample_id"/>
                 </xpath>
+                <xpath expr="//field[@name='result']" position="after">
+                    <field name="method"/>
+                </xpath>
             </field>
         </record>
         <record id="view_lab_test_form_inherit_form" model="ir.ui.view">
@@ -35,6 +38,9 @@
                     <page name="Text After Result" string="Text After Result">
                         <field name="text_after_result" widget="html"/>
                     </page>
+                </xpath>
+                <xpath expr="//field[@name='interval']" position="after">
+                    <field name="method"/>
                 </xpath>
             </field>
         </record>
