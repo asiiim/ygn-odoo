@@ -7,14 +7,6 @@ from odoo.addons import decimal_precision as dp
 class HrContract(models.Model):
     _inherit = 'hr.contract'
 
-    qualif = fields.Char(string='Qualification')
-    niveau = fields.Char()
-    coef = fields.Char(string='Coefficient')
-
-
-class HrPayslip(models.Model):
-    _inherit = 'hr.contract'
-
     allowance_khaja = fields.Float(string="Allowance for khaja", copy=True, help="Allowance for Khaja")
     allowance_khaja_tax = fields.Float(string="Taxable Khaja", copy=True, help="Taxable Khaja")
     allowance_trans = fields.Float(string="Allowance for Transportation", copy=True, help="Allowance for Transportation")
