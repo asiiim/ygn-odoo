@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="hr_contract_view_form_np_payroll_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.view.form.np_payroll.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Salary computation" name="salary_info">
+                        <group>
+                        <group name="salary_info" string="Salary Info">
+                            <field name="total_allocated_hours"/>
+                        </group>
+                        <group name="overtime_undertime" string="Overtime/Undertie Info">
+                            <field name="overtime_pay_factor"/>
+                            <field name="undertime_fine_factor"/>
+                            <field name="overtime_buffer_hours"/>
+                            <field name="undertime_buffer_hours"/>
+                        </group>
+                        <group name="allowances" string="Allowances Info">
+                            <field name="allowance_khaja"/>
+                            <field name="allowance_trans"/>
+                            <field name="allowance_khaja_tax"/>
+                            <field name="allowance_trans_tax"/>
+                        </group>
+                        <group name="misc_info" string="Miscellaneous">
+                            <field name="bonus"/>
+                            <field name="emp_grade_amount"/>
+                        </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
