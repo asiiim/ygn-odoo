@@ -40,7 +40,7 @@
             <field name="amount_python_compute">
                 result = contract.wage
                 if contract.paid_hourly_attendance:
-                    result = contract.wage * contract.x_total_allocated_hours
+                    result = contract.wage * contract.total_allocated_hours
             </field>
         </record>
         
