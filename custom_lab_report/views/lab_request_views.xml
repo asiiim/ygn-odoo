@@ -54,5 +54,18 @@
                 </xpath>
             </field>
         </record>
+        <record id="view_lab_patient_form_inherit_form" model="ir.ui.view">
+            <field name="name">view.lab.patient.form.inherit.form</field>
+            <field name="model">lab.patient</field>
+            <field name="inherit_id" ref="medical_lab_management.view_lab_patient_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='dob']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='age']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>

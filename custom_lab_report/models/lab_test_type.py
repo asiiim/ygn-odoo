@@ -4,6 +4,7 @@ from odoo import models, fields, api
 import logging
 import datetime
 from odoo.exceptions import UserError
+from dateutil.relativedelta import relativedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -37,6 +38,22 @@ class CustomLabTestAttribute(models.Model):
 
     method = fields.Char(string="Method")
     status = fields.Char(string="Status")
+
+class CustomLabPatient(models.Model):
+    _inherit = 'lab.patient'
+    
+    phone = fields.Char(string="Phone", required=False, default="9806708035")
+    email = fields.Char(string="Email", required=False)
+    dob = fields.Date(string='Date Of Birth', required=False)
+
+    @api.multi
+    def compute_age(self):
+        for data in self:
+            if data.dob:
+                dob = fields.Datetime.from_string(data.dob)
+                date = fields.Datetime.from_string(data.date)
+                delta = relativedelta(date, dob)
+                data.age = 0
 
 class CustomLabAppointment(models.Model):
     _inherit = 'lab.appointment'
