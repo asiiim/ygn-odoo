@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Nepali - Accounting',
-    'version': '2.0',
+    'version': '1.0',
     'author': 'Ygen Software Pvt. Ltd.',
     'website': 'http://ygen.io',
     'category': 'Localization',
