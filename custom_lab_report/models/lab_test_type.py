@@ -15,7 +15,7 @@ class CustomLabRequest(models.Model):
     text_before_result = fields.Html('Text Before Result')
     text_before_result = fields.Html('Text Before Result')
     specimen = fields.Selection(string='Specimen',selection=[('sp','SERUM/PLASMA'),('serum','SERUM'),('edta','EDTA BLOOD'),('fss','FRESH STERILE SAMPLE'),('fu','FRESH URINE'),('fs','FRESH STOOL'),('wb','WHOLE BODY')])
-    sample_id = fields.Char(string='Sample ID')
+    patient_type = fields.Selection(string='Patient Type',selection=[('in','Indoor'),('out','Outdoor')])
     sample_id = fields.Char(string='Sample ID')
     
     signature_id = fields.Many2one(string='Signature', comodel_name='signature.name', ondelete='set null')
@@ -36,6 +36,7 @@ class CustomLabTestAttribute(models.Model):
     _inherit = 'lab.test.attribute'
 
     method = fields.Char(string="Method")
+    status = fields.Char(string="Status")
 
 class CustomLabAppointment(models.Model):
     _inherit = 'lab.appointment'

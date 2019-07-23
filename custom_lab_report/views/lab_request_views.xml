@@ -20,9 +20,19 @@
                 <xpath expr="//field[@name='test_request']" position="before">
                     <field name="specimen"/>
                     <field name="sample_id"/>
+                    <field name="patient_type"/>
                 </xpath>
                 <xpath expr="//field[@name='result']" position="after">
                     <field name="method"/>
+                </xpath>
+                <xpath expr="//field[@name='test_content']" position="after">
+                    <field name="status"/>
+                </xpath>
+                <xpath expr="//field[@name='test_content']" position="attributes">
+                    <attribute name="string">Investigations</attribute>
+                </xpath>
+                <xpath expr="//field[@name='interval']" position="attributes">
+                    <attribute name="string">Biological Reference Interval</attribute>
                 </xpath>
             </field>
         </record>

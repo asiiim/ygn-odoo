@@ -44,8 +44,8 @@
                                 <td style="height:25px"><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/></td>
                             </tr>
                             <tr>
-                                <td style="padding:1px 10px" width="20%" class="td4">Phone</td>
-                                <td style="height:25px"><span t-att-style="style" t-esc="o.lab_requestor.phone"/></td>
+                                <td style="padding:1px 10px" width="20%" class="td4">Patient Type</td>
+                                <td style="height:25px"><span t-att-style="style" t-esc="{False: False, 'in': 'Indoor', 'out': 'Outdoor'}[o.patient_type]"/></td>
                                 <td style="padding:1px 10px" width="25%" class="td4">Specimen</td>
                                 <td style="height:25px"><span t-att-style="style" t-esc="{False: False, 'sp': 'SERUM/PLASMA', 'serum': 'SERUM', 'edta': 'EDTA BLOOD', 'fss':'FRESH STERILE SAMPLE','fu':'FRESH URINE','fs': 'FRESH STOOL','wb': 'WHOLE BODY'}[o.specimen]"/></td>
                             </tr>
@@ -63,16 +63,18 @@
                         <span t-field="o.text_before_result"/>
                         <table width="99%" style="border:1px solid #dedede;">
                             <thead style="background-color:#dedede">
-                               <th style="padding:2px 3px;border:1px solid #dedede;text-align:center;" width="13%" class="td4">Content</th>
+                               <th style="padding:2px 3px;border:1px solid #dedede;text-align:center;" width="13%" class="td4">Investigations</th>
+                               <th style="padding:2px 3px;border:1px solid #dedede;text-align:center;" width="13%" class="td4">Status</th>
                                <th style="padding:2px 3px;border:1px solid #dedede;text-align:center;" width="13%" class="td4">Result</th>
                                <th style="padding:2px 3px;border:1px solid #dedede;text-align:center;" width="13%" class="td4">Unit</th>
-                               <th style="padding:2px 3px;border:1px solid #dedede;text-align:center;" width="13%" class="td4">Normal Range</th>
+                               <th style="padding:2px 3px;border:1px solid #dedede;text-align:center;" width="13%" class="td4">Biological Reference Interval</th>
                                <th style="padding:2px 3px;border:1px solid #dedede;text-align:center;" width="13%" class="td4">Method</th>
                            </thead>
                            <tbody>
                                <t t-foreach="o.request_line" t-as="l">
                                    <tr style="border:1px solid #dedede">
                                        <td style="padding:3px 3px;border:1px solid #dedede;text-align:center;"><span t-esc="l.test_content.content_type_name" style="font-size:16px;"/></td>
+                                       <td style="padding:3px 3px;border:1px solid #dedede;text-align:center;"><span t-esc="l.status" style="font-size:16px;"/></td>
                                        <td style="padding:3px 3px;border:1px solid #dedede;text-align:center;"><span t-esc="l.result" style="font-size:16px;"/></td>
                                        <td style="padding:3px 3px;border:1px solid #dedede;text-align:center;"><span t-esc="l.unit.code" style="font-size:16px;"/></td>
                                        <td style="padding:3px 3px;border:1px solid #dedede;text-align:center;"><span t-esc="l.interval" style="font-size:16px;"/></td>
