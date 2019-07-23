@@ -23,10 +23,11 @@
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
+        #'security/ir.model.access.csv',
         'report/lab_test_report_headerless.xml',
         'report/lab_test_report.xml',
         'report/report_headerless.xml',
+        'report/consolidated_lab_test_reports.xml',
         'views/report_templates.xml',
         'views/views.xml',
         'views/lab_request_views.xml',
