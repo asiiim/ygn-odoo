@@ -70,8 +70,13 @@ class CustomLabAppointment(models.Model):
                                                 'test_request': line.lab_test.id,
                                                 'text_after_result': line.lab_test.text_after_result,
                                                 'text_before_result': line.lab_test.text_before_result,
-                                                'request_line': [(6, 0, [x.id for x in data.test_lines])],
+                                                'request_line': [(0, 0, {'test_content':x.test_content.id,
+                                                                        'unit': x.unit.id,
+                                                                        'method': x.method,
+                                                                        'interval': x.interval}) for x in line.lab_test.test_lines],
                                                 })
             self.state = 'request_lab'
         else:
             raise UserError(_('Please Select Lab Test.'))
+
+            # for x in line.lab_test.test_lines:
