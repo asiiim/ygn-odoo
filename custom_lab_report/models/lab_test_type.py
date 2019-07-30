@@ -15,7 +15,7 @@ class CustomLabRequest(models.Model):
     text_after_result = fields.Html('Text After Result')
     text_before_result = fields.Html('Text Before Result')
     text_before_result = fields.Html('Text Before Result')
-    specimen = fields.Selection(string='Specimen',selection=[('sp','SERUM/PLASMA'),('serum','SERUM'),('edta','EDTA BLOOD'),('fss','FRESH STERILE SAMPLE'),('fu','FRESH URINE'),('fs','FRESH STOOL'),('wb','WHOLE BODY')])
+    specimen = fields.Selection(string='Specimen',selection=[('fss','Fresh Sterile Stool'),('fsu','Fresh Sterile Urine'),('bd','Blood'),('sp','SERUM/PLASMA'),('serum','SERUM'),('edta','EDTA BLOOD'),('fss','FRESH STERILE SAMPLE'),('fu','FRESH URINE'),('fs','FRESH STOOL'),('wb','WHOLE BODY')])
     patient_type = fields.Selection(string='Patient Type',selection=[('in','Indoor'),('out','Outdoor')])
     sample_id = fields.Char(string='Sample ID')
     
@@ -78,5 +78,3 @@ class CustomLabAppointment(models.Model):
             self.state = 'request_lab'
         else:
             raise UserError(_('Please Select Lab Test.'))
-
-            # for x in line.lab_test.test_lines:
