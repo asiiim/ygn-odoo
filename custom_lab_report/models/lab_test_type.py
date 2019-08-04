@@ -15,16 +15,22 @@ class CustomLabRequest(models.Model):
     text_after_result = fields.Html('Text After Result')
     text_before_result = fields.Html('Text Before Result')
     text_before_result = fields.Html('Text Before Result')
-    specimen = fields.Selection(string='Specimen',selection=[('fss','Fresh Sterile Stool'),('fsu','Fresh Sterile Urine'),('bd','Blood'),('sp','SERUM/PLASMA'),('serum','SERUM'),('edta','EDTA BLOOD'),('fss','FRESH STERILE SAMPLE'),('fu','FRESH URINE'),('fs','FRESH STOOL'),('wb','WHOLE BODY')])
+    specimen = fields.Selection(string='Specimen',selection=[('semen','Semen'),('fss','Fresh Sterile Stool'),('fsu','Fresh Sterile Urine'),('bd','Blood'),('sp','SERUM/PLASMA'),('serum','SERUM'),('edta','EDTA BLOOD'),('fss','FRESH STERILE SAMPLE'),('fu','FRESH URINE'),('fs','FRESH STOOL'),('wb','WHOLE BODY')])
     patient_type = fields.Selection(string='Patient Type',selection=[('in','Indoor'),('out','Outdoor')])
-    sample_id = fields.Char(string='Sample ID')
-    
+    sample_id = fields.Char(string='Sample ID') 
+    lab_request_specimen_ids = fields.Many2many('lab.specimen', 'lab_request_specimen_rel', 'request_id', 'speciment_id', string='Specimen',)
     signature_id = fields.Many2one(string='Signature', comodel_name='signature.name', ondelete='set null')
     
 class CustomSignatureTemplate(models.Model):
     _inherit = 'signature.name'
     
     request_ids = fields.One2many(string='Lab Request', comodel_name='lab.request', inverse_name='signature_id')
+
+class LabSpecimen(models.Model):
+    _name = 'lab.specimen'
+
+    name = fields.Char(string=u'Name',)
+    specimen_ids = fields.Many2many('lab.request', 'lab_request_specimen_rel', 'speciment_id', 'request_id', string='Lab Request')
 
 class CustomLabTest(models.Model):
     _inherit = 'lab.test'

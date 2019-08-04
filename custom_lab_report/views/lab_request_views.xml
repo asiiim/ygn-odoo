@@ -18,7 +18,8 @@
                     </page>
                 </xpath>
                 <xpath expr="//field[@name='test_request']" position="before">
-                    <field name="specimen"/>
+                    <!-- <field name="specimen"/> -->
+                    <field name="lab_request_specimen_ids" widget="many2many_tags"/>
                     <field name="sample_id"/>
                     <field name="patient_type"/>
                 </xpath>
