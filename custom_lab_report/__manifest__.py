@@ -28,6 +28,7 @@
         'report/lab_test_report.xml',
         'report/report_headerless.xml',
         'report/consolidated_lab_test_reports.xml',
+        'report/consolidated_lab_test_reports_header.xml',
         'views/report_templates.xml',
         'views/views.xml',
         'views/lab_request_views.xml',
