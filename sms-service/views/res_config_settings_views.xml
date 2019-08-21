@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.sms.api</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="50"/>
+            <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="SMS" string="SMS" data-key="sms">
+                        <!--<field name="loyalty_id" invisible="1"/>-->
+                        <h2>Credentials</h2>
+                        <div class="row mt16 o_settings_container" id="sms_credentials_settings">
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="sms_credentials_data_settings">
+                                <div class="o_setting_right_pane">
+                                    <label string="Default SMS Credential Settings"/>
+                                    <div class="text-muted">Set the settings for SMS</div>
+                                </div>
+                                <div class="row mt16 o_settings_container">
+                                    <div class="o_setting_right_pane">
+                                        <div class="mt16 row">
+                                            <label class="col-xs-3 col-md-3 o_light_label" string="SMS API URL" for="sms_url"/>
+                                            <field name="sms_url"/>
+                                        </div>
+                                        <div class="mt16 row">
+                                            <label class="col-xs-3 col-md-3 o_light_label" string="SMS Token" for="sms_token"/>
+                                            <field name="sms_token"/>
+                                        </div>
+                                        <div class="mt16 row">
+                                            <label class="col-xs-3 col-md-3 o_light_label" string="SMS Sender" for="sms_sender"/>
+                                            <field name="sms_sender"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

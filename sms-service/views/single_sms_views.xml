@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="single_sms_view_tree" model="ir.ui.view">
+            <field name="name">singlesms.tree</field>
+            <field name="model">sms.single</field>
+            <field name="arch" type="xml">
+                <tree string="SMS">
+                    <field name="name"/>
+                    <field name="receiver"/>
+                    <field name="text"/>
+                    <field name="is_sent"/>
+                </tree>
+            </field>
+        </record>
+        <record id="single_sms_view_form" model="ir.ui.view">
+            <field name="name">singlesms.form</field>
+            <field name="model">sms.single</field>
+            <field name="arch" type="xml">
+                <form string="SMS">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="receiver"/>
+                            <field name="text"/>
+                            <field name="is_sent"/>
+                        </group>
+                        <button class="oe_stat_button" type="object" name="sendSms" string="SEND SMS">
+                        </button>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="single_sms_action_form" model="ir.actions.act_window">
+            <field name="name">Send Single SMS</field>
+            <field name="res_model">sms.single</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">              Create a new message to send.            </p>
+                <p>              You can create a new sms to be sent to the mobile number.            </p>
+            </field>
+        </record>
+        <menuitem id="menu_1" name="SMS Service" web_icon="sms-service,logo.png"/>
+        <menuitem id="menu_item_11" name="Single SMS" parent="sms-service.menu_1" action="single_sms_action_form"/>
+    </data>
+</odoo>
