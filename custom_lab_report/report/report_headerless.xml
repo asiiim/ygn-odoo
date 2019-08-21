@@ -8,6 +8,25 @@
             report_type="qweb-pdf"
             name="custom_lab_report.report_patient_labtest_headerless"
             file="custom_lab_report.report_patient_labtest_headerless"
+            print_report_name = "'Report of ' + object.lab_requestor.patient.name + '-'+ object.lab_requestor.name"
+        />
+        <report
+            string="Consolidated Lab Test Reports"
+            id="consolidated_print_lab_test"
+            model="lab.request"
+            report_type="qweb-pdf"
+            name="custom_lab_report.report_patient_consolidateds_lab_reports"
+            file="custom_lab_report.report_patient_consolidateds_lab_reports"
+            print_report_name = "'Report of ' + object.lab_requestor.patient.name + '-'+ object.lab_requestor.name"
+        />
+        <report
+            string="Consolidated Lab Test Reports with Header"
+            id="consolidated_print_lab_test_header"
+            model="lab.request"
+            report_type="qweb-pdf"
+            name="custom_lab_report.report_patient_consolidateds_lab_reports_header"
+            file="custom_lab_report.report_patient_consolidateds_lab_reports_header"
+            print_report_name = "'Report of ' + object.lab_requestor.patient.name + '-'+ object.lab_requestor.name"
         />
     </data>
 </odoo>

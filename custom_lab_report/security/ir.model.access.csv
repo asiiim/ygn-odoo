@@ -1,2 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_custom_lab_report_custom_lab_report,custom_lab_report.custom_lab_report,model_custom_lab_report_custom_lab_report,,1,0,0,0
+access_custom_lab_report_lab_specimen,custom_lab_report.lab.specimen,model_lab_specimen,,1,1,1,1

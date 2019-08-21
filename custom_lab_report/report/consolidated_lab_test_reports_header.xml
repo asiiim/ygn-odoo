@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_patient_consolidateds_lab_reports_header">
+            <t t-call="web.external_layout">
+                    <div class="page">
+                      <t t-foreach="docs" t-as="o">
+                        <t t-if="o and 'company_id' in o">
+                            <t t-set="company" t-value="o.company_id"> </t>
+                        </t>
+                        <t t-if="not o or not 'company_id' in o">
+                            <t t-set="company" t-value="res_company"> </t>
+                        </t>
+                        <!-- <h3 style="text-decoration:underline;text-align:center;"><b>Lab Test Report</b></h3>
+                        <br/>
+                        <br/> -->
+                          <table t-if="o_first" width="99%" style="border:1px solid black;">
+                            <tr>
+                                <td style="padding:1px 10px" width="20%" class="td4">PATIENT NAME</td>
+                                <td style="height:30px"><b><span t-att-style="style" t-esc="{False: False, 'ms': 'Ms', 'mister': 'Mr', 'mrs': 'Mrs'}[o.lab_requestor.title]"/>. <span t-att-style="style" t-esc="o.lab_requestor.patient.name"/></b></td>
+                                <td style="padding:1px 10px" width="30%" class="td4">PATIENT ID</td>
+                                <td style="height:30px" width="20%"><b><span t-att-style="style" t-esc="o.lab_requestor.name"/></b></td>
+                                <!--<td style="width:50px;height:25px"><span>Patient: </span><span t-att-style="style" t-esc="o.lab_requestor.patient.name"/></td>-->
+                                <!--<td style="width:50px;height:25px"><span>Age/Gender: </span><span t-att-style="style" t-esc="o.lab_requestor.age"/>/ <span t-att-style="style" t-esc="o.lab_requestor.gender"/></td>-->
+                                <!--<td style="width:50px;height:25px"><span>Test  : </span><span t-att-style="style" t-esc="o.test_request.lab_test"/></td>-->
+                                <!--<td style="width:50px;height:25px"><span>Date: </span><span t-att-style="style" t-esc="o.lab_requesting_date"/></td>-->
+                            </tr>
+                            <tr>
+                                <td style="padding:1px 10px" width="20%" class="td4">AGE</td>
+                                <td style="height:30px"><span t-att-style="style" t-esc="o.lab_requestor.x_patient_age"/> <span t-att-style="style" t-esc="{False: False, 'moth': 'Months', 'yrs': 'Years'}[o.lab_requestor.x_patient_age_type]"/></td>
+                                <td style="padding:1px 10px" width="30%" class="td4">SAMPLE ID</td>
+                                <td style="height:30px" width="20%"><span t-att-style="style" t-esc="o.sample_id"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:1px 10px" width="20%" class="td4">GENDER</td>
+                                <td style="height:30px"><span t-att-style="style" t-esc="{False: False, 'm': 'Male', 'f': 'Female', 'ot': 'Others'}[o.lab_requestor.gender]"/></td>
+                                <td style="padding:1px 10px" width="30%" class="td4">SAMPLE REGISTRATION DATE</td>
+                                <td style="height:30px" width="20%"><span t-att-style="style" t-esc="o.lab_requesting_date"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:1px 10px" width="20%" class="td4">REFFERED BY</td>
+                                <td style="height:30px"><span t-att-style="style" t-esc="o.app_id.physician_id.name"/></td>
+                                <td style="padding:1px 10px" width="30%" class="td4">SAMPLE REPORTING DATE</td>
+                                <td style="height:30px" width="20%"><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:1px 10px" width="20%" class="td4">PATIENT TYPE</td>
+                                <td style="height:30px"><span t-att-style="style" t-esc="{False: False, 'in': 'Indoor', 'out': 'Outdoor'}[o.patient_type]"/></td>
+                                <td style="padding:1px 10px" width="30%" class="td4">SPECIMEN</td>
+                                <td style="height:30px">
+                                    <t t-foreach="o.lab_request_specimen_ids" t-as="l">
+                                        <span t-esc="l.name"/><t t-if="(l_size > 1) and (not l_last)">, </t>
+                                    </t>
+                                </td>
+                            </tr>
+                            
+                          </table>
+                          <!--<tr style="border:0px">-->
+                            <!--<td width="20%" style="padding:5px 10px;height:25px"><b><span>TEST</span></b></td>-->
+                            <!--<td style="text-transform: uppercase;">-->
+                            <!--  <b><span t-att-style="style" t-esc="o.test_request.lab_test"/></b>-->
+                            <!--</td>-->
+                            <!--<td colspan="4" class="text-right" style="padding:5px 10px;height:30px">-->
+                          <table t-if="o_first" width="99%" style="border:0px;">
+                              <tr style="border:0px;">
+                                <td colspan="4" class="text-right" style="padding:5px 10px;height:30px">
+                                  <img alt="barcode" t-if="o.lab_requestor.patient.barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.lab_requestor.patient.barcode, 600, 70)" style="max-height:25pt;max-width:100%;" align="center"/>
+                                </td>
+                              </tr>  
+                          </table>
+                            <!--</td>-->
+                          <!--</tr>-->
+                          <t t-if="o_first"><br/></t>
+                      </t>
+                          <!--<span t-field="o.text_before_result"/>-->
+                          <table width="99%" style="border:1px solid #000;">
+                              <thead style="background-color:#dedede; font-size:14px;">
+                                 <th style="padding:3px 3px;border:1px solid #000;text-align:center;" width="34%" class="td4">Investigations</th>
+                                 <th style="padding:3px 3px;border:1px solid #000;text-align:center;" width="8%" class="td4">Status</th>
+                                 <th style="padding:3px 3px;border:1px solid #000;text-align:center;" width="13%" class="td4">Result</th>
+                                 <th style="padding:3px 3px;border:1px solid #000;text-align:center;" width="10%" class="td4">Unit</th>
+                                 <th style="padding:3px 3px;border:1px solid #000;text-align:center;" width="22%" class="td4">Reference Interval</th>
+                                 <th style="padding:3px 3px;border:1px solid #000;text-align:center;" width="13%" class="td4">Method</th>
+                              </thead>
+                              <tbody>
+                               <t t-foreach="docs.sorted(key=lambda r: r.test_request.lab_test_code)" t-as="o">
+                                <!--<tr style="border:1px solid #dedede; background-color:#d6e3bc;">-->
+                                <!--  <td colspan="6" style="padding:2px 3px; font-size:14px; font-weight:bold">-->
+                                <!--    <span>[<t t-esc="o.test_request.lab_test_code"/>] <t t-esc="o.test_request.lab_test"/>:</span>-->
+                                <!--  </td>-->
+                                <!--</tr>-->
+                                <t t-if="o_first" t-set="prev_test_code" t-value="False"/>
+                                <t t-foreach="o.request_line" t-as="l">
+                                  <t t-if="prev_test_code != o.test_request.lab_test_code">
+                                    <tr t-if="l_first" style="border:1px solid #ededed; background-color:#d6e3bc;">
+                                      <td colspan="6" style="padding:2px 3px; font-size:13px; font-weight:bold">
+                                        <span><t t-esc="o.test_request.lab_test_code"/>:</span>
+                                      </td>
+                                    </tr>
+                                  </t>
+                                  <tr style="border:1px solid #ededed;">
+                                    <td style="padding:2px 3px;border:1px solid #ededed;text-align:center;"><span t-esc="l.test_content.content_type_name" style="font-size:13px;"/></td>
+                                    <td style="padding:2px 3px;border:1px solid #ededed;text-align:center;"><span t-esc="l.status" style="font-size:13px;"/></td>
+                                    <td style="padding:2px 3px;border:1px solid #ededed;text-align:center;"><span t-esc="l.result" style="font-size:13px;"/></td>
+                                    <td style="padding:2px 3px;border:1px solid #ededed;text-align:center;"><span t-esc="l.unit.code" style="font-size:13px;"/></td>
+                                    <td style="padding:2px 3px;border:1px solid #ededed;text-align:center;"><span t-esc="l.interval" style="font-size:13px;"/></td>
+                                    <td style="padding:2px 3px;border:1px solid #ededed;text-align:center;"><span t-esc="l.method" style="font-size:13px;"/></td>
+                                  </tr>
+                                </t>
+                                <t t-set="prev_test_code" t-value="o.test_request.lab_test_code"/>
+                               </t>
+                              </tbody>
+                          </table>
+                          <!--<br/>-->
+                          <!--<span t-field="o.text_after_result"/>-->
+                         <!--<br/>-->
+                         <br/>
+                         <t t-foreach="docs" t-as="o">
+                          <div t-if="o_first" style="top: 40px;" t-field="o.signature_id.signature"/>
+                        </t>
+                  </div>
+                  <p style="page-break-after:always"/>
+                </t>
+        </template>
+    </data>
+</openerp>

@@ -1,0 +1,38 @@
+<odoo>
+    <data>
+        <record id="lab_specimen_view_tree" model="ir.ui.view">
+            <field name="name">lab.specimen.tree</field>
+            <field name="model">lab.specimen</field>
+            <field name="arch" type="xml">
+                <tree string="Specimen">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="lab_specimen_view_form" model="ir.ui.view">
+            <field name="name">lab.specimen.form</field>
+            <field name="model">lab.specimen</field>
+            <field name="arch" type="xml">
+                <form string="Specimen">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="lab_specimen_action_window" model="ir.actions.act_window">
+            <field name="name">Specimen</field>
+            <field name="res_model">lab.specimen</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem name="Specimen"
+          id="lab_specimen_conf"
+          parent="medical_lab_management.configuration_id"
+          action="custom_lab_report.lab_specimen_action_window"
+          sequence="25" />
+    </data>
+</odoo>
