@@ -8,7 +8,6 @@ class LabCommisionAccountInvoiceLine(models.Model):
 
     commission_subtotal = fields.Float(string='Commission Subtotal',compute="_compute_lab_commission_total",readonly=True,store=True,track_visibility='always')
 
-    # @api.onchange('price_subtotal')
     @api.depends('account_analytic_id','price_subtotal')
     def _compute_lab_commission_total(self):
         for record in self:
@@ -16,14 +15,6 @@ class LabCommisionAccountInvoiceLine(models.Model):
                 record.commission_subtotal = record.price_subtotal-(((record.account_analytic_id.partner_id.commission) * 0.01 ) * float(record.price_subtotal))
             else:
                 record.commission_subtotal = 0.0
-
-    # @api.onchange('price_subtotal')
-    # def _onchange_price_subtotal(self):
-    #     for record in self:
-    #         if record.account_analytic_id:
-    #             record.commission_subtotal = record.price_subtotal-(((record.account_analytic_id.partner_id.commission) * 0.01) * float(record.price_subtotal))
-    #         else:
-    #             record.commission_subtotal= 0.0
 
 class LabCommisionAccountAnalyticLine(models.Model):
     _inherit ="account.analytic.line"
