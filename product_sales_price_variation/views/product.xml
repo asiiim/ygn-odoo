@@ -15,8 +15,8 @@
                     <label for="can_depend_base"/>
                 </div>
                 <group attrs="{'invisible': ['|', '|', ('is_base', '=', True), ('can_depend_base', '=', False), ('product_variant_count', '&gt;', 1)]}">
-                    <field name="base_product_id" />
                     <field name="weight_uom_id" options="{'no_create_edit': True, 'no_create': True}" />
+                    <field name="base_product_id" />
                 </group>
             </xpath>
 
@@ -40,8 +40,8 @@
             <!-- Customize Start -->
             <xpath expr="//div[@name='options']" postion="after">
                 <group attrs="{'invisible': ['|', '|', ('is_base', '=', True), ('can_depend_base', '=', False)]}">
-                    <field name="base_product_id" />
                     <field name="weight_uom_id" options="{'no_create_edit': True, 'no_create': True}" />
+                    <field name="base_product_id" />
                 </group>
             </xpath>
             <xpath expr="//page[@name='general_information']" position="inside">
@@ -69,8 +69,8 @@
                     <field name="can_depend_base" invisible="1"/>
                     <field name="product_tmpl_id" invisible="1" />
                     <group attrs="{'invisible': ['|', ('is_base', '=', True), ('can_depend_base', '=', False)]}">
-                        <field name="base_product_id" />
                         <field name="weight_uom_id" options="{'no_create_edit': True, 'no_create': True}" />
+                        <field name="base_product_id" />
                     </group>
                     <group string="Sales Price Logistics" attrs="{'invisible': ['|', ('is_base', '=', True), ('can_depend_base', '=', False)]}">
                         <field name="ready_weight" />

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="messaging_list_view_tree" model="ir.ui.view">
+            <field name="name">messaging.list.tree</field>
+            <field name="model">sms.messaging.list</field>
+            <field name="arch" type="xml">
+                <tree string="Group">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="messaging_list_view_form" model="ir.ui.view">
+            <field name="name">messaging.list.form</field>
+            <field name="model">sms.messaging.list</field>
+            <field name="arch" type="xml">
+                <form string="Group">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="partner_ids" widget="many2many_tags"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="messaging_list_action_form" model="ir.actions.act_window">
+            <field name="name">Message Groups</field>
+            <field name="res_model">sms.messaging.list</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">              Create a new messaging Group.            </p>
+                <p>              You can later use this group to send bulk messages to the members of entire group.            </p>
+            </field>
+        </record>
+        <menuitem id="menu_item_13" name="SMS Group" parent="sms-service.menu_1" action="messaging_list_action_form"/>
+    </data>
+</odoo>

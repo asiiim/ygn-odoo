@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sparrow_sms_sms_single,sparrow_sms.sms_single,model_sms_single,,1,1,1,1
+access_sparrow_sms_sms_multiple,sparrow_sms.sms_multiple,model_sms_multiple,,1,1,1,1
+access_sparrow_sms_sms_messaging_list,sparrow_sms.sms_messaging_list,model_sms_messaging_list,,1,1,1,1

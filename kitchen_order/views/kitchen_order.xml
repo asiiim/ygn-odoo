@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_kitchen_order_tree" model="ir.ui.view">
+            <field name="name">kitchen.order.tree</field>
+            <field name="model">kitchen_order.kitchen_order</field>
+            <field name="arch" type="xml">
+                <tree string="Kitchen Order" class="o_kitchen_order">
+                    <field name="name" string="Kitchen Order Number"/>
+                    <field name="product_id"/>
+                    <field name="saleorder_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_kitchen_order_form" model="ir.ui.view">
+            <field name="name">kitchen.order.form</field>
+            <field name="model">kitchen_order.kitchen_order</field>
+            <field name="arch" type="xml">
+                <form string="Kitchen Order" class="o_kitchen_order">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="new,in_progress,done" clickable="True"
+                            options="{'fold_field': 'fold'}"/>
+                    </header>
+                    <sheet>
+                        <field name="image" widget="image" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="product_id" options='{"always_reload": True}'/>
+                                <field name="saleorder_id" options='{"always_reload": True}'/>
+                                <field name="order_description"/>
+                            </group>
+                            <group>
+                                <field name="requested_date"/>
+                                <field name="product_description"/>
+                                <field name="ko_note"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_kitchen_orders" model="ir.actions.act_window">
+            <field name="name">Kitchen Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">kitchen_order.kitchen_order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!-- <field name="search_view_id" ref="sale_order_view_search_inherit_sale"/> -->
+            <field name="context">{}</field>
+            <!-- <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field> -->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create a Kitchen Order, the first step of a new kitchen order.
+                </p>
+                <p>
+                    Once the sale order is confirmed, it creates a kitchen order.
+                    You'll be able to view it and change states of each kitchen order.
+                    From the <i>Kitchen Orders</i> menu, you can track kitchen
+                    orders.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="main_menu_kitchen_order" 
+                    name="Kitchen Orders" 
+                    sequence="1"
+                    web_icon="kitchen_order,static/src/img/default_image.png"/>
+        <menuitem id="menu_kitchen_order"
+                    name="Orders"
+                    action="action_kitchen_orders"
+                    parent="main_menu_kitchen_order"
+                    sequence="2"/>
+    </data>
+</odoo>
