@@ -1,5 +1,5 @@
-# Copyright 2014-2018 Tecnativa - Pedro M. Baeza
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+# -*- coding: utf-8 -*-
+# Part of Ygen. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, exceptions, fields, models
 
