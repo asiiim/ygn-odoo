@@ -33,6 +33,8 @@ class KitchenOrder(models.Model):
         ('2', 'High'),
         ('3', 'Very High'),
         ], default='0', index=True, string="Priority")
+    
+    requested_date  = fields.Datetime(related="saleorder_id.requested_date", string="Order Requested Date")
             
     @api.onchange('product_id')
     def _get_product_image(self):

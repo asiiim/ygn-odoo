@@ -30,7 +30,6 @@
                                 <field name="name" readonly="1"/>
                             </h1>
                         </div>
-                        <!-- <field name="kanban_state" widget="state_selection"/> -->
                         <group>
                             <group>
                                 <field name="product_id" options='{"always_reload": True}'/>
@@ -38,6 +37,7 @@
                                 <field name="order_description"/>
                             </group>
                             <group>
+                                <field name="requested_date"/>
                                 <field name="product_description"/>
                                 <field name="ko_note"/>
                             </group>
