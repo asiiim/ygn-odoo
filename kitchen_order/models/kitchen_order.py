@@ -13,7 +13,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 class KitchenOrder(models.Model):
-    _name = "kitchen_order.kitchen_order"
+    _name = "kitchen.order"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _description = "Kitchen Order"
     _order = "priority desc, sequence, id desc"
@@ -36,7 +36,7 @@ class KitchenOrder(models.Model):
 
     @api.model
     def create(self, vals):
-        vals['name'] = self.env['ir.sequence'].next_by_code('kitchen_order.kitchen_order') or _('New')
+        vals['name'] = self.env['ir.sequence'].next_by_code('kitchen.order') or _('New')
         result = super(KitchenOrder, self).create(vals)
         return result
 
@@ -44,7 +44,7 @@ class KitchenOrder(models.Model):
     ################################## [ Work in Progress ] #############################################################################
     active = fields.Boolean(default=True)
     priority = fields.Selection(kitchen_order_stage.AVAILABLE_PRIORITIES, string='Priority', index=True, default=kitchen_order_stage.AVAILABLE_PRIORITIES[0][0])
-    stage_id = fields.Many2one('kitchen_order.stage', string='Stage', track_visibility='onchange', index=True, group_expand='_read_group_stage_ids')
+    stage_id = fields.Many2one('kitchen.stage', string='Stage', track_visibility='onchange', index=True, group_expand='_read_group_stage_ids')
     color = fields.Integer('Color Index', default=0)
 
     @api.multi

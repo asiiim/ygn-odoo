@@ -13,7 +13,7 @@ AVAILABLE_PRIORITIES = [
 class Stage(models.Model):
     """ Model for case stages. This models the main stages of a kitchen order flow. 
     """
-    _name = "kitchen_order.stage"
+    _name = "kitchen.stage"
     _description = "Stage of Kitchen Order"
     _rec_name = 'name'
     _order = "sequence, name, id"
