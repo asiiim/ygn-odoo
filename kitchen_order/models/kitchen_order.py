@@ -25,8 +25,11 @@ class KitchenOrder(models.Model):
     product_description = fields.Text(related="product_id.description", string="Product Details")
     order_description = fields.Text(string="Order Description", track_visibility='onchange')
     ko_note = fields.Text(string="Note/Content for the Order", track_visibility='onchange')
-    image = fields.Binary("Image", attachment=True, track_visibility='onchange')    
+    image = fields.Binary("Image", attachment=True, track_visibility='onchange')
+
+    date_order  = fields.Datetime(related="saleorder_id.date_order", string="Ordered Date")    
     requested_date  = fields.Datetime(related="saleorder_id.requested_date", string="Order Requested Date")
+
             
     @api.onchange('product_id')
     def _get_product_image(self):
@@ -50,8 +53,19 @@ class KitchenOrder(models.Model):
     def cancel_kitchen_order(self):
         self.ensure_one()
         for rec in self:
+            if rec.active:
+                rec.write({
+                    'active': False
+                })
+            else:
+                rec.write({'active': True})
+
+    @api.multi
+    def back_to_kitchen_order(self):
+        self.ensure_one()
+        for rec in self:
             rec.write({
-                'active': False
+                'active': True
             })
 
     @api.model
