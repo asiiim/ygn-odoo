@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="product_configurator_order_now_form" model="ir.ui.view">
-        <field name="name">product.configurator.ordernow</field>
-        <field name="model">product.configurator.ordernow</field>
+    <record id="product_configurator_ordernow_ko_form" model="ir.ui.view">
+        <field name="name">product.configurator.ordernow.ko</field>
+        <field name="model">product.configurator.ordernow.ko</field>
         <field name="arch" type="xml">
             <form string="Order Configurator">
                 <header>
-                    <button
+                    <!-- <button
                         string="Reset"
                         type="object"
                         name="action_reset"
@@ -15,24 +15,24 @@
                         special="no_save"
                         class="oe_highlight"
                         attrs="{'invisible': ['|', ('product_tmpl_id', '=', False), ('state', '=', 'select')]}"/>
-                    <field name="state" widget="statusbar" clickable="True"/>
+                    <field name="state" invisible="1" widget="statusbar" clickable="True"/> -->
                 </header>
                 <sheet>
-                    <field attrs="{'invisible': [('product_img', '=', False)]}" name="product_img" readonly="1" nolabel="1" widget="image"/>
+                    <!-- <field attrs="{'invisible': [('product_img', '=', False)]}" name="product_img" readonly="1" nolabel="1" widget="image"/> -->
                     <group col="3">
                         <!-- <group name='static_form' colspan="2" states='select'> -->
                         <group name='static_form' colspan="2">
-                            <field name="product_id" invisible="1" attrs="{'readonly': [('product_id', '!=', False)]}"/>
+                            <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}"/>
                             <field name="product_tmpl_id" attrs="{'readonly': [('product_id', '!=', False)]}" required="True" options="{'no_create': True}"/>
-                            <field name="partner_id"/>
+                            <field name="partner_id" required="True"/>
                             <field name="requested_date"/>
                             <field name="client_order_ref"/>
                             <field name="currency_id"/>
-                            <field name="amount"/>
-                            <field name="journal_id"/>
+                            <field name="amount" widget="monetary"/>
+                            <field name="journal_id" required="True"/>
                         </group>
                         <group colspan="1">
-                            <field name="price" widget="monetary"/>
+                            <!-- <field name="price" widget="monetary"/> -->
                         </group>
                     </group>
                 </sheet>

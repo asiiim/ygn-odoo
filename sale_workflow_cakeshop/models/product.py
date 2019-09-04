@@ -18,12 +18,13 @@ class ProductTemplate(models.Model):
         # return {
         #     'type': 'ir.actions.act_window',
         #     'res_model': 'product.configurator.ordernow',
-        #     'name': "Order Configurator",
+        #     'name': "Product Configurator",
         #     'view_mode': 'form',
         #     'target': 'new',
         #     'context': dict(
         #         self.env.context,
         #         # default_order_id=self.id,
+        #         default_product_tmpl_id=self.id,
         #         wizard_model='product.configurator.ordernow',
         #     ),
         # }

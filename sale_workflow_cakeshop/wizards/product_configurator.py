@@ -1,13 +1,26 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models
+from odoo import api, fields, models, api, _
+from odoo.exceptions import Warning, ValidationError
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
-class ProductConfiguratorSale(models.TransientModel):
+class ProductConfiguratorSaleOrderKO(models.TransientModel):
+    _name = 'product.configurator.ordernow.ko'
 
-    _name = 'product.configurator.ordernow'
-    _inherit = 'product.configurator'
-
+    product_tmpl_id = fields.Many2one(
+        comodel_name='product.template',
+        domain=[('config_ok', '=', True)],
+        string='Configurable Template',
+        required=True
+    )
+    product_id = fields.Many2one(
+        comodel_name='product.product',
+        string='Product',
+        required=True
+    )
     order_id = fields.Many2one(
         comodel_name='sale.order',
         # required=True,
@@ -35,7 +48,7 @@ class ProductConfiguratorSale(models.TransientModel):
     amount = fields.Monetary(string='Advance Amount', required=True, default=0)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.user.company_id.currency_id)
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False)
-    journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])
+    journal_id = fields.Many2one('account.journal', string='Payment Journal', domain=[('type', 'in', ('bank', 'cash'))])
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
 
     @api.multi
@@ -80,22 +93,6 @@ class ProductConfiguratorSale(models.TransientModel):
         }
         return payment_vals
 
-    @api.multi
-    def configure_order(self, product):
-        self.product_id = self.env['product.product'].browse(product)
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'product.configurator.ordernow',
-            'name': "Order Configurator",
-            'view_mode': 'form',
-            'target': 'new',
-            'context': dict(
-                self.env.context,
-                # default_order_id=self.id,
-                wizard_model='product.configurator.ordernow',
-            ),
-        }
-
     def _get_order_line_vals(self, product_id):
         """Hook to allow custom line values to be put on the newly
         created or edited lines."""
@@ -108,45 +105,71 @@ class ProductConfiguratorSale(models.TransientModel):
         }
 
     @api.multi
-    def action_config_done(self):
-        """Parse values and execute final code before closing the wizard"""
-        res = super(ProductConfiguratorSale, self).action_config_done()
-
-        # line_vals = self._get_order_line_vals(res['res_id'])
-        
-        # if self.order_line_id:
-        #   self.order_line_id.write(line_vals)
-        # else:
-        #   self.order_id.write({'order_line': [(0, 0, line_vals)]})
-
-        # Call order configurator wizard
-        return self.configure_order(res['res_id'])
-
-    @api.multi
     def action_order_config_done(self):
         """Parse values and execute final code before closing the wizard"""
-
+        # try:
+        #     variant = self.config_session_id.create_get_variant()
+        # except ValidationError:
+        #     raise
+        # except Exception:
+        #     raise ValidationError(
+        #         _('Invalid configuration! Please check all '
+        #           'required steps and fields.')
+        #     )
         # Create Order
+        _logger.error("Order config done")
         SaleOrder = self.env['sale.order']
         sale_order = SaleOrder.create(self._prepare_order())
         self.order_id = sale_order
 
+        # Attach sale order line
+        line_vals = self._get_order_line_vals(self.product_id.id)
+        # if self.order_line_id:
+        #   self.order_line_id.write(line_vals)
+        # else:
+        self.order_id.write({'order_line': [(0, 0, line_vals)]})
+        
         # Create Payment if any
         Payment = self.env['account.payment']
         payment = Payment.create(self._prepare_payment())
         payment.post()
         self.payment_id = payment
-
+        _logger.error("Order config doneasdfas")
         # Create Kitchen Order
 
 
         # Do other works here
-
-        # line_vals = self._get_order_line_vals(res['res_id'])
-        
-        # if self.order_line_id:
-        #   self.order_line_id.write(line_vals)
-        # else:
-        #   self.order_id.write({'order_line': [(0, 0, line_vals)]})
-
         return
+
+class ProductConfiguratorSaleOrderNow(models.TransientModel):
+    _name = 'product.configurator.ordernow'
+    _inherit = 'product.configurator'
+
+    @api.multi
+    def configure_order(self, product_id):
+        _logger.error("Product id after config is: %s" % str(product_id))
+        product = self.env['product.product'].browse(product_id)
+        order_configurator_view_id = self.env.ref('sale_workflow_cakeshop.product_configurator_ordernow_ko_form').id
+        _logger.error(product_id)
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.configurator.ordernow.ko',
+            'name': "Order Configurator",
+            'view_mode': 'form',
+            'view_id': order_configurator_view_id,
+            'target': 'new',
+            'context': dict(
+                self.env.context,
+                default_product_tmpl_id=product.product_tmpl_id.id,
+                default_product_id=product_id,
+                wizard_model='product.configurator.ordernow.ko',
+            ),
+        }
+    
+    @api.multi
+    def action_config_done(self):
+        """Parse values and execute final code before closing the wizard"""
+        res = super(ProductConfiguratorSaleOrderNow, self).action_config_done()
+        _logger.error("res id after config is: %s" % str(res['res_id']))
+        # Call order configurator wizard
+        return self.configure_order(res['res_id'])

@@ -12,8 +12,6 @@ This module helps salesperson in a cake shop to select product attributes,
 kitchen order notes, advance payment, and customer information in a series of 
 steps rather than going through multiple separate windows. This module is only 
 good for processing one product at a time.
-==============================================================================
-
     """,
     'installable': True,
     'application': True,
