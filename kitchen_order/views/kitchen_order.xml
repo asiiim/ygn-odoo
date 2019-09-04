@@ -22,11 +22,18 @@
                     <header>
                         <field name="active" invisible="1"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
-                            options="{'fold_field': 'fold'}"
-                            attrs="{'invisible': [('active', '=', False)]}"/>
+                            options="{'fold_field': 'fold'}"/>
                     </header>
                     <sheet>
                         <field name="image" widget="image" class="oe_avatar"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" attrs="{'invisible': [('active', '=', True)]}">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check" attrs="{'invisible': [('active', '=', False)]}">
+                                <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
+                            </button>
+                        </div>
                         <div class="oe_title">
                             <h1>
                                 <field name="name" readonly="1"/>
@@ -77,24 +84,22 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
-                                <div class="o_kanban_image">
-                                    <field name="image" widget="image" class="oe_avatar"/>
-                                </div>
+                                <field name="image" widget="image" class="oe_avatar"/>
+                                <field name="priority" widget="priority"/><br/>
                                 <div class="oe_kanban_details">
                                     <div class="o_kanban_record_top">
                                         <div class="o_kanban_record_headings">
                                             <strong class="o_kanban_record_title">
-                                                <field name="name"/>
+                                                <b><field name="name"/></b>
                                             </strong>
-                                            <span t-if="record.saleorder_id" class="o_kanban_record_subtitle"><field name="saleorder_id"/></span>
+                                            <span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle">Sale Order: <field name="saleorder_id"/></span>
                                         </div>
                                     </div>
                                     <ul>
-                                        <li t-if="record.product_id"> <b>Product: </b> <field name="product_id"/></li>
-                                        <li t-if="record.product_description"> <b>Product Details: </b> <br /> <field name="product_description"/></li>
-                                        <li t-if="record.order_description"><i class="fa fa-pencil"></i> <field name="order_description"/></li>
-                                        <li t-if="record.ko_note"><i class="fa fa-edit"></i> <field name="ko_note"/></li>
-                                        <li><field name="priority" widget="priority"/></li>
+                                        <li t-if="record.product_id.raw_value"> <b>Product: </b> <field name="product_id"/></li><br/>
+                                        <li t-if="record.product_description.value"> <b>Product Details: </b> <field name="product_description"/></li><br/>
+                                        <li t-if="record.order_description.value"> <b>Order Details: </b><br/> <i class="fa fa-pencil"></i> <field name="order_description"/></li><br/>
+                                        <li t-if="record.ko_note.value"> <b>Order Note: </b><br/><i class="fa fa-edit"></i> <field name="ko_note"/></li><br/><br/>
                                     </ul>
                                     <div class="o_kanban_button">
                                         <t t-if="record.active">
