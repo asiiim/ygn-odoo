@@ -25,7 +25,7 @@ Business theme,
 Multipurpose odoo theme,
 Multi-purpose theme,
         """,
-    'depends': ['website_theme_install'],
+    'depends': ['alan_customize','website_theme_install'],
     'data': [
         'views/customize_template.xml',
         'views/templates.xml',
