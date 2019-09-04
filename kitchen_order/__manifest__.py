@@ -24,5 +24,6 @@
         'security/ir.model.access.csv',
         'views/kitchen_order.xml',
         'data/ir_sequence.xml',
+        'data/kitchen_order_stage.xml',
     ],
 }
