@@ -13,6 +13,11 @@ class ProductConfiguratorSale(models.TransientModel):
         # required=True,
         readonly=True
     )
+    payment_id = fields.Many2one(
+        comodel_name='account.payment',
+        # required=True,
+        readonly=True
+    )
     # order_line_id = fields.Many2one(
     #     comodel_name='sale.order.line',
     #     readonly=True
@@ -20,13 +25,14 @@ class ProductConfiguratorSale(models.TransientModel):
 
     partner_id = fields.Many2one(
         comodel_name='res.partner',
-        required=True,
+        # required=True,
         readonly=False,
         string="Partner"
     )
+
     requested_date = fields.Datetime(string='Requested Date', required=True, index=True, copy=False, default=fields.Datetime.now)
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
-    amount = fields.Monetary(string='Advance Amount', required=True)
+    amount = fields.Monetary(string='Advance Amount', required=True, default=0)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.user.company_id.currency_id)
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False)
     journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])
@@ -72,10 +78,11 @@ class ProductConfiguratorSale(models.TransientModel):
             'company_id': self.company_id.id,
             # 'user_id': self.user_id and self.user_id.id,
         }
-        return order_vals
+        return payment_vals
 
     @api.multi
-    def configure_order(self):
+    def configure_order(self, product):
+        self.product_id = self.env['product.product'].browse(product)
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'product.configurator.ordernow',
@@ -105,34 +112,41 @@ class ProductConfiguratorSale(models.TransientModel):
         """Parse values and execute final code before closing the wizard"""
         res = super(ProductConfiguratorSale, self).action_config_done()
 
-        # Call order configurator wizard
         # line_vals = self._get_order_line_vals(res['res_id'])
         
         # if self.order_line_id:
-        #     self.order_line_id.write(line_vals)
+        #   self.order_line_id.write(line_vals)
         # else:
-        #     self.order_id.write({'order_line': [(0, 0, line_vals)]})
+        #   self.order_id.write({'order_line': [(0, 0, line_vals)]})
 
-        return self.configure_order()
+        # Call order configurator wizard
+        return self.configure_order(res['res_id'])
 
     @api.multi
     def action_order_config_done(self):
         """Parse values and execute final code before closing the wizard"""
 
         # Create Order
+        SaleOrder = self.env['sale.order']
+        sale_order = SaleOrder.create(self._prepare_order())
+        self.order_id = sale_order
 
         # Create Payment if any
+        Payment = self.env['account.payment']
+        payment = Payment.create(self._prepare_payment())
+        payment.post()
+        self.payment_id = payment
 
         # Create Kitchen Order
 
+
         # Do other works here
 
-        # Call order configurator wizard
         # line_vals = self._get_order_line_vals(res['res_id'])
         
         # if self.order_line_id:
-        #     self.order_line_id.write(line_vals)
+        #   self.order_line_id.write(line_vals)
         # else:
-        #     self.order_id.write({'order_line': [(0, 0, line_vals)]})
+        #   self.order_id.write({'order_line': [(0, 0, line_vals)]})
 
-        return self.configure_order()
+        return

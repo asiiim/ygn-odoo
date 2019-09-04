@@ -19,6 +19,9 @@ good for processing one product at a time.
     'application': True,
     'auto_install': False,
     'depends': ['sale','account_payment'],
-    'data': ['views/product_views.xml'],
+    'data': [
+        'views/product_views.xml',
+        'wizards/product_configurator_order_now.xml',
+    ],
     'images': ['static/description/banner.png'],
 }

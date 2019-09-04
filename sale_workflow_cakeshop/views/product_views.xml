@@ -10,7 +10,7 @@
             </field>
             <xpath expr="//div[hasclass('oe_kanban_details')]" position="after">
                 <div class="mt-3">
-                    <button style="position:absolute;right:5px;bottom:5px;" class="pull-right btn btn-primary text-right" name="configure_product" type="object">
+                    <button style="position:absolute;right:5px;bottom:5px;" class="pull-right btn btn-primary text-right" name="action_order_now" type="object">
                         <span>Order Now</span>
                     </button>
                 </div>
