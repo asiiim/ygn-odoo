@@ -61,7 +61,7 @@ class KitchenOrder(models.Model):
         # - ('id', 'in', stages.ids): add columns that should be present
         # - OR ('fold', '=', False): add default columns that are not folded
         
-        search_domain = ['|', ('id', 'in', stages.ids)]
+        search_domain = [('id', 'in', stages.ids)]
 
         # perform search
         stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)

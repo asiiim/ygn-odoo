@@ -59,9 +59,8 @@
             <field name="model">kitchen_order.kitchen_order</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id" 
-                        class="oe_background_grey o_kanban_dashboard o_project_kanban o_emphasize_colors o_kanban_kitchen_orders"
-                        default_order="sequence"
-                        group_create="False">
+                        class="oe_background_grey o_kanban_dashboard o_emphasize_colors o_kanban_kitchen_orders"
+                        default_order="sequence">
                     <field name="name"/>
                     <field name="active"/>
                     <field name="image"/>
