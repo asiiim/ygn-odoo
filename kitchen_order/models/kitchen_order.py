@@ -57,12 +57,5 @@ class KitchenOrder(models.Model):
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
-        # retrieve team_id from the context and write the domain
-        # - ('id', 'in', stages.ids): add columns that should be present
-        # - OR ('fold', '=', False): add default columns that are not folded
-        
-        search_domain = [('id', 'in', stages.ids)]
-
-        # perform search
-        stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
-        return stages.browse(stage_ids)
+        stage_ids = self.env['kitchen.stage'].search([])
+        return stage_ids
