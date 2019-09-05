@@ -84,16 +84,19 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
-                                <field name="image" widget="image" class="oe_avatar"/><br/>
-                                <field name="priority" widget="priority"/><br/>
+                                <span>
+                                    <field name="image" widget="image" class="oe_avatar"/>
+                                </span>
                                 <div class="oe_kanban_details">
                                     <div class="o_kanban_record_top">
                                         <div class="o_kanban_record_headings">
+                                            <br/><field name="priority" widget="priority"/><br/><br/>
                                             <strong class="o_kanban_record_title">
-                                                <b><field name="name"/></b><br/>
                                                 <b><field name="product_id"/></b>
                                             </strong>
+                                            <span class="o_kanban_record_subtitle"><b>Kitchen Order: </b><field name="name"/></span>
                                             <span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle"><b>Sale Order: </b><field name="saleorder_id"/></span>
+                                            <br/>
                                         </div>
                                     </div>
                                     <ul>
@@ -102,11 +105,9 @@
                                         <li t-if="record.ko_note.value"> <b>Order Note: </b><br/><i class="fa fa-edit"></i> <field name="ko_note"/></li><br/><br/>
                                     </ul>
                                     <div class="o_kanban_button">
-                                        <t t-if="record.active.value">
-                                            <button name="cancel_kitchen_order" type="object" class="oe_highlight btn-sm btn-primary">
-                                                <span>Cancel</span>
-                                            </button><br/>
-                                        </t>
+                                        <button t-if="record.stage_id.value != 'Cancel'" name="cancel_kitchen_order" type="object" class="oe_highlight btn-sm btn-primary">
+                                            <span>Cancel Order</span>
+                                        </button><br/>
                                     </div>
                                 </div>
                             </div>

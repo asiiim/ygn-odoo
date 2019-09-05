@@ -12,4 +12,8 @@
         <field name="name">Done</field>
         <field name="sequence">30</field>
     </record>
+    <record model="kitchen.stage" id="cancel">
+        <field name="name">Cancel</field>
+        <field name="sequence">50</field>
+    </record>
 </odoo>
