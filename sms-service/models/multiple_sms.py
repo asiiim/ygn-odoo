@@ -18,13 +18,13 @@ class SMSMultiple(models.Model):
     name = fields.Char(string="Name", track_visibility='onchange')
     sms_messaging_list_ids = fields.Many2many('sms.messaging.list', 'group_multi_sms_rel', 'sms_messaging_list_ids', 'sms_multiple_id', string="SMS Groups", track_visibility='onchange')
     receivers = fields.Text(string="To",compute="_compute_receivers", help="Comma Separated 10-digit mobile numbers.", store=True, track_visibility='onchange')
-    failed_receivers = fields.Char(string="Failed Names", store=True, track_visibility='onchange')
+    failed_receivers = fields.Char(string="Failed Names", store=True, track_visibility='onchange', copy=False)
     text = fields.Text(string="Text", help="SMS to be sent.", track_visibility='onchange')
-    total_partners_count = fields.Integer(string="Total Partners Count", default=0, track_visibility='onchange')
-    failed_partners_count = fields.Integer(string="Failed Partners Count", default=0, track_visibility='onchange')
-    credits_consumed_count = fields.Integer(string="Credits Consumed in SMS", default=0, track_visibility='onchange')
-    is_button_pressed = fields.Boolean(string="Press 'Send SMS' Button", track_visibility='onchange')
-    is_sent = fields.Boolean(string="Sent?", track_visibility='onchange')
+    total_partners_count = fields.Integer(string="Total Partners Count", default=0, track_visibility='onchange', copy=False)
+    failed_partners_count = fields.Integer(string="Failed Partners Count", default=0, track_visibility='onchange', copy=False)
+    credits_consumed_count = fields.Integer(string="Credits Consumed in SMS", default=0, track_visibility='onchange', copy=False)
+    is_button_pressed = fields.Boolean(string="Press 'Send SMS' Button", track_visibility='onchange', copy=False)
+    is_sent = fields.Boolean(string="Sent?", track_visibility='onchange', copy=False)
 
 
     @api.multi
