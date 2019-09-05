@@ -46,7 +46,7 @@ class KitchenOrder(models.Model):
     # Kanban View Essentials
     active = fields.Boolean(default=True, track_visibility='onchange')
     priority = fields.Selection(kitchen_order_stage.AVAILABLE_PRIORITIES, string='Priority', index=True, default=kitchen_order_stage.AVAILABLE_PRIORITIES[0][0], track_visibility='onchange')
-    stage_id = fields.Many2one('kitchen.stage', string='Stage', track_visibility='onchange', index=True, group_expand='_read_group_stage_ids')
+    stage_id = fields.Many2one('kitchen.stage', string='Stage', track_visibility='onchange', index=True, group_expand='_read_group_stage_ids', default=lambda self: self.env['kitchen.stage'].search([('sequence', '=', 1)], limit=1))
     color = fields.Integer('Color Index', default=0)
 
     @api.multi

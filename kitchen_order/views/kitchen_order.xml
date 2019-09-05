@@ -68,7 +68,6 @@
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id" 
                         class="oe_background_grey o_kanban_dashboard o_emphasize_colors o_kanban_kitchen_orders"
-                        default_order="sequence"
                         quick_create="false">
                     <field name="name"/>
                     <field name="active"/>
@@ -85,7 +84,7 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
-                                <field name="image" widget="image" class="oe_avatar"/>
+                                <field name="image" widget="image" class="oe_avatar"/><br/>
                                 <field name="priority" widget="priority"/><br/>
                                 <div class="oe_kanban_details">
                                     <div class="o_kanban_record_top">
