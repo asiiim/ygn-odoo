@@ -21,8 +21,7 @@ class SMSMultiple(models.Model):
     total_partners_count = fields.Integer(string="Total Partners Count", default=0)
     failed_partners_count = fields.Integer(string="Failed Partners Count", default=0)
     credits_consumed_count = fields.Integer(string="Credits Consumed in SMS", default=0)
-    message_id = fields.Integer(string="Message ID",  default=0)
-    is_button_pressed = fields.Boolean(string="Is button pressed?", default=False)
+    is_button_pressed = fields.Boolean(string="Press 'Send SMS' Button")
     is_sent = fields.Boolean(string="Sent?")
 
 
@@ -72,12 +71,11 @@ class SMSMultiple(models.Model):
                         'Cannot contact SMS servers. \nPlease make sure that your Internet connection is up and running (%s).') % e)
                 if result:
                     _logger.warning(str(result))
-                    if result['response_code'] == 200:
+                    if result['response_code'] in [200, 201] and result['count']:
                         record.write({
                             'is_button_pressed': True,
                             'is_sent': True,
-                            'credits_consumed_count': result['credit_consumed'],
-                            'message_id': result['message_id']
+                            'credits_consumed_count': result['count'],
                         })
                     else:
                         raise UserError(_('An Error Occured: '+ str(result['response'])))

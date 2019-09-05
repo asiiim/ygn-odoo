@@ -10,6 +10,7 @@
                     <field name="receiver"/>
                     <field name="text"/>
                     <field name="is_sent"/>
+                    <field name="sms_credits_consumed"/>
                 </tree>
             </field>
         </record>
@@ -23,7 +24,8 @@
                             <field name="name"/>
                             <field name="receiver"/>
                             <field name="text"/>
-                            <field name="is_sent"/>
+                            <field name="is_sent" readonly="1"/>
+                            <field name="sms_credits_consumed" readonly="1"/>
                         </group>
                         <button class="oe_stat_button" type="object" name="sendSms" string="SEND SMS">
                         </button>
@@ -36,8 +38,8 @@
             <field name="res_model">sms.single</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">              Create a new message to send.            </p>
-                <p>              You can create a new sms to be sent to the mobile number.            </p>
+                <p class="oe_view_nocontent_create">Create a new message to send.</p>
+                <p>You can create a new sms to be sent to the mobile number.</p>
             </field>
         </record>
         <menuitem id="menu_1" name="SMS Service" web_icon="sms-service,logo.png"/>

@@ -5,7 +5,7 @@
         <!-- Sequences for kitchen order -->
         <record id="seq_kitchen_order" model="ir.sequence">
             <field name="name">Kitchen Order</field>
-            <field name="code">kitchen_order.kitchen_order</field>
+            <field name="code">kitchen.order</field>
             <field name="prefix">KO-</field>
             <field name="padding">3</field>
             <field name="company_id" eval="False"/>

@@ -16,7 +16,8 @@ class SMSSingle(models.Model):
     name = fields.Char(string="Name")
     receiver = fields.Text(string="To", help="Comma Separated 10-digit mobile numbers.")
     text = fields.Text(string="Text", help="SMS Message to be sent.")
-    is_sent = fields.Boolean(string="SMS Sent?")
+    is_sent = fields.Boolean(string="SMS Sent?", default=False, store=True)
+    sms_credits_consumed = fields.Integer(string="Credits consumed", store=True)
 
     @api.multi
     def sendSms(self):
@@ -27,9 +28,10 @@ class SMSSingle(models.Model):
                 raise UserError(_(
                     'Cannot contact SMS servers. \nPlease make sure that your Internet connection is up and running (%s).') % e)
             if result:
-                if result['response_code'] == 200:
+                if result['response_code'] in [200, 201] and result['count']:
                     record.write({
-                    'is_sent': True
+                    'is_sent': True,
+                    'sms_credits_consumed': result['count']
                     })
                 else:
                     raise UserError(_('An Error Occured: '+ str(result['response'])))
