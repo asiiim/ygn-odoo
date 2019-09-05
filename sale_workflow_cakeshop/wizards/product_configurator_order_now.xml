@@ -7,15 +7,7 @@
         <field name="arch" type="xml">
             <form string="Order Configurator">
                 <header>
-                    <!-- <button
-                        string="Reset"
-                        type="object"
-                        name="action_reset"
-                        confirm="Are you sure? This will remove your current configuration for this template!"
-                        special="no_save"
-                        class="oe_highlight"
-                        attrs="{'invisible': ['|', ('product_tmpl_id', '=', False), ('state', '=', 'select')]}"/>
-                    <field name="state" invisible="1" widget="statusbar" clickable="True"/> -->
+                    
                 </header>
                 <sheet>
                     <!-- <field attrs="{'invisible': [('product_img', '=', False)]}" name="product_img" readonly="1" nolabel="1" widget="image"/> -->
@@ -37,8 +29,6 @@
                     </group>
                 </sheet>
                 <footer>
-                    <!-- <field name="value_ids" readonly="1" invisible="1"/> -->
-                    <!-- <button type="object" name="action_previous_step" attrs="{'invisible': [('state','=','select')]}" string="Back" special="no_save"/> -->
                     <button type="object" name="action_order_config_done" class="oe_highlight" string="Order Now"/>
                 </footer>
             </form>

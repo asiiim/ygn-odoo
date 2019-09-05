@@ -80,7 +80,10 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         a clean extension chain).
         """
         self.ensure_one()
+        payment_methods = self.journal_id.inbound_payment_method_ids
+        payment_method_id = payment_methods and payment_methods[0] or False
         payment_vals = {
+            'payment_method_id': payment_method_id.id,
             'payment_type': 'inbound',
             'partner_type': 'customer',
             'partner_id': self.partner_id.id,
@@ -107,26 +110,14 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     @api.multi
     def action_order_config_done(self):
         """Parse values and execute final code before closing the wizard"""
-        # try:
-        #     variant = self.config_session_id.create_get_variant()
-        # except ValidationError:
-        #     raise
-        # except Exception:
-        #     raise ValidationError(
-        #         _('Invalid configuration! Please check all '
-        #           'required steps and fields.')
-        #     )
-        # Create Order
-        _logger.error("Order config done")
+        # Create Order)
         SaleOrder = self.env['sale.order']
         sale_order = SaleOrder.create(self._prepare_order())
+        sale_order.action_confirm()
         self.order_id = sale_order
 
         # Attach sale order line
         line_vals = self._get_order_line_vals(self.product_id.id)
-        # if self.order_line_id:
-        #   self.order_line_id.write(line_vals)
-        # else:
         self.order_id.write({'order_line': [(0, 0, line_vals)]})
         
         # Create Payment if any
@@ -134,12 +125,12 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         payment = Payment.create(self._prepare_payment())
         payment.post()
         self.payment_id = payment
-        _logger.error("Order config doneasdfas")
+        
         # Create Kitchen Order
-
+        
 
         # Do other works here
-        return
+        return sale_order
 
 class ProductConfiguratorSaleOrderNow(models.TransientModel):
     _name = 'product.configurator.ordernow'
@@ -147,10 +138,8 @@ class ProductConfiguratorSaleOrderNow(models.TransientModel):
 
     @api.multi
     def configure_order(self, product_id):
-        _logger.error("Product id after config is: %s" % str(product_id))
         product = self.env['product.product'].browse(product_id)
         order_configurator_view_id = self.env.ref('sale_workflow_cakeshop.product_configurator_ordernow_ko_form').id
-        _logger.error(product_id)
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'product.configurator.ordernow.ko',
@@ -161,7 +150,7 @@ class ProductConfiguratorSaleOrderNow(models.TransientModel):
             'context': dict(
                 self.env.context,
                 default_product_tmpl_id=product.product_tmpl_id.id,
-                default_product_id=product_id,
+                default_product_id=product.id,
                 wizard_model='product.configurator.ordernow.ko',
             ),
         }

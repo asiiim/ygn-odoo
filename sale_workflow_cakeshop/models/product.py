@@ -13,18 +13,22 @@ class ProductTemplate(models.Model):
     @api.multi
     def action_order_now(self):
         """Return action to start order now wizard"""
-        _logger.error("**************")
+        # Check whether product template has any variants
+        if self.product_variant_count == 1:
+            order_configurator_view_id = self.env.ref('sale_workflow_cakeshop.product_configurator_ordernow_ko_form').id
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'product.configurator.ordernow.ko',
+                'name': "Order Configurator",
+                'view_mode': 'form',
+                'view_id': order_configurator_view_id,
+                'target': 'new',
+                'context': dict(
+                    self.env.context,
+                    default_product_tmpl_id=self.id,
+                    default_product_id=self.product_variant_id.id,
+                    wizard_model='product.configurator.ordernow.ko',
+                ),
+            }
+
         return self.create_config_wizard(model_name="product.configurator.ordernow")
-        # return {
-        #     'type': 'ir.actions.act_window',
-        #     'res_model': 'product.configurator.ordernow',
-        #     'name': "Product Configurator",
-        #     'view_mode': 'form',
-        #     'target': 'new',
-        #     'context': dict(
-        #         self.env.context,
-        #         # default_order_id=self.id,
-        #         default_product_tmpl_id=self.id,
-        #         wizard_model='product.configurator.ordernow',
-        #     ),
-        # }
