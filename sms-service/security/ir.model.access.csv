@@ -1,4 +1,11 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_sparrow_sms_sms_single,sparrow_sms.sms_single,model_sms_single,,1,1,1,1
-access_sparrow_sms_sms_multiple,sparrow_sms.sms_multiple,model_sms_multiple,,1,1,1,1
-access_sparrow_sms_sms_messaging_list,sparrow_sms.sms_messaging_list,model_sms_messaging_list,,1,1,1,1
+
+access_sms_single,sms.sms_single,model_sms_single,sms-service.group_sms_user,1,0,0,0
+access_sms_multiple,sms.sms_multiple,model_sms_multiple,sms-service.group_sms_user,1,0,0,0
+access_sms_messaging_list,sms.sms_messaging_list,model_sms_messaging_list,sms-service.group_sms_user,1,0,0,0
+access_sms_credit,sms.sms_credit,model_sms_credit,sms-service.group_sms_user,1,0,0,0
+
+access_sms_single,sms.sms_single,model_sms_single,sms-service.group_sms_officer,1,1,1,0
+access_sms_multiple,sms.sms_multiple,model_sms_multiple,sms-service.group_sms_officer,1,1,1,0
+access_sms_messaging_list,sms.sms_messaging_list,model_sms_messaging_list,sms-service.group_sms_officer,1,1,1,0
+access_sms_credit,sms.sms_credit,model_sms_credit,sms-service.group_sms_officer,1,1,0,0

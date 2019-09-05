@@ -33,6 +33,6 @@
                 <p>              You can later use this group to send bulk messages to the members of entire group.            </p>
             </field>
         </record>
-        <menuitem id="menu_item_13" name="SMS Group" parent="sms-service.menu_1" action="messaging_list_action_form"/>
+        <menuitem sequence="3" id="menu_item_13" name="SMS Group" parent="sms-service.menu_1" action="messaging_list_action_form"/>
     </data>
 </odoo>

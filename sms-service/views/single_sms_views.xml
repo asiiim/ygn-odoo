@@ -21,13 +21,13 @@
                 <form string="SMS">
                     <sheet>
                         <group>
-                            <field name="name"/>
-                            <field name="receiver"/>
-                            <field name="text"/>
+                            <field name="name" attrs="{'readonly': [('is_sent', '=', True)]}"/>
+                            <field name="receiver" attrs="{'readonly': [('is_sent', '=', True)]}"/>
+                            <field name="text" attrs="{'readonly': [('is_sent', '=', True)]}"/>
                             <field name="is_sent" readonly="1"/>
                             <field name="sms_credits_consumed" readonly="1"/>
                         </group>
-                        <button class="oe_stat_button" type="object" name="sendSms" string="SEND SMS">
+                        <button attrs="{'invisible': [('is_sent', '=', True)]}" class="oe_stat_button" type="object" name="sendSms" string="SEND SMS">
                         </button>
                     </sheet>
                 </form>
@@ -43,6 +43,6 @@
             </field>
         </record>
         <menuitem id="menu_1" name="SMS Service" web_icon="sms-service,logo.png"/>
-        <menuitem id="menu_item_11" name="Single SMS" parent="sms-service.menu_1" action="single_sms_action_form"/>
+        <menuitem sequence="2" id="menu_item_11" name="Single SMS" parent="sms-service.menu_1" action="single_sms_action_form"/>
     </data>
 </odoo>

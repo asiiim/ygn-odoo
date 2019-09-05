@@ -9,7 +9,6 @@
                     <field name="name"/>
                     <field name="receivers"/>
                     <field name="text"/>
-                    <field name="failed_receivers"/>
                     <field name="failed_partners_count" string="Partners without Mobile Number" readonly="True"/>
                     <field name="total_partners_count" string="Partners with Mobile Number" readonly="True"/>
                     <field name="credits_consumed_count" readonly="True"/>
@@ -50,6 +49,6 @@
                 <p>You can create a new sms to be sent to multiple mobile number.</p>
             </field>
         </record>
-        <menuitem id="menu_item_12" name="Multiple SMS" parent="sms-service.menu_1" action="multiple_sms_action_form"/>
+        <menuitem sequence="3" id="menu_item_12" name="Multiple SMS" parent="sms-service.menu_1" action="multiple_sms_action_form"/>
     </data>
 </odoo>
