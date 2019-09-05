@@ -46,19 +46,13 @@ class KitchenOrder(models.Model):
     # Kanban View Essentials
     active = fields.Boolean(default=True, track_visibility='onchange')
     priority = fields.Selection(kitchen_order_stage.AVAILABLE_PRIORITIES, string='Priority', index=True, default=kitchen_order_stage.AVAILABLE_PRIORITIES[0][0], track_visibility='onchange')
-    stage_id = fields.Many2one('kitchen.stage', string='Stage', track_visibility='onchange', index=True, group_expand='_read_group_stage_ids', default=lambda self: self.env['kitchen.stage'].search([('sequence', '=', 1)], limit=1))
+    stage_id = fields.Many2one('kitchen.stage', string='Stage', track_visibility='onchange', index=True, group_expand='_read_group_stage_ids', default=lambda self: self.env['kitchen.stage'].search([('name', '=', 'New')], limit=1))
     color = fields.Integer('Color Index', default=0)
 
     @api.multi
     def cancel_kitchen_order(self):
         self.ensure_one()
         for rec in self:
-            # if rec.active:
-            #     rec.write({
-            #         'active': False
-            #     })
-            # else:
-            #     rec.write({'active': True})
             rec.write({
                 'stage_id': self.env['kitchen.stage'].search([('name', '=', 'Cancel')], limit=1).id
             })
@@ -66,4 +60,7 @@ class KitchenOrder(models.Model):
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
         stage_ids = self.env['kitchen.stage'].search([])
+        for stage in stage_ids:
+            if stage.name == "Cancel":
+                stage.fold = True
         return stage_ids
