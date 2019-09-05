@@ -7,7 +7,6 @@
             <field name="arch" type="xml">
                 <tree string="Multiple SMS">
                     <field name="name"/>
-                    <field name="receivers"/>
                     <field name="text"/>
                     <field name="failed_partners_count" string="Partners without Mobile Number" readonly="True"/>
                     <field name="total_partners_count" string="Partners with Mobile Number" readonly="True"/>
