@@ -6,6 +6,7 @@
             <field name="model">sms.single</field>
             <field name="arch" type="xml">
                 <tree string="SMS">
+                    <field name="reference"/>
                     <field name="name"/>
                     <field name="receiver"/>
                     <field name="text"/>
@@ -20,12 +21,19 @@
             <field name="arch" type="xml">
                 <form string="SMS">
                     <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="reference" readonly="1"/>
+                            </h1>
+                        </div>
                         <group>
                             <field name="name" attrs="{'readonly': [('is_sent', '=', True)]}"/>
+                            <field name="partner_id" attrs="{'readonly': [('is_sent', '=', True)]}"/>
                             <field name="receiver" attrs="{'readonly': [('is_sent', '=', True)]}"/>
                             <field name="text" attrs="{'readonly': [('is_sent', '=', True)]}"/>
                             <field name="is_sent" readonly="1"/>
                             <field name="sms_credits_consumed" readonly="1"/>
+                            <field name="remaining_credits" invisible="1"/>
                         </group>
                         <button attrs="{'invisible': [('is_sent', '=', True)]}" class="oe_stat_button" type="object" name="sendSms" string="SEND SMS">
                         </button>
