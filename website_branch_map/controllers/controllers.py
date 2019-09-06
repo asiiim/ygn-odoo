@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Part of Ygen. See LICENSE file for full copyright and licensing details.
+
 from odoo.addons.bus.controllers.main import BusController
 from odoo import http
 from odoo.http import request, route
