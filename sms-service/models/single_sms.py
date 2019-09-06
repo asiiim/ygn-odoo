@@ -13,11 +13,12 @@ _logger = logging.getLogger(__name__)
 class SMSSingle(models.Model):
     _name = 'sms.single'
 
-    name = fields.Char(string="Name")
-    receiver = fields.Text(string="To", help="Comma Separated 10-digit mobile numbers.")
-    text = fields.Text(string="Text", help="SMS Message to be sent.")
-    is_sent = fields.Boolean(string="SMS Sent?", default=False, store=True)
-    sms_credits_consumed = fields.Integer(string="Credits consumed", store=True)
+
+    name = fields.Char(string="Name", track_visibility='onchange')
+    receiver = fields.Text(string="To", help="Comma Separated 10-digit mobile numbers.", track_visibility='onchange')
+    text = fields.Text(string="Text", help="SMS Message to be sent.", track_visibility='onchange')
+    is_sent = fields.Boolean(string="SMS Sent?", default=False, store=True, track_visibility='onchange', copy=False)
+    sms_credits_consumed = fields.Integer(string="Credits consumed", store=True, track_visibility='onchange', copy=False)
 
     @api.multi
     def sendSms(self):

@@ -7,9 +7,7 @@
             <field name="arch" type="xml">
                 <tree string="Multiple SMS">
                     <field name="name"/>
-                    <field name="receivers"/>
                     <field name="text"/>
-                    <field name="failed_receivers"/>
                     <field name="failed_partners_count" string="Partners without Mobile Number" readonly="True"/>
                     <field name="total_partners_count" string="Partners with Mobile Number" readonly="True"/>
                     <field name="credits_consumed_count" readonly="True"/>
@@ -24,18 +22,18 @@
                 <form string="Multiple SMS">
                     <sheet>
                         <group>
-                            <field name="name"/>
-                            <field name="text"/>
-                            <field name="sms_messaging_list_ids" widget="many2many_tags"/>
+                            <field name="name" attrs="{'readonly': [('is_sent', '=', True)]}"/>
+                            <field name="text" attrs="{'readonly': [('is_sent', '=', True)]}"/>
+                            <field name="sms_messaging_list_ids" widget="many2many_tags" attrs="{'readonly': [('is_sent', '=', True)]}"/>
                             <field name="credits_consumed_count" readonly="True"/>
-                            <field name="failed_partners_count" string="Partners without Mobile Number" readonly="True"/>
-                            <field name="total_partners_count" string="Partners with Mobile Number" readonly="True"/>
+                            <field name="failed_partners_count" string="Receivers without Mobile Number" readonly="True"/>
+                            <field name="total_partners_count" string="Receivers with Mobile Number" readonly="True"/>
                         </group>
-                        <button class="oe_stat_button" type="object" name="sendSms" string="SEND SMS">
+                        <button class="oe_stat_button" type="object" name="sendSms" string="SEND SMS" attrs="{'invisible': [('is_sent', '=', True)]}">
                         </button>
                         <group>
                             <field name="is_sent" readonly="True"/>
-                            <field name="is_sent" invisible="1"/>
+                            <field name="is_button_pressed" invisible="1"/>
                         </group>
                     </sheet>
                 </form>
@@ -50,6 +48,6 @@
                 <p>You can create a new sms to be sent to multiple mobile number.</p>
             </field>
         </record>
-        <menuitem id="menu_item_12" name="Multiple SMS" parent="sms-service.menu_1" action="multiple_sms_action_form"/>
+        <menuitem sequence="3" id="menu_item_12" name="Multiple SMS" parent="sms-service.menu_1" action="multiple_sms_action_form"/>
     </data>
 </odoo>
