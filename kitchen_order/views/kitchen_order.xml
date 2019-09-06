@@ -69,7 +69,7 @@
             <field name="model">kitchen.order</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id" 
-                        class="oe_background_grey o_emphasize_colors o_kanban_kitchen_orders"
+                        class="oe_background_grey o_emphasize_colors o_kanban_kitchen_orders o_kanban_mobile"
                         quick_create="false">
                     <field name="name"/>
                     <field name="active"/>
