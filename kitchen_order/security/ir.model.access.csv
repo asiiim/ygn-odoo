@@ -3,4 +3,4 @@ access_kitchen_order,kitchen.order,model_kitchen_order,,1,1,0,0
 access_kitchen_stage,kitchen.stage,model_kitchen_stage,,1,1,0,0
 
 access_manager_kitchen_order,kitchen.order,model_kitchen_order,kitchen_order.group_kitchen_manager,1,1,1,1
-access_manager_kitchen_stage,kitchen.stage,model_kitchen_stage,kitchen_order.group_kitchen_manager,1,1,1,1
+access_manager_kitchen_stage,kitchen.stage,model_kitchen_stage,kitchen_order.group_kitchen_manager,1,1,0,0
