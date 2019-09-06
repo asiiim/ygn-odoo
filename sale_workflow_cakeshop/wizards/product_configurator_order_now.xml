@@ -16,15 +16,20 @@
                         <group name='static_form' colspan="2">
                             <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}"/>
                             <field name="product_tmpl_id" attrs="{'readonly': [('product_id', '!=', False)]}" required="True" options="{'no_create': True}"/>
+                            <field name="order_description"/>
+                            <field name="ko_note"/>
                             <field name="partner_id" required="True"/>
                             <field name="requested_date"/>
-                            <field name="client_order_ref"/>
+                            <field name="journal_id" required="True"/>
                             <field name="currency_id"/>
                             <field name="amount" widget="monetary"/>
-                            <field name="journal_id" required="True"/>
                         </group>
                         <group colspan="1">
-                            <!-- <field name="price" widget="monetary"/> -->
+                            <field name="price_unit"/>
+                            <field name="product_uom_qty"/>
+                            <field name="discount"/>
+                            <field name="tax_id" widget="many2many_tags"/>
+                            <field name="price_total" widget="monetary"/>
                         </group>
                     </group>
                 </sheet>
