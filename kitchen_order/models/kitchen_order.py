@@ -5,6 +5,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
 from datetime import datetime, timedelta, date
+from odoo.addons import decimal_precision as dp
 
 from . import kitchen_order_stage
 
@@ -25,11 +26,11 @@ class KitchenOrder(models.Model):
     product_description = fields.Text(related="product_id.description", string="Product Details")
     order_description = fields.Text(string="Order Description", track_visibility='onchange')
     ko_note = fields.Text(string="Note/Content for the Order", track_visibility='onchange')
-    image = fields.Binary("Image", attachment=True, track_visibility='onchange')
-
-    date_order  = fields.Datetime(related="saleorder_id.date_order", string="Ordered Date")    
-    requested_date  = fields.Datetime(related="saleorder_id.requested_date", string="Order Requested Date")
-
+    image = fields.Binary("Image", attachment=True)
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('kitchen.order'))
+    date_order  = fields.Datetime(related="saleorder_id.date_order", string="Ordered Date", track_visibility='onchange')    
+    requested_date  = fields.Datetime(related="saleorder_id.requested_date", string="Order Requested Date", track_visibility='onchange')
+    product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), readonly=1, required=True, default=1.0, track_visibility='always')
             
     @api.onchange('product_id')
     def _get_product_image(self):
