@@ -152,7 +152,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             'product_uom_qty': self.product_uom_qty,
             'product_uom': product.uom_id.id,
             'discount': self.discount,
-            'tax_id': self.tax_id,
+            # 'tax_id': self.tax_id,
         }
 
     @api.multi

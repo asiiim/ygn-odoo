@@ -14,7 +14,7 @@ class ProductTemplate(models.Model):
     def action_order_now(self):
         """Return action to start order now wizard"""
         # Check whether product template has any variants
-        if self.product_variant_count == 1:
+        if len(self.attribute_line_ids) == 0:
             order_configurator_view_id = self.env.ref('sale_workflow_cakeshop.product_configurator_ordernow_ko_form').id
             return {
                 'type': 'ir.actions.act_window',

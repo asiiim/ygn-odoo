@@ -15,5 +15,3 @@ class ProductTemplate(models.Model):
         inverse_name='saleorder_id',
         string="Kitchen Orders"
     )
-
-    

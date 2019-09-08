@@ -16,11 +16,11 @@ good for processing one product at a time.
     'installable': True,
     'application': True,
     'auto_install': False,
-    'depends': ['sale','account_payment', 'kitchen_order'],
+    'depends': ['sale','account_payment', 'kitchen_order', 'product_configurator'],
     'data': [
         'views/product_views.xml',
         # 'views/sale_views.xml',
         'wizards/product_configurator_order_now.xml',
     ],
-    'images': ['static/description/banner.png'],
+    # 'images': ['static/description/banner.png'],
 }
