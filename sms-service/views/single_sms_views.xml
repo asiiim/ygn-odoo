@@ -50,7 +50,7 @@
                 <p>You can create a new sms to be sent to the mobile number.</p>
             </field>
         </record>
-        <menuitem id="menu_1" name="SMS Service" web_icon="sms-service,logo.png"/>
+        <menuitem id="menu_1" name="SMS Service" web_icon="sms-service,logo.png" groups="sms-service.group_sms_officer"/>
         <menuitem sequence="2" id="menu_item_11" name="Single SMS" parent="sms-service.menu_1" action="single_sms_action_form"/>
     </data>
 </odoo>
