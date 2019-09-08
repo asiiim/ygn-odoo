@@ -78,7 +78,7 @@ class SMSMultiple(models.Model):
         for record in self:
             try:
                 result = requests.post(
-                    record.env['ir.config_parameter'].sudo().get_param('sms_credit_url') + 'credit', 
+                    record.env['ir.config_parameter'].sudo().get_param('sms_url') + 'credit', 
                     data={'auth_token': record.env['ir.config_parameter'].sudo().get_param('sms_token')}).json()
             except Exception as e:
                 raise UserError(_(
