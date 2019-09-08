@@ -77,7 +77,9 @@ class SMSMultiple(models.Model):
     def _request_sms_credit(self):
         for record in self:
             try:
-                result = requests.post(record.env['ir.config_parameter'].sudo().get_param('sms_credit_url'), data={'auth_token': record.env['ir.config_parameter'].sudo().get_param('sms_token')}).json()
+                result = requests.post(
+                    record.env['ir.config_parameter'].sudo().get_param('sms_credit_url') + 'credit', 
+                    data={'auth_token': record.env['ir.config_parameter'].sudo().get_param('sms_token')}).json()
             except Exception as e:
                 raise UserError(_(
                     'Cannot contact SMS servers. \nPlease make sure that your Internet connection is up and running (%s).') % e)
@@ -101,7 +103,13 @@ class SMSMultiple(models.Model):
             if not record.is_button_pressed:
                 record._compute_receivers()
                 try:
-                    result = requests.post(record.env['ir.config_parameter'].sudo().get_param('sms_url'), params={'auth_token': record.env['ir.config_parameter'].sudo().get_param('sms_token'), 'from': record.env['ir.config_parameter'].sudo().get_param('sms_sender'), 'to': record.receivers,'text': record.text}).json()
+                    result = requests.post(
+                        record.env['ir.config_parameter'].sudo().get_param('sms_url') + 'send', 
+                        params={
+                            'auth_token': record.env['ir.config_parameter'].sudo().get_param('sms_token'), 
+                            'from': record.env['ir.config_parameter'].sudo().get_param('sms_sender'), 
+                            'to': record.receivers, 
+                            'text': record.text}).json()
                 except Exception as e:
                     raise UserError(_(
                         'Cannot contact SMS servers. \nPlease make sure that your Internet connection is up and running (%s).') % e)

@@ -24,10 +24,6 @@
                                             <field name="sms_url"/>
                                         </div>
                                         <div class="mt16 row">
-                                            <label class="col-xs-3 col-md-3 o_light_label" string="SMS API URL" for="sms_credit_url"/>
-                                            <field name="sms_credit_url"/>
-                                        </div>
-                                        <div class="mt16 row">
                                             <label class="col-xs-3 col-md-3 o_light_label" string="SMS Token" for="sms_token"/>
                                             <field name="sms_token"/>
                                         </div>
