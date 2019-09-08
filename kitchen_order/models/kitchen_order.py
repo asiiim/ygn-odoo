@@ -19,7 +19,7 @@ class KitchenOrder(models.Model):
     _description = "Kitchen Order"
     _order = "priority desc, sequence, id desc"
 
-    name = fields.Char(string="Kitchen Order Reference", required=True, copy=False, readonly=True, states={'new': [('readonly', False)]}, index=True, default=lambda self: _('New'), track_visibility='onchange')
+    name = fields.Char(string="Kitchen Order Reference", required=True, copy=False, readonly=True, index=True, default=lambda self: _('New'), track_visibility='onchange')
     sequence = fields.Integer(help='Kitchen order sequence', track_visibility='onchange')
     product_id = fields.Many2one('product.product', string="Ordered Product", track_visibility='onchange')
     saleorder_id = fields.Many2one('sale.order', string="Sale Order", track_visibility='onchange')

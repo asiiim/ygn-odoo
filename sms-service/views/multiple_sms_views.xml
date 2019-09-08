@@ -6,6 +6,7 @@
             <field name="model">sms.multiple</field>
             <field name="arch" type="xml">
                 <tree string="Multiple SMS">
+                    <field name="reference"/>
                     <field name="name"/>
                     <field name="text"/>
                     <field name="failed_partners_count" string="Partners without Mobile Number" readonly="True"/>
@@ -21,6 +22,11 @@
             <field name="arch" type="xml">
                 <form string="Multiple SMS">
                     <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="reference" readonly="1"/>
+                            </h1>
+                        </div>
                         <group>
                             <field name="name" attrs="{'readonly': [('is_sent', '=', True)]}"/>
                             <field name="text" attrs="{'readonly': [('is_sent', '=', True)]}"/>
@@ -28,6 +34,7 @@
                             <field name="credits_consumed_count" readonly="True"/>
                             <field name="failed_partners_count" string="Receivers without Mobile Number" readonly="True"/>
                             <field name="total_partners_count" string="Receivers with Mobile Number" readonly="True"/>
+                            <field name="remaining_credits" invisible="1"/>
                         </group>
                         <button class="oe_stat_button" type="object" name="sendSms" string="SEND SMS" attrs="{'invisible': [('is_sent', '=', True)]}">
                         </button>
