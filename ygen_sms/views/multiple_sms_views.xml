@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="sms_multiple_view_tree" model="ir.ui.view">
+            <field name="name">ygen.sms.multiple.tree</field>
+            <field name="model">ygen.sms.multiple</field>
+            <field name="arch" type="xml">
+                <tree string="Multiple SMS">
+                    <field name="reference"/>
+                    <field name="name"/>
+                    <field name="text"/>
+                    <field name="failed_partners_count" string="Partners without Mobile Number" readonly="True"/>
+                    <field name="total_partners_count" string="Partners with Mobile Number" readonly="True"/>
+                    <field name="credits_consumed_count" readonly="True"/>
+                    <field name="is_sent" readonly="True"/>
+                </tree>
+            </field>
+        </record>
+        <record id="sms_multiple_view_form" model="ir.ui.view">
+            <field name="name">ygen.sms.multiple.form</field>
+            <field name="model">ygen.sms.multiple</field>
+            <field name="arch" type="xml">
+                <form string="Multiple SMS">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="reference" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="name" attrs="{'readonly': [('is_sent', '=', True)]}"/>
+                            <field name="text" attrs="{'readonly': [('is_sent', '=', True)]}"/>
+                            <field name="sms_messaging_list_ids" widget="many2many_tags" attrs="{'readonly': [('is_sent', '=', True)]}"/>
+                            <field name="credits_consumed_count" readonly="True"/>
+                            <field name="failed_partners_count" string="Receivers without Mobile Number" readonly="True"/>
+                            <field name="total_partners_count" string="Receivers with Mobile Number" readonly="True"/>
+                            <field name="remaining_credits" invisible="1"/>
+                        </group>
+                        <button class="oe_stat_button" type="object" name="send_sms" string="SEND SMS" attrs="{'invisible': [('is_sent', '=', True)]}">
+                        </button>
+                        <group>
+                            <field name="is_sent" readonly="True"/>
+                            <field name="is_button_pressed" invisible="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="multiple_sms_action_form" model="ir.actions.act_window">
+            <field name="name">Send Multiple SMS</field>
+            <field name="res_model">ygen.sms.multiple</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create a new message to send.</p>
+                <p>You can create a new sms to be sent to multiple mobile number.</p>
+            </field>
+        </record>
+        <menuitem sequence="3" id="menu_item_12" name="Multiple SMS" parent="menu_1" action="multiple_sms_action_form"/>
+    </data>
+</odoo>

@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_ygen_sms_single_user,ygen_sms.ygen_sms_single,model_ygen_sms_single,ygen_sms.group_sms_user,1,1,1,0
+access_ygen_sms_multiple_user,ygen_sms.ygen_sms_multiple,model_ygen_sms_multiple,ygen_sms.group_sms_user,1,1,1,0
+access_ygen_sms_messaging_list_user,ygen_sms.ygen_sms_messaging_list,model_ygen_sms_messaging_list,ygen_sms.group_sms_user,1,1,1,0
+access_ygen_sms_credit_user,ygen_sms.ygen_sms_credit,model_ygen_sms_credit,ygen_sms.group_sms_user,1,1,0,0
+
+access_ygen_sms_single_officer,ygen_sms.ygen_sms_single,model_ygen_sms_single,ygen_sms.group_sms_officer,1,1,1,0
+access_ygen_sms_multiple_officer,ygen_sms.ygen_sms_multiple,model_ygen_sms_multiple,ygen_sms.group_sms_officer,1,1,1,0
+access_ygen_sms_messaging_list_officer,ygen_sms.ygen_sms_messaging_list,model_ygen_sms_messaging_list,ygen_sms.group_sms_officer,1,1,1,0
+access_ygen_sms_credit_officer,ygen_sms.ygen_sms_credit,model_ygen_sms_credit,ygen_sms.group_sms_officer,1,1,0,0
