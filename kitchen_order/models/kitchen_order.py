@@ -10,6 +10,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
 from datetime import datetime, timedelta, date
+from odoo.addons import decimal_precision as dp
 
 from . import kitchen_order_stage
 
@@ -31,16 +32,19 @@ class KitchenOrder(models.Model):
     order_description = fields.Text(string="Order Description", track_visibility='onchange')
     ko_note = fields.Text(string="Note/Content for the Order", track_visibility='onchange')
     image = fields.Binary("Image", attachment=True, track_visibility='onchange')
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('kitchen.order'))
+    date_order  = fields.Datetime(related="saleorder_id.date_order", string="Ordered Date", track_visibility='onchange')
     requested_date  = fields.Datetime(related="saleorder_id.requested_date", string="Order Requested Date", store=True)
+    product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), readonly=1, required=True, default=1.0, track_visibility='always')
+    
+    # # For the purpose of search view filter
+    # ko_date = fields.Date('Kitchen Order Date', compute="_compute_date", store=True)
+    # req_date = fields.Date('Order Requested Date Only', compute="_compute_date", store=True)
 
-    # For the purpose of search view filter
-    ko_date = fields.Date('Kitchen Order Date', compute="_compute_date", store=True)
-    req_date = fields.Date('Order Requested Date Only', compute="_compute_date", store=True)
-
-    def _compute_date(self):
-        for rec in self:  
-            rec.ko_date = fields.Date.from_string(rec.create_date).strftime('%Y-%m-%d')
-            rec.req_date = fields.Date.from_string(rec.requested_date).strftime('%Y-%m-%d')
+    # def _compute_date(self):
+    #     for rec in self:  
+    #         rec.ko_date = fields.Date.from_string(rec.create_date).strftime('%Y-%m-%d')
+    #         rec.req_date = fields.Date.from_string(rec.requested_date).strftime('%Y-%m-%d')
 
     # Get product image        
     @api.onchange('product_id')

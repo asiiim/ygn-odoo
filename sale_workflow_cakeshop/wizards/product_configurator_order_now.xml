@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_configurator_ordernow_ko_form" model="ir.ui.view">
+        <field name="name">product.configurator.ordernow.ko</field>
+        <field name="model">product.configurator.ordernow.ko</field>
+        <field name="arch" type="xml">
+            <form string="Order Configurator">
+                <header>
+                    
+                </header>
+                <sheet>
+                    <!-- <field attrs="{'invisible': [('product_img', '=', False)]}" name="product_img" readonly="1" nolabel="1" widget="image"/> -->
+                    <group col="3">
+                        <!-- <group name='static_form' colspan="2" states='select'> -->
+                        <group name='static_form' colspan="2">
+                            <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}"/>
+                            <field name="product_tmpl_id" attrs="{'readonly': [('product_id', '!=', False)]}" required="True" options="{'no_create': True}"/>
+                            <field name="order_description"/>
+                            <field name="ko_note"/>
+                            <field name="partner_id" required="True"/>
+                            <field name="requested_date"/>
+                            <field name="journal_id" required="True"/>
+                            <field name="currency_id"/>
+                            <field name="amount" widget="monetary"/>
+                        </group>
+                        <group colspan="1">
+                            <field name="price_unit"/>
+                            <field name="product_uom_qty"/>
+                            <field name="discount"/>
+                            <field name="tax_id" widget="many2many_tags"/>
+                            <field name="price_total" widget="monetary"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button type="object" name="action_order_config_done" class="oe_highlight" string="Order Now"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
