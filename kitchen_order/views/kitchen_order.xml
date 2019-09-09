@@ -6,8 +6,10 @@
             <field name="model">kitchen.order</field>
             <field name="arch" type="xml">
                 <tree string="Kitchen Order" class="o_kitchen_order">
+                    <!-- <field name="create_date"/> -->
                     <field name="name" string="Kitchen Order Number"/>
                     <field name="product_id"/>
+                    <field name="requested_date"/>
                     <field name="product_uom_qty"/>
                     <field name="saleorder_id"/>
                     <field name="stage_id"/>
@@ -22,8 +24,12 @@
                 <form string="Kitchen Order" class="o_kitchen_order">
                     <header>
                         <field name="active" invisible="1"/>
+                        <field name="stage_name" invisible="1"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"/>
+                        <button name="cancel_kitchen_order" string="Cancel Order" 
+                                type="object" class="btn-primary o_sale_print" 
+                                attrs="{'invisible': [('stage_name', '=', 'Cancel')]}"/>
                     </header>
                     <sheet>
                         <field name="image" widget="image" class="oe_avatar"/>
@@ -48,7 +54,8 @@
                                 <field name="order_description"/>
                             </group>
                             <group>
-                                <field name="date_order" invisible="1"/>
+                                <field name="ko_date" invisible="1"/>
+                                <field name="req_date" invisible="1"/>
                                 <field name="requested_date"/>
                                 <field name="product_description"/>
                                 <field name="ko_note"/>
@@ -83,6 +90,7 @@
                     <field name="order_description"/>
                     <field name="ko_note"/>
                     <field name="saleorder_id"/>
+                    <field name="requested_date"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
@@ -98,20 +106,16 @@
                                             </strong>
                                             <span class="o_kanban_record_subtitle"><b>Kitchen Order: </b><field name="name"/></span>
                                             <span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle"><b>Sale Order: </b><field name="saleorder_id"/></span>
+                                            <span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle"><b>Requested Date: </b><field name="requested_date"/></span>
                                             <span t-if="record.product_uom_qty.raw_value" class="o_kanban_record_subtitle"><b>Quantity: </b><field name="product_uom_qty"/></span>
                                             <br/>
                                         </div>
                                     </div>
                                     <ul>
-                                        <li t-if="record.product_description.value"> <b>Product Details: </b> <field name="product_description"/></li><br/>
-                                        <li t-if="record.order_description.value"> <b>Order Details: </b><br/> <i class="fa fa-pencil"></i> <field name="order_description"/></li><br/>
+                                        <li t-if="record.product_description.value"> <b>Product Details: </b> <field name="product_description"/></li>
+                                        <li t-if="record.order_description.value"> <b>Order Details: </b><br/> <i class="fa fa-pencil"></i> <field name="order_description"/></li>
                                         <li t-if="record.ko_note.value"> <b>Order Note: </b><br/><i class="fa fa-edit"></i> <field name="ko_note"/></li><br/><br/>
                                     </ul>
-                                    <div class="o_kanban_button">
-                                        <button t-if="record.stage_id.value != 'Cancel'" name="cancel_kitchen_order" type="object" class="oe_highlight btn-sm btn-primary">
-                                            <span>Cancel Order</span>
-                                        </button><br/>
-                                    </div>
                                 </div>
                             </div>
                         </t>
@@ -131,13 +135,26 @@
                     <field name="stage_id"/>
                     <field name="sequence"/>
                     <field name="product_id"/>
+                    <field name="requested_date"/>
                     <field name="product_description"/>
                     <field name="order_description"/>
                     <field name="ko_note"/>
                     <field name="saleorder_id"/>
                     <filter string="Starred" name="starred" domain="[('priority','in',[1, 2, 3])]"/>
                     <separator/>
-                    <filter string="Cancelled Orders" name="inactive" domain="[('active','=',False)]"/>
+                    <filter string="Cancelled Orders" name="inactive" domain="[('stage_name','=','Cancel')]"/>
+                    
+                    <separator/>
+                    <filter string="Today's Order" name="today_kitchen_order" domain="[('create_date', '&gt;', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('create_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
+                    <filter name="late_kitchen_order" string="Late Orders" domain="[('ko_date','&lt;', datetime.date.today().strftime('%Y-%m-%d'))]"/>
+                    
+                    <separator/>
+                    <filter string="Today's Requested Order" name="today_requested_kitchen_order" domain="[('requested_date', '&gt;', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('requested_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
+                    <filter string="Tomorrow's Requested Order" name="today_requested_kitchen_order" domain="[('req_date', '=', (datetime.date.today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                    
+                    <separator/>
+                    <filter name="late_requested_order" string="Late Requested Orders" domain="[('req_date','&lt;', datetime.date.today().strftime('%Y-%m-%d'))]"/>
+                    <filter name="future_requested_order" string="Future Requested Orders" domain="[('req_date','&gt;', datetime.date.today().strftime('%Y-%m-%d'))]"/>
                 </search>
             </field>
         </record>

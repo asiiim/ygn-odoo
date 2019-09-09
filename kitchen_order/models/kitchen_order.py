@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Ygen. See LICENSE file for full copyright and licensing details.
 
+import time
+
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
@@ -17,7 +19,7 @@ class KitchenOrder(models.Model):
     _name = "kitchen.order"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _description = "Kitchen Order"
-    _order = "priority desc, sequence, id desc"
+    _order = "requested_date, priority desc, id"
 
     name = fields.Char(string="Kitchen Order Reference", required=True, copy=False, readonly=True, index=True, default=lambda self: _('New'), track_visibility='onchange')
     sequence = fields.Integer(help='Kitchen order sequence', track_visibility='onchange')
@@ -26,18 +28,29 @@ class KitchenOrder(models.Model):
     product_description = fields.Text(related="product_id.description", string="Product Details")
     order_description = fields.Text(string="Order Description", track_visibility='onchange')
     ko_note = fields.Text(string="Note/Content for the Order", track_visibility='onchange')
-    image = fields.Binary("Image", attachment=True)
+    image = fields.Binary("Image", attachment=True, track_visibility='onchange')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('kitchen.order'))
-    date_order  = fields.Datetime(related="saleorder_id.date_order", string="Ordered Date", track_visibility='onchange')    
-    requested_date  = fields.Datetime(related="saleorder_id.requested_date", string="Order Requested Date", track_visibility='onchange')
+    date_order  = fields.Datetime(related="saleorder_id.date_order", string="Ordered Date", track_visibility='onchange')
+    requested_date  = fields.Datetime(related="saleorder_id.requested_date", string="Order Requested Date", store=True)
     product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), readonly=1, required=True, default=1.0, track_visibility='always')
-            
+    
+    # For the purpose of search view filter
+    ko_date = fields.Date('Kitchen Order Date', compute="_compute_date", store=True)
+    req_date = fields.Date('Order Requested Date Only', compute="_compute_date", store=True)
+
+    def _compute_date(self):
+        for rec in self:  
+            rec.ko_date = fields.Date.from_string(rec.create_date).strftime('%Y-%m-%d')
+            rec.req_date = fields.Date.from_string(rec.requested_date).strftime('%Y-%m-%d')
+
+    # Get product image        
     @api.onchange('product_id')
     def _get_product_image(self):
         for rec in self:
             if rec.product_id.image_medium:
                 rec.image = rec.product_id.image_medium
 
+    # Generate kitchen order name with a sequence number
     @api.model
     def create(self, vals):
         vals['name'] = self.env['ir.sequence'].next_by_code('kitchen.order') or _('New')
@@ -48,6 +61,7 @@ class KitchenOrder(models.Model):
     active = fields.Boolean(default=True, track_visibility='onchange')
     priority = fields.Selection(kitchen_order_stage.AVAILABLE_PRIORITIES, string='Priority', index=True, default=kitchen_order_stage.AVAILABLE_PRIORITIES[0][0], track_visibility='onchange')
     stage_id = fields.Many2one('kitchen.stage', string='Stage', track_visibility='onchange', index=True, group_expand='_read_group_stage_ids', default=lambda self: self.env['kitchen.stage'].search([('name', '=', 'New')], limit=1))
+    stage_name = fields.Char(related='stage_id.name', string="Stage Name", store=True)
     color = fields.Integer('Color Index', default=0)
 
     @api.multi

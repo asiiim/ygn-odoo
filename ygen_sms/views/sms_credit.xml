@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="sms_credit_view_tree" model="ir.ui.view">
+            <field name="name">ygen.sms.credit.tree</field>
+            <field name="model">ygen.sms.credit</field>
+            <field name="arch" type="xml">
+                <tree string="SMS Credit">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="sms_credit_view_form" model="ir.ui.view">
+            <field name="name">ygen.sms.credit.form</field>
+            <field name="model">ygen.sms.credit</field>
+            <field name="arch" type="xml">
+                <form string="SMS Credit">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <button class="oe_stat_button" type="object" name="request_credit" string="Check Credit">
+                        </button>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="sms_credit_action_form" model="ir.actions.act_window">
+            <field name="name">SMS Credit</field>
+            <field name="res_model">ygen.sms.credit</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Check SMS Credit.</p>
+            </field>
+        </record>
+        <menuitem sequence="1" id="menu_item_sms_credit" name="SMS Credit" parent="menu_1" action="sms_credit_action_form"/>
+    </data>
+</odoo>
