@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_hr_payslip_form_ygen_inherit">
+        <field name="name">HR Payslip Form View Ygen Inherit</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <field name="contract_id" position="before">
+                <field name="payslip_days"/>
+            </field>
+        </field>
+    </record>
+</odoo>
