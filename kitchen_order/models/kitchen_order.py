@@ -34,14 +34,14 @@ class KitchenOrder(models.Model):
     requested_date  = fields.Datetime(related="saleorder_id.requested_date", string="Order Requested Date", store=True)
     product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), readonly=1, required=True, default=1.0, track_visibility='always')
     
-    # For the purpose of search view filter
-    ko_date = fields.Date('Kitchen Order Date', compute="_compute_date", store=True)
-    req_date = fields.Date('Order Requested Date Only', compute="_compute_date", store=True)
+    # # For the purpose of search view filter
+    # ko_date = fields.Date('Kitchen Order Date', compute="_compute_date", store=True)
+    # req_date = fields.Date('Order Requested Date Only', compute="_compute_date", store=True)
 
-    def _compute_date(self):
-        for rec in self:  
-            rec.ko_date = fields.Date.from_string(rec.create_date).strftime('%Y-%m-%d')
-            rec.req_date = fields.Date.from_string(rec.requested_date).strftime('%Y-%m-%d')
+    # def _compute_date(self):
+    #     for rec in self:  
+    #         rec.ko_date = fields.Date.from_string(rec.create_date).strftime('%Y-%m-%d')
+    #         rec.req_date = fields.Date.from_string(rec.requested_date).strftime('%Y-%m-%d')
 
     # Get product image        
     @api.onchange('product_id')

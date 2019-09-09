@@ -54,8 +54,6 @@
                                 <field name="order_description"/>
                             </group>
                             <group>
-                                <field name="ko_date" invisible="1"/>
-                                <field name="req_date" invisible="1"/>
                                 <field name="requested_date"/>
                                 <field name="product_description"/>
                                 <field name="ko_note"/>
@@ -146,15 +144,15 @@
                     
                     <separator/>
                     <filter string="Today's Order" name="today_kitchen_order" domain="[('create_date', '&gt;', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('create_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
-                    <filter name="late_kitchen_order" string="Late Orders" domain="[('ko_date','&lt;', datetime.date.today().strftime('%Y-%m-%d'))]"/>
+                    <filter name="late_kitchen_order" string="Late Orders" domain="[('create_date','&lt;', datetime.datetime.now().replace(hour=0, minute=0, second=0))]"/>
                     
                     <separator/>
                     <filter string="Today's Requested Order" name="today_requested_kitchen_order" domain="[('requested_date', '&gt;', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('requested_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
-                    <filter string="Tomorrow's Requested Order" name="today_requested_kitchen_order" domain="[('req_date', '=', (datetime.date.today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Tomorrow's Requested Order" name="tomorrow_requested_kitchen_order" domain="[('requested_date', '&gt;', datetime.datetime.now().replace(hour=23, minute=59, second=59)),('requested_date', '&lt;=',(datetime.datetime.now().replace(hour=23, minute=59, second=59) + datetime.timedelta(days=1)))]"/>
                     
                     <separator/>
-                    <filter name="late_requested_order" string="Late Requested Orders" domain="[('req_date','&lt;', datetime.date.today().strftime('%Y-%m-%d'))]"/>
-                    <filter name="future_requested_order" string="Future Requested Orders" domain="[('req_date','&gt;', datetime.date.today().strftime('%Y-%m-%d'))]"/>
+                    <filter name="late_requested_order" string="Late Requested Orders" domain="[('requested_date','&lt;', datetime.datetime.now().replace(hour=0, minute=0, second=0))]"/>
+                    <filter name="future_requested_order" string="Future Requested Orders" domain="[('requested_date','&gt;', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
                 </search>
             </field>
         </record>
