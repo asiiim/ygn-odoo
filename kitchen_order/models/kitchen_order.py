@@ -3,6 +3,9 @@
 
 import time
 
+from datetime import datetime, timedelta, date
+from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
@@ -59,6 +62,40 @@ class KitchenOrder(models.Model):
     stage_id = fields.Many2one('kitchen.stage', string='Stage', track_visibility='onchange', index=True, group_expand='_read_group_stage_ids', default=lambda self: self.env['kitchen.stage'].search([('name', '=', 'New')], limit=1))
     stage_name = fields.Char(related='stage_id.name', string="Stage Name", store=True)
     color = fields.Integer('Color Index', default=0)
+    kanban_state = fields.Selection([('grey', 'Ordered Requested Today'), ('red', 'Delayed Requested Order'), ('green', 'Future Requested Order')],
+        string='Activity State', compute='_compute_kanban_state', copy=False, default='grey', required=True,)
+    kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State', track_visibility='onchange')
+
+    legend_red = fields.Char(related='stage_id.legend_red', string='Kanban Delayed Explanation', readonly=True, related_sudo=False)
+    legend_green = fields.Char(related='stage_id.legend_green', string='Kanban Future Explanation', readonly=True, related_sudo=False)
+    legend_grey = fields.Char(related='stage_id.legend_grey', string='Kanban Normal Explanation', readonly=True, related_sudo=False)
+
+    @api.multi
+    def _compute_kanban_state(self):
+        today = datetime.now().strftime('%Y-%m-%d')
+        for order in self:
+            kanban_state = 'grey'
+            if order.requested_date:
+                order_req_date = fields.Datetime.from_string(order.requested_date).strftime('%Y-%m-%d')
+                if order_req_date > today:
+                    kanban_state = 'green'
+                elif order_req_date < today:
+                    kanban_state = 'red'
+
+                _logger.warning('Kanban State: ' + str(kanban_state))
+                _logger.warning('Name: ' + str(order.name))
+            order.kanban_state = kanban_state
+
+    @api.depends('stage_id', 'kanban_state')
+    def _compute_kanban_state_label(self):
+        for order in self:
+            if order.kanban_state == 'grey':
+                order.kanban_state_label = order.legend_grey
+            elif order.kanban_state == 'red':
+                order.kanban_state_label = order.legend_red
+            else:
+                order.kanban_state_label = order.legend_green
+            _logger.warning('Kanban Label state: ' + str(order.kanban_state_label))
 
     @api.multi
     def cancel_kitchen_order(self):

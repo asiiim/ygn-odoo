@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="order_stage_search" model="ir.ui.view">
+            <field name="name">kitchen.stage.search</field>
+            <field name="model">kitchen.stage</field>
+            <field name="arch" type="xml">
+                <search string="Kitchen Order Stages">
+                   <field name="name" string="Order Stages"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="order_stage_form" model="ir.ui.view">
+            <field name="name">kitchen.stage.form</field>
+            <field name="model">kitchen.stage</field>
+            <field name="arch" type="xml">
+                <form string="Order Stage">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="fold"/>
+                                <field name="sequence" groups="base.group_no_one"/>
+                            </group>
+                        </group>
+                        <group string="Stage Description and Tooltips">
+                            <label for="legend_grey" string=" " class="o_status"/>
+                            <field name="legend_grey" nolabel="1"/>
+                            <label for="legend_red" string=" " class="o_status o_status_red"/>
+                            <field name="legend_red" nolabel="1"/>
+                            <label for="legend_green" string=" " class="o_status o_status_green"/>
+                            <field name="legend_green" nolabel="1"/>
+
+                            <label for="legend_priority" string=" " class="fa fa-star fa-lg o_star_on"/>
+                            <field name="legend_priority" nolabel="1"/>
+
+                            <p class="text-muted" colspan="2">
+                                You can also add a description to help your coworkers understand the meaning and purpose of the stage.
+                            </p>
+                            <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="order_stage_tree" model="ir.ui.view">
+            <field name="name">kitchen.stage.tree</field>
+            <field name="model">kitchen.stage</field>
+            <field name="arch" type="xml">
+                <tree string="Order Stage">
+                    <field name="sequence" widget="handle" groups="base.group_no_one"/>
+                    <field name="name"/>
+                    <field name="fold"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="order_stage_kanban" model="ir.ui.view">
+            <field name="name">kitchen.stage.kanban</field>
+            <field name="model">kitchen.stage</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="fold"/>
+                    <field name="description"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <strong><t t-esc="record.name.value"/></strong>
+                                    </div>
+                                </div>
+                                <t t-if="record.description.value">
+                                    <hr class="mt8 mb8"/>
+                                    <t t-esc="record.description.value"/>
+                                </t>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="order_stage_action" model="ir.actions.act_window">
+            <field name="name">Stages</field>
+            <field name="res_model">kitchen.stage</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="order_stage_tree"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a stage in the kitchen order.</p>
+            </field>
+        </record>
+
+        <menuitem action="order_stage_action" id="menu_kitchen_order_stage" name="Order Stages" parent="main_menu_kitchen_order" sequence="3" groups="kitchen_order.group_kitchen_manager"/>
+    </data>
+</odoo>
