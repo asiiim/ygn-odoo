@@ -3,10 +3,11 @@
 
 {
     'name': 'Advanced Sales Workflow for Cake shops',
-    'version': '1.0',
+    'version': '11.0.1.0.0',
     'author': 'Ygen Software Pvt. Ltd.',
     'website': 'https://ygen.io',
     'category': 'Sales',
+    'license': 'OPL-1',
     'description': """
 This module helps salesperson in a cake shop to select product attributes, 
 kitchen order notes, advance payment, and customer information in a series of 

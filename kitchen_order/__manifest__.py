@@ -14,7 +14,8 @@
     # Check https://github.com/odoo/odoo/blob/11.0/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Product',
-    'version': '11.0.0.0.1',
+    'license': 'OPL-1',
+    'version': '11.0.1.0.0',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'sale_management', 'sale_order_dates'],
