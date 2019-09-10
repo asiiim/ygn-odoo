@@ -69,16 +69,14 @@ class KitchenOrder(models.Model):
     def _compute_kanban_state(self):
         today = datetime.now().strftime('%Y-%m-%d')
         for order in self:
-            kanban_state = 'today'
             if order.requested_date:
                 order_req_date = fields.Datetime.from_string(order.requested_date).strftime('%Y-%m-%d')
-                if order_req_date > today:
+                if order_req_date == today:
+                    kanban_state = 'today'
+                elif order_req_date > today:
                     kanban_state = 'future'
-                elif order_req_date < today:
+                else:
                     kanban_state = 'delayed'
-
-                _logger.warning('Kanban State: ' + str(kanban_state))
-                _logger.warning('Name: ' + str(order.name))
             order.kanban_state = kanban_state
 
     @api.depends('stage_id', 'kanban_state')
@@ -90,7 +88,6 @@ class KitchenOrder(models.Model):
                 order.kanban_state_label = order.legend_red
             else:
                 order.kanban_state_label = order.legend_green
-            _logger.warning('Kanban Label state: ' + str(order.kanban_state_label))
 
     @api.multi
     def cancel_kitchen_order(self):
