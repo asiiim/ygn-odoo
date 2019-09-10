@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- <record id="view_template_property_form" model="ir.ui.view">
+        <field name="name">product.template.common.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <field name="description_sale" position="after">
+            <separator string="Notes for POS" colspan="4"/>
+            <field name="pos_notes" colspan="4" nolabel="1" placeholder="This note will be displayed on the POS."/>
+            </field>
+        </field>
+    </record> -->
+
+    <record id="kitchen_order_notes_form_view" model="ir.ui.view">
+        <field name="name">kitchen.order.notes.form</field>
+        <field name="model">kitchen.order.notes</field>
+        <field name="arch" type="xml">
+            <form string="KO Product Notes">
+                <sheet>
+                    <group>
+                        <field name="name" required="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="kitchen_order_notes_tree_view" model="ir.ui.view">
+        <field name="name">kitchen.order.notes.tree</field>
+        <field name="model">kitchen.order.notes</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="kitchen_order_notes_action" model="ir.actions.act_window">
+        <field name="name">KO Product Notes</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">kitchen.order.notes</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" eval="False"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to define a new note.
+            </p>
+        </field>
+    </record>
+    <menuitem id="menu_kitchen_order_notes" action="kitchen_order_notes_action" parent="kitchen_order.menu_kitchen_order_configuration" sequence="26" />
+</odoo>
