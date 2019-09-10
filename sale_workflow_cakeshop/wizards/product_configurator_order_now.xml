@@ -17,6 +17,7 @@
                             <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}"/>
                             <field name="product_tmpl_id" attrs="{'readonly': [('product_id', '!=', False)]}" required="True" options="{'no_create': True}"/>
                             <field name="order_description"/>
+                            <field name="ko_notes_ids" widget="many2many_tags"/>
                             <field name="ko_note"/>
                             <field name="partner_id" required="True"/>
                             <field name="requested_date"/>
@@ -28,7 +29,7 @@
                             <field name="price_unit"/>
                             <field name="product_uom_qty"/>
                             <field name="discount"/>
-                            <field name="tax_id" widget="many2many_tags"/>
+                            <field name="tax_id" widget="many2many_tags" readonly="1"/>
                             <field name="price_total" widget="monetary"/>
                         </group>
                     </group>
