@@ -12,6 +12,7 @@
 
     # Categories can be used to filter modules in modules listing
     'category': 'Sale',
+    'license': 'OPL-1',
     'version': '11.0.1.0.0',
     "price": 34.00,
     "currency": "EUR",
