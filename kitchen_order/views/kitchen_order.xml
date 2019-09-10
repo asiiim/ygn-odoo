@@ -27,8 +27,9 @@
                         <field name="stage_name" invisible="1"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"/>
+                        <button name="print_kitchen_order" string="Print" type="object" class="btn-primary"/>
                         <button name="cancel_kitchen_order" string="Cancel Order" 
-                                type="object" class="btn-primary o_sale_print" 
+                                type="object" class="btn-secondary" 
                                 attrs="{'invisible': [('stage_name', '=', 'Cancel')]}"/>
                     </header>
                     <sheet>
