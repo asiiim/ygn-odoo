@@ -30,7 +30,7 @@ class KitchenOrder(models.Model):
     saleorder_id = fields.Many2one('sale.order', string="Sale Order", track_visibility='onchange')
     product_description = fields.Text(related="product_id.description", string="Product Details")
     order_description = fields.Text(string="Order Description", track_visibility='onchange')
-    ko_note = fields.Text(string="Note/Content for the Order", track_visibility='onchange')
+    ko_note = fields.Text(string="Note/Content for the Order", translate=True, track_visibility='onchange')
     image = fields.Binary("Image", attachment=True, track_visibility='onchange')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('kitchen.order'))
     date_order  = fields.Datetime(related="saleorder_id.date_order", string="Ordered Date", track_visibility='onchange')
