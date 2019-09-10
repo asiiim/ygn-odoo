@@ -57,7 +57,7 @@ class KitchenOrder(models.Model):
     stage_id = fields.Many2one('kitchen.stage', string='Stage', track_visibility='onchange', index=True, group_expand='_read_group_stage_ids', default=lambda self: self.env['kitchen.stage'].search([('name', '=', 'New')], limit=1))
     stage_name = fields.Char(related='stage_id.name', string="Stage Name", store=True)
     color = fields.Integer('Color Index', default=0)
-    kanban_state = fields.Selection([('grey', 'Ordered Requested Today'), ('red', 'Delayed Requested Order'), ('green', 'Future Requested Order')],
+    kanban_state = fields.Selection([('today', 'Ordered Requested Today'), ('delayed', 'Delayed Requested Order'), ('future', 'Future Requested Order')],
         string='Activity State', compute='_compute_kanban_state', copy=False, default='grey', required=True,)
     kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State', track_visibility='onchange')
 
@@ -69,13 +69,13 @@ class KitchenOrder(models.Model):
     def _compute_kanban_state(self):
         today = datetime.now().strftime('%Y-%m-%d')
         for order in self:
-            kanban_state = 'grey'
+            kanban_state = 'today'
             if order.requested_date:
                 order_req_date = fields.Datetime.from_string(order.requested_date).strftime('%Y-%m-%d')
                 if order_req_date > today:
-                    kanban_state = 'green'
+                    kanban_state = 'future'
                 elif order_req_date < today:
-                    kanban_state = 'red'
+                    kanban_state = 'delayed'
 
                 _logger.warning('Kanban State: ' + str(kanban_state))
                 _logger.warning('Name: ' + str(order.name))
@@ -84,9 +84,9 @@ class KitchenOrder(models.Model):
     @api.depends('stage_id', 'kanban_state')
     def _compute_kanban_state_label(self):
         for order in self:
-            if order.kanban_state == 'grey':
+            if order.kanban_state == 'today':
                 order.kanban_state_label = order.legend_grey
-            elif order.kanban_state == 'red':
+            elif order.kanban_state == 'delayed':
                 order.kanban_state_label = order.legend_red
             else:
                 order.kanban_state_label = order.legend_green

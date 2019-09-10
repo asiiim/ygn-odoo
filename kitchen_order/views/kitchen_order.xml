@@ -97,7 +97,7 @@
                     <field name="legend_red" invisible="1"/>
                     <field name="legend_grey" invisible="1"/>
                     <field name="legend_green" invisible="1"/>
-                    <progressbar field="kanban_state" colors='{"green": "success", "grey": "warning", "red": "danger"}'/>
+                    <progressbar field="kanban_state" colors='{"future": "success", "today": "normal", "delayed": "danger"}'/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
