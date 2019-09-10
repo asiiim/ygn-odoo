@@ -25,7 +25,7 @@ class KitchenOrder(models.Model):
     _order = "requested_date, priority desc, id"
 
     name = fields.Char(string="Kitchen Order Reference", required=True, copy=False, readonly=True, index=True, default=lambda self: _('New'), track_visibility='onchange')
-    sequence = fields.Integer(help='Kitchen order sequence', track_visibility='onchange')
+    # sequence = fields.Integer(help='Kitchen order sequence', track_visibility='onchange')
     product_id = fields.Many2one('product.product', string="Ordered Product", track_visibility='onchange')
     saleorder_id = fields.Many2one('sale.order', string="Sale Order", track_visibility='onchange')
     product_description = fields.Text(related="product_id.description", string="Product Details")
@@ -56,7 +56,7 @@ class KitchenOrder(models.Model):
     priority = fields.Selection(kitchen_order_stage.AVAILABLE_PRIORITIES, string='Priority', index=True, default=kitchen_order_stage.AVAILABLE_PRIORITIES[0][0], track_visibility='onchange')
     stage_id = fields.Many2one('kitchen.stage', string='Stage', track_visibility='onchange', index=True, group_expand='_read_group_stage_ids', default=lambda self: self.env['kitchen.stage'].search([('name', '=', 'New')], limit=1))
     stage_name = fields.Char(related='stage_id.name', string="Stage Name", store=True)
-    color = fields.Integer('Color Index', default=0)
+    # color = fields.Integer('Color Index', default=0)
     kanban_state = fields.Selection([('today', 'Ordered Requested Today'), ('delayed', 'Delayed Requested Order'), ('future', 'Future Requested Order')],
         string='Activity State', compute='_compute_kanban_state', copy=False, default='grey', required=True,)
     kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State', track_visibility='onchange')
