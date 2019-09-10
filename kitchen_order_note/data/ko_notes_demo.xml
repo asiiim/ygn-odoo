@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="predefine_note1" model="kitchen.order.notes">
+        <field name="name">Sweeter</field>
+    </record>
+    <record id="predefine_note2" model="kitchen.order.notes">
+        <field name="name">Heavy</field>
+    </record>
+    <record id="predefine_note3" model="kitchen.order.notes">
+        <field name="name">Double Layer Chocolate</field>
+    </record>
+</odoo>

@@ -43,7 +43,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         comodel_name='res.partner',
         # required=True,
         readonly=False,
-        string="Partner"
+        string="Customer"
     )
 
     requested_date = fields.Datetime(string='Requested Date', required=True, index=True, copy=False, default=fields.Datetime.now)
@@ -61,6 +61,8 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     tax_id = fields.Many2many('account.tax', related="product_id.taxes_id",string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     price_total = fields.Monetary(compute='_compute_amount', string='Total', readonly=True)
 
+    ko_notes_ids = fields.Many2many('kitchen.order.notes', 'sale_workflow_cakeshop_kitchen_order_notes_', string='KO Notes')
+    
     @api.depends('product_uom_qty', 'discount', 'price_unit')
     def _compute_amount(self):
         """
@@ -73,7 +75,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
                 'price_total': taxes['total_included'],
             })
 
-    api.multi
+    @api.multi
     def _prepare_kitchen_order(self):
         """
         Prepare the dict of values to create the new kitchen order for a new order. This method may 
@@ -81,13 +83,19 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         establish a clean extension chain).
         """
         self.ensure_one()
+        notes = ''
+        for note in self.ko_notes_ids:
+            notes = notes + note.name + "\n"
+        notes = notes + self.ko_note or ''
+
         ko_vals = {
             'product_id': self.product_id.id,
             'requested_date': self.requested_date,
             # 'pricelist_id': self.partner_id.property_product_pricelist.id,
             'saleorder_id': self.order_id.id,
             'order_description': self.order_description or '',
-            'ko_note': self.ko_note or '',
+            'ko_note': notes,
+            'ko_notes_ids': self.ko_notes_ids,
             'product_uom_qty': self.product_uom_qty,
             'company_id': self.company_id.id,
             # 'user_id': self.user_id and self.user_id.id,

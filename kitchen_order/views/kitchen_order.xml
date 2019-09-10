@@ -206,12 +206,17 @@
 
         <menuitem id="main_menu_kitchen_order" 
                     name="Kitchen Orders" 
-                    sequence="1"
+                    sequence="5"
                     web_icon="kitchen_order,static/src/img/default_image.png"/>
         <menuitem id="menu_kitchen_order"
                     name="Orders"
                     action="action_kitchen_orders"
                     parent="main_menu_kitchen_order"
-                    sequence="2"/>
+                    sequence="5"/>
+        <menuitem id="menu_kitchen_order_configuration"
+                    name="Configuration"
+                    parent="main_menu_kitchen_order" 
+                    sequence="20" 
+                    groups="kitchen_order.group_kitchen_manager"/>
     </data>
 </odoo>

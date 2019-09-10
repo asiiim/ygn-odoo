@@ -99,6 +99,6 @@
             </field>
         </record>
 
-        <menuitem action="order_stage_action" id="menu_kitchen_order_stage" name="Order Stages" parent="main_menu_kitchen_order" sequence="3" groups="kitchen_order.group_kitchen_manager"/>
+        <menuitem action="order_stage_action" id="menu_kitchen_order_stage" name="Order Stages" parent="menu_kitchen_order_configuration" sequence="15" groups="kitchen_order.group_kitchen_manager"/>
     </data>
 </odoo>
