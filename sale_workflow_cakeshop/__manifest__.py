@@ -20,7 +20,7 @@ good for processing one product at a time.
     'depends': ['sale','account_payment', 'kitchen_order', 'kitchen_order_note', 'product_configurator'],
     'data': [
         'views/product_views.xml',
-        # 'views/sale_views.xml',
+        'views/sale_views.xml',
         'wizards/product_configurator_order_now.xml',
     ],
     # 'images': ['static/description/banner.png'],
