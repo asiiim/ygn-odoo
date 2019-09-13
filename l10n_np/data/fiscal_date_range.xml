@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="fiscalyear_nepali_2074_075" model="date.range">
+        <field name="name">2074.075</field>
+        <field name="type_id" ref="account_fiscal_year.fiscalyear"/>
+        <field name="date_start">07/16/2017</field>
+        <field name="date_end">07/16/2018</field>
+        <field name="active" eval="True"/>
+    </record>
+    <record id="fiscalyear_nepali_2075_076" model="date.range">
+        <field name="name">2075.076</field>
+        <field name="type_id" ref="account_fiscal_year.fiscalyear"/>
+        <field name="date_start">07/17/2018</field>
+        <field name="date_end">07/16/2019</field>
+        <field name="active" eval="True"/>
+    </record>
+    <record id="fiscalyear_nepali_2076_077" model="date.range">
+        <field name="name">2076.077</field>
+        <field name="type_id" ref="account_fiscal_year.fiscalyear"/>
+        <field name="date_start">07/17/2019</field>
+        <field name="date_end">07/15/2020</field>
+        <field name="active" eval="True"/>
+    </record>
+    <record id="fiscalyear_nepali_2077_078" model="date.range">
+        <field name="name">2077.078</field>
+        <field name="type_id" ref="account_fiscal_year.fiscalyear"/>
+        <field name="date_start">07/16/2020</field>
+        <field name="date_end">07/15/2021</field>
+        <field name="active" eval="True"/>
+    </record>
+    <record id="fiscalyear_nepali_2078_079" model="date.range">
+        <field name="name">2078.079</field>
+        <field name="type_id" ref="account_fiscal_year.fiscalyear"/>
+        <field name="date_start">07/16/2021</field>
+        <field name="date_end">07/16/2022</field>
+        <field name="active" eval="True"/>
+    </record>
+    <record id="fiscalyear_nepali_20779_080" model="date.range">
+        <field name="name">2079.080</field>
+        <field name="type_id" ref="account_fiscal_year.fiscalyear"/>
+        <field name="date_start">07/17/2022</field>
+        <field name="date_end">07/16/2023</field>
+        <field name="active" eval="True"/>
+    </record>
+    <record id="fiscalyear_nepali_2080_081" model="date.range">
+        <field name="name">2080.081</field>
+        <field name="type_id" ref="account_fiscal_year.fiscalyear"/>
+        <field name="date_start">07/17/2023</field>
+        <field name="date_end">07/15/2024</field>
+        <field name="active" eval="True"/>
+    </record>
+    <record id="fiscalyear_nepali_2081_082" model="date.range">
+        <field name="name">2081.082</field>
+        <field name="type_id" ref="account_fiscal_year.fiscalyear"/>
+        <field name="date_start">07/16/2024</field>
+        <field name="date_end">07/15/2025</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>
