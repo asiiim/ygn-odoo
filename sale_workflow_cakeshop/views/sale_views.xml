@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record model="ir.ui.view" id="view_order_kitchen_order_form">
+    <!-- <record model="ir.ui.view" id="view_order_kitchen_order_form">
         <field name="name">Sale Order form view kitchen order</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
@@ -10,6 +10,24 @@
                     <field name="kitchen_order_ids"/>
                 </page>
             </xpath>
+        </field>
+    </record> -->
+    <record id="view_order_tree" model="ir.ui.view">
+        <field name="name">sale.order.tree. create invoice</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="amount_total" position="after">
+                <field name="amount_due"/>
+            </field>
+            <field name="state" position="after">
+                <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                    type="action" class="btn-primary"
+                    attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}"/>
+                <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                    type="action" context="{'default_advance_payment_method': 'percentage'}"
+                    attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
+            </field>
         </field>
     </record>
 </odoo>
