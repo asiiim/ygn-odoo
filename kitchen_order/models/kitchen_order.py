@@ -38,7 +38,7 @@ class KitchenOrder(models.Model):
         string="Order Description", track_visibility='onchange')
     ko_note = fields.Text(string="Note/Content for the Order",
                           translate=True, track_visibility='onchange')
-    image = fields.Binary("Image", attachment=True,
+    image = fields.Binary(related="product_id.image", attachment=True,
                           track_visibility='onchange')
     company_id = fields.Many2one(
         'res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('kitchen.order'))
@@ -50,11 +50,11 @@ class KitchenOrder(models.Model):
         'Product Unit of Measure'), readonly=1, required=True, default=1.0, track_visibility='always')
 
     # Get product image
-    @api.onchange('product_id')
-    def _get_product_image(self):
-        for rec in self:
-            if rec.product_id.image_medium:
-                rec.image = rec.product_id.image_medium
+    # @api.onchange('product_id')
+    # def _get_product_image(self):
+    #     for rec in self:
+    #         if rec.product_id.image_medium:
+    #             rec.image = rec.product_id.image_medium
 
     # Generate kitchen order name with a sequence number
     @api.model
