@@ -102,17 +102,21 @@ class AccountInvoice(models.Model):
         request_url_suffix = None
         if self.type == "out_invoice":
             request_url_suffix = "api/bill"
-        else:
+        elif self.type == "out_refund":
             request_url_suffix = "api/billreturn"
         request_api_bill_url = "%s%s" % (ird_api_url, request_url_suffix)
         
         # Calculate fiscal year
-        fy_date_range = self.company_id.compute_fiscalyear_dates(fields.Date().from_string(self.date_invoice))
-        fiscal_year = str(fy_date_range['date_from'].year) + "." + str(fy_date_range['date_to'].year)
+        fy_date_range = self.company_id.find_daterange_fy(fields.Date().from_string(self.date_invoice))
+        if fy_date_range:
+            fiscal_year = fy_date_range.name
+        else:    
+            fy_date_range = self.company_id.compute_fiscalyear_dates(fields.Date().from_string(self.date_invoice))
+            fiscal_year = str(fy_date_range['date_from'].year) + "." + str(fy_date_range['date_to'].year)
         
         # Process and calculate for tax groups
         tax_group_amounts = self._process_prepare_taxes()
-        is_realtime = True if (datetime.datetime.now() - fields.Datetime().from_string(self.write_date)) < datetime.timedelta(minutes=10) else False
+        is_realtime = True if (datetime.datetime.now() - fields.Datetime().from_string(self.date_transaction if self.date_transaction else self.write_date)) < datetime.timedelta(minutes=5) else False
         data = {
             "username": username,
             "password": password,
@@ -154,7 +158,7 @@ class AccountInvoice(models.Model):
         sanitized_data = data.copy()
         del sanitized_data["username"]
         del sanitized_data["password"]
-        msg = "Data sent to IRD: <br/>"
+        msg = "<b>Data sent to IRD:</b> <br/>"
         for k,v in sanitized_data.items():
             msg += "%s: %s<br/>" % (k,v)
         return msg
@@ -198,11 +202,15 @@ class AccountInvoice(models.Model):
                             msg = _("%s sent to the IRD with %s number %s<br/><br/>%s") % (invoice_type, invoice_type, invoice.number, str(sanitized_data))
                             invoice.message_post(
                                 body=msg,
-                                subject="Invoice sent to IRD"
+                                subject="<b>Invoice sent to IRD</b>"
                             )
                             _logger.info(msg.replace("<br/>",", "))
                         else:
                             _logger.warning("Error returned by server with code: %s and message: %s" % (content, ird_api_codes[int(content)]))
+                            invoice.message_post(
+                                body=ird_api_codes[int(content)],
+                                subject="<b>Invoice not sent to IRD</b>"
+                            )
                         if int(content) in [200,101]:
                             invoice.write({'sent_to_ird': True, 'is_ird_realtime': data["isrealtime"]})
                     except requests.HTTPError:
