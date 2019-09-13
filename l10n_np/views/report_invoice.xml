@@ -1,13 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="l10n_np_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
-        <xpath expr="//h2" position="inside">
-            <t t-if="o.printed_copy_count != 0">
-                <span>|</span>
-                <span class="text-right" style="font-size: 15px; font-weight:bold;">Copy of Original</span>
-                <span>|</span>
-                <span class="text-right" style="font-size:13px;">Copy no.: <t t-esc="o.printed_copy_count"/></span>
-            </t>
+        <xpath expr="//div[@name='invoice_address']" position="attributes">
+          <attribute name="style">display:none;</attribute>
+        </xpath>
+        <xpath expr="//div[@name='invoice_address']" position="after">
+          <div name="invoice_address" class="col-xs-7">
+            <div><b>Customer:</b> <span t-esc="o.partner_id.name"/></div>
+            <div class="mt8"><b>Address:</b> <span t-esc="o.partner_id.street"/><t t-if="o.partner_id.city">, <span t-esc="o.partner_id.city"/></t></div>
+          </div>
+          <div name="invoice_address" class="col-xs-5">
+              <div><b>Tel:</b> <span t-esc="o.partner_id.mobile"/></div>
+              <div t-if="o.partner_id.vat" class="mt8"><b><t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>:</b> <span t-field="o.partner_id.vat"/></div>
+          </div>
+        </xpath>
+        <xpath expr="//h2" position="attributes">
+          <attribute name="style">display:none;</attribute>
+        </xpath>
+        <xpath expr="//h2" position="after">
+          <div class="row mt16">
+            <div class="col-xs-6" style="font-size:13px;">
+              <b>
+                <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid') and o.printed_copy_count == 0">Tax</span>
+                <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice</span>
+                <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
+                <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+                <span t-if="o.type == 'out_refund'">Credit Note</span>
+                <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
+                <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
+              </b>
+              <span t-field="o.number" style="font-size:15px;"/>
+            </div>
+            <div class="col-xs-6 text-right">
+              <t t-if="o.printed_copy_count != 0">
+                  <span style="font-size:13px;font-weight:normal;">COPY OF ORIGINAL <t t-esc="o.printed_copy_count"/></span>
+              </t>
+            </div>
+          </div>
+        </xpath>
+        <xpath expr="//div[@class='row mt32 mb32']" position="attributes">
+          <attribute name="style">display:none;</attribute>
+        </xpath>>
+        <xpath expr="//div[@class='row mt32 mb32']" position="after">
+          <div class="row mt32 mb16">
+            <!--<div class="col-xs-2" t-if="o.name">-->
+            <!--    <strong>Description:</strong>-->
+            <!--    <p t-field="o.name"/>-->
+            <!--</div>-->
+            <div class="col-xs-3" t-if="o.date_invoice">
+                <strong>Invoice Date:</strong>
+                <p t-field="o.date_invoice"/>
+            </div>
+            <div class="col-xs-3" t-if="o.date_transaction">
+              <strong>Transaction Date: </strong>
+              <p t-field="o.date_transaction"/>
+            </div>
+            <div class="col-xs-3" t-if="o.date_due and o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">
+                <strong>Due Date:</strong>
+                <p t-field="o.date_due"/>
+            </div>
+            <div class="col-xs-3" t-if="o.origin">
+                <strong>Source:</strong>
+                <p t-field="o.origin"/>
+            </div>
+            <!--<div class="col-xs-2" t-if="o.partner_id.ref">-->
+            <!--    <strong>Customer Code:</strong>-->
+            <!--    <p t-field="o.partner_id.ref"/>-->
+            <!--</div>-->
+            <!--<div name="reference" class="col-xs-2" t-if="o.reference">-->
+            <!--    <strong>Reference:</strong>-->
+            <!--    <p t-field="o.reference"/>-->
+            <!--</div>-->
+          </div>
         </xpath>
         <xpath expr="//p[@t-if='o.comment']" position="before">
             <div class="clearfix">
