@@ -185,7 +185,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         payment = Payment.create(self._prepare_payment())
         payment.post()
         self.payment_id = payment
-        SaleOrder.payment_id = payment
+        sale_order.payment_id = payment
 
         # Do other works here
         return sale_order
