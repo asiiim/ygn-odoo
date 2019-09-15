@@ -86,7 +86,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         notes = ''
         for note in self.ko_notes_ids:
             notes = notes + note.name + "\n"
-        notes = notes + self.ko_note or ''
+        notes = notes + self.ko_note if self.ko_note else ''
 
         ko_vals = {
             'product_id': self.product_id.id,
