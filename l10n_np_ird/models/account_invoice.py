@@ -33,6 +33,7 @@ class AccountInvoice(models.Model):
         track_visibility='onchange', help="It indicates that the invoice has been sent to IRD.") 
     is_ird_realtime = fields.Boolean(string='Is Realtime', readonly=True, default=False, copy=False,
         track_visibility='onchange', help="It indicates whether the invoice sent to IRD is in realtime.")
+    fiscal_year_nepali = fields.Text(string="Fiscal Year", copy=False, readonly=True, track_visibility='onchange')
 
     # Override
     @api.multi
@@ -114,6 +115,7 @@ class AccountInvoice(models.Model):
             fy_date_range = self.company_id.compute_fiscalyear_dates(fields.Date().from_string(self.date_invoice))
             fiscal_year = str(fy_date_range['date_from'].year) + "." + str(fy_date_range['date_to'].year)
         
+        self.write({'fiscal_year_nepali': fiscal_year})
         # Process and calculate for tax groups
         tax_group_amounts = self._process_prepare_taxes()
         is_realtime = True if (datetime.datetime.now() - fields.Datetime().from_string(self.date_transaction if self.date_transaction else self.write_date)) < datetime.timedelta(minutes=5) else False
