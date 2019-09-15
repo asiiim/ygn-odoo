@@ -1,1 +1,5 @@
 partner-contact
+server-ux <https://github.com/OCA/server-ux>
+account_fiscal_year <https://github.com/OCA/account-financial-tools>
+keychain <https://github.com/OCA/server-auth>
+product_configurator <https://github.com/pledra/odoo-product-configurator>
