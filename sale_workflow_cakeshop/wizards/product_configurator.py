@@ -116,7 +116,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             'partner_id': self.partner_id.id,
             'requested_date': self.requested_date,
             # 'pricelist_id': self.partner_id.property_product_pricelist.id,
-            'note': self.order_description,
+            # 'note': self.order_description,
             # 'payment_term_id': self.payment_term_id.id,
             'company_id': self.company_id.id,
             # 'user_id': self.user_id and self.user_id.id,
@@ -185,7 +185,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         payment = Payment.create(self._prepare_payment())
         payment.post()
         self.payment_id = payment
-        SaleOrder.payment_id = payment
+        sale_order.payment_id = payment
 
         # Do other works here
         return sale_order

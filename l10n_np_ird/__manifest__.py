@@ -13,6 +13,11 @@ This module syncs invoices and invoices return to IRD.
 
     """,
     'depends': ['keychain','l10n_np','l10n_np_sales'],
+
+    # price
+    'price': 600.00,
+    'currency': 'EUR',
+
     'data': [
         'views/res_config_settings_views.xml',
         'views/res_company_views.xml',
