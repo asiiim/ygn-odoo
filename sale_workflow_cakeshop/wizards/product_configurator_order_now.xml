@@ -19,10 +19,10 @@
                             <field name="order_description"/>
                             <field name="ko_notes_ids" widget="many2many_tags"/>
                             <field name="ko_note"/>
-                            <field name="partner_id" required="True"/>
+                            <field name="partner_id" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}' required="True"/>
                             <field name="requested_date"/>
-                            <field name="journal_id" required="True"/>
-                            <field name="currency_id"/>
+                            <field name="journal_id" widget="selection" required="True"/>
+                            <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                             <field name="amount" widget="monetary"/>
                         </group>
                         <group colspan="1">

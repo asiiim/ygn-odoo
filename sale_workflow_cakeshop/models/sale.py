@@ -30,4 +30,4 @@ class ProductTemplate(models.Model):
         for line in self:
             # Check if the payment linked has already been matched 
             # and set the amount_due accordingly
-            line.amount_due = line.amount_total - (line.payment_id.amount if line.payment_id.move_reconciled else 0)
+            line.amount_due = line.amount_total - (line.payment_id.amount if line.payment_id.state == 'posted' and not line.payment_id.move_reconciled else 0)
