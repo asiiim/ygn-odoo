@@ -45,7 +45,7 @@ class KitchenOrder(models.Model):
     date_order = fields.Datetime(
         related="saleorder_id.date_order", string="Ordered Date", track_visibility='onchange')
     requested_date = fields.Datetime(
-        related="saleorder_id.requested_date", string="Order Requested Date", store=True)
+        related="saleorder_id.requested_date", string="Delivery Date", store=True)
     product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision(
         'Product Unit of Measure'), readonly=1, required=True, default=1.0, track_visibility='always')
 

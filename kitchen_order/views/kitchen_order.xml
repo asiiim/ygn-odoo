@@ -112,7 +112,7 @@
                                             </strong>
                                             <span class="o_kanban_record_subtitle"><b>Kitchen Order: </b><field name="name"/></span>
                                             <span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle"><b>Sale Order: </b><field name="saleorder_id"/></span>
-                                            <span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle"><b>Requested Date: </b><field name="requested_date"/></span>
+                                            <span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle"><b>Delivery Date: </b><field name="requested_date"/></span>
                                             <span t-if="record.product_uom_qty.raw_value" class="o_kanban_record_subtitle"><b>Quantity: </b><field name="product_uom_qty"/></span>
                                             <br/>
                                         </div>

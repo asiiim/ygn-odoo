@@ -28,7 +28,7 @@
                                     <strong>KO Date: </strong><span t-field="doc.create_date"/><br/>
                                 </div>
                                 <div t-if="doc.requested_date">
-                                    <strong>Requested Date: </strong><span t-field="doc.requested_date"/><br/>
+                                    <strong>Delivery Date: </strong><span t-field="doc.requested_date"/><br/>
                                 </div><br/>
 
                                 <div t-if="doc.create_date">
@@ -88,7 +88,7 @@
                                             <strong>KO Date:</strong>
                                             <p t-field="o.create_date"/>
 
-                                            <strong>Requested Date:</strong>
+                                            <strong>Delivery Date:</strong>
                                             <p t-field="o.requested_date"/>
                                         </div>
                                         <div class="col-xs-5" style="border-right:1px solid #000; padding:2px 5px;">
