@@ -17,8 +17,8 @@
                             </div>
                             <div t-if="doc.product_uom_qty" class="col-xs-4">
                                 <strong>Ordered Qty: </strong>
-                                <span t-field="o.product_uom_qty"/>
-                                <span t-field="o.uom"/>
+                                <span t-field="doc.product_uom_qty"/>
+                                <span t-field="doc.uom"/>
                             </div>
                         </div>
                         <div class="row mt32 mb32" id="order-informations">
@@ -43,6 +43,10 @@
                                 </div>
                             </div>
                             <div class="col-xs-4">
+                                <div t-if="doc.message">
+                                    <strong>Message:</strong>
+                                    <p t-field="doc.message"/>
+                                </div>
                                 <div t-if="doc.create_date">
                                     <strong>KO Note:</strong>
                                     <p t-field="doc.ko_note"/>
@@ -102,6 +106,9 @@
 
                                             <strong>KO Note:</strong>
                                             <p t-field="o.ko_note"/>
+
+                                            <strong>Message:</strong>
+                                            <p t-field="o.message"/>
 
                                             <strong>Order Details:</strong>
                                             <p t-field="o.order_description"/>

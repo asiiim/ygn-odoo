@@ -28,6 +28,7 @@
         'data/kitchen_order_stage.xml',
         'views/kitchen_order.xml',
         'views/kitchen_order_stage.xml',
+        'views/kitchen_message.xml',
         'report/kitchen_order_report.xml'
     ],
 }

@@ -1,6 +1,8 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_kitchen_order,kitchen.order,model_kitchen_order,,1,1,0,0
 access_kitchen_stage,kitchen.stage,model_kitchen_stage,,1,1,0,0
+access_kitchen_message,kitchen.message,model_kitchen_message,,1,1,0,0
 
 access_manager_kitchen_order,kitchen.order,model_kitchen_order,kitchen_order.group_kitchen_manager,1,1,1,1
 access_manager_kitchen_stage,kitchen.stage,model_kitchen_stage,kitchen_order.group_kitchen_manager,1,1,0,0
+access_manager_kitchen_message,kitchen.message,model_kitchen_message,kitchen_order.group_kitchen_manager,1,1,1,1

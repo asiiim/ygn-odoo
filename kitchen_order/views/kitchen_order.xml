@@ -54,6 +54,7 @@
                                 <field name="product_uom_qty"/>
                                 <field name="uom"/>
                                 <field name="saleorder_id" options='{"always_reload": True}'/>
+                                <field name="message_id"/>
                                 <field name="order_description"/>
                             </group>
                             <group>
@@ -88,6 +89,7 @@
                     <field name="kanban_state"/>
                     <field name="kanban_state_label"/>
                     <field name="priority"/>
+                    <field name="message_id"/>
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description", "legend_priority": "Use of stars"}}'/>
                     <field name="product_id"/>
                     <field name="product_description"/>
@@ -125,6 +127,7 @@
                                     </div>
                                     <ul>
                                         <li t-if="record.product_description.value"> <b>Product Details: </b> <field name="product_description"/></li>
+                                        <li t-if="record.message_id.value"> <b>Message: </b><br/> <i class="fa fa-pencil"></i> <field name="message"/></li>
                                         <li t-if="record.order_description.value"> <b>Order Details: </b><br/> <i class="fa fa-pencil"></i> <field name="order_description"/></li>
                                         <li t-if="record.ko_note.value"> <b>Order Note: </b><br/><i class="fa fa-edit"></i> <field name="ko_note"/></li><br/><br/>
                                     </ul>
@@ -222,7 +225,8 @@
         <menuitem id="main_menu_kitchen_order" 
                     name="Kitchen Orders" 
                     sequence="5"
-                    web_icon="kitchen_order,static/src/img/default_image.png"/>
+                    web_icon="kitchen_order,static/src/img/default_image.png"
+                    groups="kitchen_order.group_kitchen_user"/>
         <menuitem id="menu_kitchen_order"
                     name="Orders"
                     action="action_kitchen_orders"

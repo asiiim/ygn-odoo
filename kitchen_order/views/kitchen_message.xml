@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="order_message_search" model="ir.ui.view">
+            <field name="name">kitchen.message.search</field>
+            <field name="model">kitchen.message</field>
+            <field name="arch" type="xml">
+                <search string="Kitchen Order Messages">
+                   <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="order_message_form" model="ir.ui.view">
+            <field name="name">kitchen.message.form</field>
+            <field name="model">kitchen.message</field>
+            <field name="arch" type="xml">
+                <form string="Order Message">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="order_message_tree" model="ir.ui.view">
+            <field name="name">kitchen.message.tree</field>
+            <field name="model">kitchen.message</field>
+            <field name="arch" type="xml">
+                <tree string="Order Message">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="order_message_kanban" model="ir.ui.view">
+            <field name="name">kitchen.message.kanban</field>
+            <field name="model">kitchen.message</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <strong><t t-esc="record.name.value"/></strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="order_message_action" model="ir.actions.act_window">
+            <field name="name">Order Messages</field>
+            <field name="res_model">kitchen.message</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="order_message_tree"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add an order message in the kitchen order.</p>
+            </field>
+        </record>
+
+        <menuitem action="order_message_action" id="menu_kitchen_order_message" name="Order Messages" parent="menu_kitchen_order_configuration" sequence="14" groups="kitchen_order.group_kitchen_manager"/>
+    </data>
+</odoo>

@@ -124,3 +124,9 @@ class KitchenOrder(models.Model):
     @api.multi
     def print_kitchen_order(self):
         return self.env.ref('kitchen_order.action_report_kitchen_order').report_action(self)
+
+    # Kitchen Order Message
+    message_id = fields.Many2one(
+        'kitchen.message', string="Message", track_visibility='onchange')
+    message = fields.Char(related='message_id.name',
+                          string="Message", track_visibility='onchange')
