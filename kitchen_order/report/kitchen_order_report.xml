@@ -16,7 +16,9 @@
                                 <strong>Sale Order: </strong><span t-field="doc.saleorder_id.name"/>
                             </div>
                             <div t-if="doc.product_uom_qty" class="col-xs-4">
-                                <strong>Ordered Qty: </strong><span t-field="doc.product_uom_qty"/>
+                                <strong>Ordered Qty: </strong>
+                                <span t-field="o.product_uom_qty"/>
+                                <span t-field="o.uom"/>
                             </div>
                         </div>
                         <div class="row mt32 mb32" id="order-informations">
@@ -79,7 +81,10 @@
                                             <strong>Sale Order: </strong>
                                             <p t-field="o.saleorder_id.name"/>
                                             <strong>Ordered Qty: </strong>
-                                            <p t-field="o.product_uom_qty"/>
+                                            <p>
+                                                <span t-field="o.product_uom_qty"/>
+                                                <span t-field="o.uom"/>
+                                            </p>
                                         </div>
                                         <div class="col-xs-3" style="border-right:1px solid #000; padding:2px 5px;">
                                             <strong>Product:</strong>

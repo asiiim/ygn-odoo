@@ -11,6 +11,7 @@
                     <field name="product_id"/>
                     <field name="requested_date"/>
                     <field name="product_uom_qty"/>
+                    <field name="uom"/>
                     <field name="saleorder_id"/>
                     <field name="stage_id"/>
                 </tree>
@@ -51,6 +52,7 @@
                             <group>
                                 <field name="product_id" options='{"always_reload": True}'/>
                                 <field name="product_uom_qty"/>
+                                <field name="uom"/>
                                 <field name="saleorder_id" options='{"always_reload": True}'/>
                                 <field name="order_description"/>
                             </group>
@@ -113,7 +115,11 @@
                                             <span class="o_kanban_record_subtitle"><b>Kitchen Order: </b><field name="name"/></span>
                                             <span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle"><b>Sale Order: </b><field name="saleorder_id"/></span>
                                             <span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle"><b>Delivery Date: </b><field name="requested_date"/></span>
-                                            <span t-if="record.product_uom_qty.raw_value" class="o_kanban_record_subtitle"><b>Quantity: </b><field name="product_uom_qty"/></span>
+                                            <span t-if="record.product_uom_qty.raw_value" class="o_kanban_record_subtitle">
+                                                <b>Quantity: </b>
+                                                <field name="product_uom_qty"/>
+                                                <field name="uom"/>
+                                            </span>
                                             <br/>
                                         </div>
                                     </div>

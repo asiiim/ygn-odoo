@@ -48,15 +48,9 @@ class KitchenOrder(models.Model):
         related="saleorder_id.requested_date", string="Delivery Date", store=True)
     product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision(
         'Product Unit of Measure'), readonly=1, required=True, default=1.0, track_visibility='always')
+    uom = fields.Many2one(related="product_id.uom_id", string='Unit of Measure', readonly=1,
+                          required=True, track_visibility='always')
 
-    # Get product image
-    # @api.onchange('product_id')
-    # def _get_product_image(self):
-    #     for rec in self:
-    #         if rec.product_id.image_medium:
-    #             rec.image = rec.product_id.image_medium
-
-    # Generate kitchen order name with a sequence number
     @api.model
     def create(self, vals):
         vals['name'] = self.env['ir.sequence'].next_by_code(
