@@ -112,6 +112,22 @@ class KitchenOrder(models.Model):
                 'stage_id': self.env['kitchen.stage'].search([('name', '=', 'Cancel')], limit=1).id
             })
 
+    @api.multi
+    def start_kitchen_order(self):
+        self.ensure_one()
+        for rec in self:
+            rec.write({
+                'stage_id': self.env['kitchen.stage'].search([('name', '=', 'In Progress')], limit=1).id
+            })
+
+    @api.multi
+    def finish_kitchen_order(self):
+        self.ensure_one()
+        for rec in self:
+            rec.write({
+                'stage_id': self.env['kitchen.stage'].search([('name', '=', 'Done')], limit=1).id
+            })
+
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
         stage_ids = self.env['kitchen.stage'].search([])

@@ -88,6 +88,7 @@
                     <field name="image"/>
                     <field name="kanban_state"/>
                     <field name="kanban_state_label"/>
+                    <field name="stage_name"/>
                     <field name="priority"/>
                     <field name="message_id"/>
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description", "legend_priority": "Use of stars"}}'/>
@@ -110,27 +111,57 @@
                                 <div class="oe_kanban_details">
                                     <div class="o_kanban_record_top">
                                         <div class="o_kanban_record_headings">
-                                            <br/><field name="priority" widget="priority"/><br/><br/>
-                                            <strong class="o_kanban_record_title">
-                                                <b><field name="product_id"/></b>
-                                            </strong>
-                                            <span class="o_kanban_record_subtitle"><b>Kitchen Order: </b><field name="name"/></span>
-                                            <span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle"><b>Sale Order: </b><field name="saleorder_id"/></span>
-                                            <span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle"><b>Delivery Date: </b><field name="requested_date"/></span>
-                                            <span t-if="record.product_uom_qty.raw_value" class="o_kanban_record_subtitle">
-                                                <b>Quantity: </b>
-                                                <field name="product_uom_qty"/>
-                                                <field name="uom"/>
-                                            </span>
-                                            <br/>
+                                            <br/><div class="row">
+                                                <div class="col-xs-6 o_kanban_primary_left">
+                                                    <button t-if="record.stage_name.raw_value == 'New'" type="object" name="start_kitchen_order" class="btn btn-primary btn-sm">
+                                                        <span>Start</span>
+                                                    </button>
+                                                    <button t-if="record.stage_name.raw_value == 'In Progress'" type="object" name="finish_kitchen_order" class="btn btn-primary btn-sm">
+                                                        <span>Finish</span>
+                                                    </button>
+                                                </div>
+                                                <div class="col-xs-6 text-right">
+                                                    <field name="priority" widget="priority"/>
+                                                </div>
+                                            </div><br/>
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <strong class="o_kanban_record_title">
+                                                        <b><field name="product_id"/></b>
+                                                    </strong>
+                                                </div>
+                                            </div><br/>
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <span class="o_kanban_record_subtitle"><b>Kitchen Order: </b></span>
+                                                    <field name="name"/>
+                                                    <span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle"><b>Sale Order: </b></span>
+                                                    <field name="saleorder_id"/>
+                                                </div>
+                                                <div class="col-xs-6">
+                                                    <span t-if="record.product_uom_qty.raw_value" class="o_kanban_record_subtitle">
+                                                        <b>Quantity: </b>
+                                                    </span>
+                                                    <span>
+                                                        <field name="product_uom_qty"/>
+                                                        <field name="uom"/>
+                                                    </span>
+                                                    <span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle"><b>Delivery Date: </b></span>
+                                                    <field name="requested_date"/>
+                                                </div>
+                                            </div><br/>
                                         </div>
                                     </div>
-                                    <ul>
-                                        <li t-if="record.product_description.value"> <b>Product Details: </b> <field name="product_description"/></li>
-                                        <li t-if="record.message_id.value"> <b>Message: </b><br/> <i class="fa fa-pencil"></i> <field name="message"/></li>
-                                        <li t-if="record.order_description.value"> <b>Order Details: </b><br/> <i class="fa fa-pencil"></i> <field name="order_description"/></li>
-                                        <li t-if="record.ko_note.value"> <b>Order Note: </b><br/><i class="fa fa-edit"></i> <field name="ko_note"/></li><br/><br/>
-                                    </ul>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <ul>
+                                                <li t-if="record.product_description.value"> <b>Product Details: </b> <field name="product_description"/></li>
+                                                <li t-if="record.message_id.value"> <b>Message: </b><br/> <i class="fa fa-pencil"></i> <field name="message"/></li>
+                                                <li t-if="record.order_description.value"> <b>Order Details: </b><br/> <i class="fa fa-pencil"></i> <field name="order_description"/></li>
+                                                <li t-if="record.ko_note.value"> <b>Order Note: </b><br/><i class="fa fa-edit"></i> <field name="ko_note"/></li><br/><br/>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </t>
