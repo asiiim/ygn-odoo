@@ -13,6 +13,7 @@
                     <field name="product_uom_qty"/>
                     <field name="uom"/>
                     <field name="saleorder_id"/>
+                    <field name="invoice_ids"/>
                     <field name="stage_id"/>
                 </tree>
             </field>
@@ -61,6 +62,7 @@
                                 <field name="legend_red" invisible="1"/>
                                 <field name="legend_grey" invisible="1"/>
                                 <field name="legend_green" invisible="1"/>
+                                <field name="invoice_ids" widget="many2many_tags"/>
                                 <field name="requested_date"/>
                                 <field name="product_description"/>
                                 <field name="ko_note"/>
@@ -91,6 +93,7 @@
                     <field name="stage_name"/>
                     <field name="priority"/>
                     <field name="message_id"/>
+                    <field name="invoice_ids"/>
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description", "legend_priority": "Use of stars"}}'/>
                     <field name="product_id"/>
                     <field name="product_description"/>
@@ -136,7 +139,8 @@
                                                     <span class="o_kanban_record_subtitle"><b>Kitchen Order: </b></span>
                                                     <field name="name"/>
                                                     <span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle"><b>Sale Order: </b></span>
-                                                    <field name="saleorder_id"/>
+                                                    <span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle"><b>Invoice Ref: </b></span>
+                                                    <field name="invoice_ids"/>
                                                 </div>
                                                 <div class="col-xs-6">
                                                     <span t-if="record.product_uom_qty.raw_value" class="o_kanban_record_subtitle">

@@ -146,3 +146,7 @@ class KitchenOrder(models.Model):
         'kitchen.message', string="Message", track_visibility='onchange')
     message = fields.Char(related='message_id.name',
                           string="Message", track_visibility='onchange')
+
+    # Link Invoice(s) With Kitchen Order
+    invoice_ids = fields.Many2many(
+        related="saleorder_id.invoice_ids", string='Invoice Ref.')
