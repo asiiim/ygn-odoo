@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_ygen_printer_user,ygen_printer_user.ygen_printer,model_ygen_printer,ygen_win32_print.group_ygen_printer_user,1,1,1,0
+access_ygen_printer_manager,ygen_printer_manager.ygen_printer,model_ygen_printer,ygen_win32_print.group_ygen_printer_manager,1,1,1,1

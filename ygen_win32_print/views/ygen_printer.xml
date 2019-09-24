@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="ygen_printer_search" model="ir.ui.view">
+            <field name="name">ygen.printer.search</field>
+            <field name="model">ygen.printer</field>
+            <field name="arch" type="xml">
+                <search string="Search Printers">
+                   <field name="name" string="Printers"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="ygen_printer_form" model="ir.ui.view">
+            <field name="name">ygen.printer.form</field>
+            <field name="model">ygen.printer</field>
+            <field name="arch" type="xml">
+                <form string="Printer">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="default_printer"/>
+                            </group>
+                            <group>
+                                <field name="sequence"/>
+                                <field name="description"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="ygen_printer_tree" model="ir.ui.view">
+            <field name="name">ygen.printer.tree</field>
+            <field name="model">ygen.printer</field>
+            <field name="arch" type="xml">
+                <tree string="Printers">
+                    <field name="sequence" widget="handle"/>
+                    <field name="default_printer"/>
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="ygen_printer_kanban" model="ir.ui.view">
+            <field name="name">ygen.printer.kanban</field>
+            <field name="model">ygen.printer</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="default_printer"/>
+                    <field name="description"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <strong><t t-esc="record.name.value"/></strong>
+                                    </div>
+                                </div>
+                                <t t-if="record.description.value">
+                                    <hr class="mt8 mb8"/>
+                                    <t t-esc="record.description.value"/>
+                                </t>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="ygen_printer_action" model="ir.actions.act_window">
+            <field name="name">Printers</field>
+            <field name="res_model">ygen.printer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="ygen_printer_kanban"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a printer in the for the direct printing of the file.</p>
+            </field>
+        </record>
+
+        <menuitem action="ygen_printer_action" id="menu_ygen_printer" name="Available Printers" parent="base.reporting_menuitem" sequence="5" groups="ygen_win32_print.group_ygen_printer_manager"/>
+    </data>
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.module.category" id="module_ygen_win32_print">
+        <field name="name">Ygen Direct Print</field>
+        <field name="description">Helps you print the file directly...</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="group_ygen_printer_user" model="res.groups">
+        <field name="name">Print User</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="category_id" ref="module_ygen_win32_print"/>
+    </record>
+
+    <record id="group_ygen_printer_manager" model="res.groups">
+        <field name="name">Print Manager</field>
+        <field name="category_id" ref="module_ygen_win32_print"/>
+        <field name="implied_ids" eval="[(4, ref('group_ygen_printer_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+    </record>
+
+<data noupdate="1">
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('ygen_win32_print.group_ygen_printer_user'))]"/>
+    </record>
+</data>
+</odoo>
