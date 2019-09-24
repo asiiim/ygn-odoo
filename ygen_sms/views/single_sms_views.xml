@@ -7,11 +7,12 @@
             <field name="arch" type="xml">
                 <tree string="SMS">
                     <field name="reference"/>
+                    <field name="create_date" string="Date &amp; Time"/>
                     <field name="name"/>
                     <field name="receiver"/>
                     <field name="text"/>
                     <field name="is_sent"/>
-                    <field name="sms_credits_consumed"/>
+                    <field name="sms_credits_consumed" sum="Total Credits Consumed"/>
                 </tree>
             </field>
         </record>

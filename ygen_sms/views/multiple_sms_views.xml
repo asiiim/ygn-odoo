@@ -7,11 +7,12 @@
             <field name="arch" type="xml">
                 <tree string="Multiple SMS">
                     <field name="reference"/>
+                    <field name="create_date" string="Date &amp; Time"/>
                     <field name="name"/>
                     <field name="text"/>
                     <field name="failed_partners_count" string="Partners without Mobile Number" readonly="True"/>
                     <field name="total_partners_count" string="Partners with Mobile Number" readonly="True"/>
-                    <field name="credits_consumed_count" readonly="True"/>
+                    <field name="credits_consumed_count" readonly="True" sum="Total Credits Consumed"/>
                     <field name="is_sent" readonly="True"/>
                 </tree>
             </field>
