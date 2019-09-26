@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <!--
+    <record model="ir.ui.view" id="ygen_slave_synchronization.list">
+      <field name="name">ygen_slave_synchronization list</field>
+      <field name="model">ygen_slave_synchronization.ygen_slave_synchronization</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+    -->
+
+    <!-- actions opening views on models -->
+    <!--
+    <record model="ir.actions.act_window" id="ygen_slave_synchronization.action_window">
+      <field name="name">ygen_slave_synchronization window</field>
+      <field name="res_model">ygen_slave_synchronization.ygen_slave_synchronization</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    -->
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="ygen_slave_synchronization.action_server">
+      <field name="name">ygen_slave_synchronization server</field>
+      <field name="model_id" ref="model_ygen_slave_synchronization_ygen_slave_synchronization"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+    <!--
+    <menuitem name="ygen_slave_synchronization" id="ygen_slave_synchronization.menu_root"/>
+    -->
+    <!-- menu categories -->
+    <!--
+    <menuitem name="Menu 1" id="ygen_slave_synchronization.menu_1" parent="ygen_slave_synchronization.menu_root"/>
+    <menuitem name="Menu 2" id="ygen_slave_synchronization.menu_2" parent="ygen_slave_synchronization.menu_root"/>
+    -->
+    <!-- actions -->
+    <!--
+    <menuitem name="List" id="ygen_slave_synchronization.menu_1_list" parent="ygen_slave_synchronization.menu_1"
+              action="ygen_slave_synchronization.action_window"/>
+    <menuitem name="Server to list" id="ygen_slave_synchronization" parent="ygen_slave_synchronization.menu_2"
+              action="ygen_slave_synchronization.action_server"/>
+    -->
+  </data>
+</odoo>
