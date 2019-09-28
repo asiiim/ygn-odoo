@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Ygen. See LICENSE file for full copyright and licensing details.
 {
-    'name': "Ygen Win32 Print",
+    'name': "Ygen Win32 Direct Print",
 
     'summary': """
         Print file directly in Windows OS.""",
