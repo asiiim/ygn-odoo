@@ -43,14 +43,8 @@ class IrActionsReport(models.Model):
             _logger.error("File descriptor not closed.")
 
         # command for direct print
-        initial_printer = win32print.GetDefaultPrinter()
-        win32print.SetDefaultPrinter(self.printer_id.name)
-        win32api.ShellExecute(0, "print", filepath, None, ".", 0)
-        
-        # wait till print job is done
-        time.sleep(60)
-
-        win32print.SetDefaultPrinter(initial_printer)
+        printer = self.printer_id.name if self.printer_id else str(win32print.GetDefaultPrinter())
+        win32api.ShellExecute(0, "print", filepath, '"%s"' % printer, ".", 0)
 
     @api.noguess
     def report_action(self, docids, data=None, config=True):
