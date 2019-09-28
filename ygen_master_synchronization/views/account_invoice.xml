@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_invoice_view_form_ygen_master_sync" model="ir.ui.view">
+        <field name="name">account.invoice.form.inherit.ygen.master.sync</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="before">
+                <field name="remote_id"/>
+                <!-- <field name="remote_invoice_number"/> -->
+            </xpath>
+        </field>
+    </record>
+</odoo>
