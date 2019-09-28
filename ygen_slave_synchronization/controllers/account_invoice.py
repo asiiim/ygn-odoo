@@ -5,6 +5,7 @@ from odoo import http
 from odoo.http import Response
 from odoo.http import request
 from operator import itemgetter
+from odoo.tools import float_is_zero, float_compare, pycompat
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -35,7 +36,7 @@ class InvoiceController(http.Controller):
             error = "authorization_failed"
             _logger.error(info)
             return {
-                'status': 401,
+                'code': 401,
                 'info': info,
                 'error': error
             }
@@ -52,7 +53,7 @@ class InvoiceController(http.Controller):
         customer = partner.search([('id', '=', customer_id)])
         if not customer:
             return {
-                "status": 500,
+                "code": 500,
                 "message": "You need a customer for the invoice in the system, please create it first.",
             }   
         else:
@@ -60,6 +61,8 @@ class InvoiceController(http.Controller):
                 'partner_id': customer_id,
                 'name': sales_reference
             }
+            
+            # create invoice
             inv_rec = invoice.create(vals)
 
             # invoice lines creation
@@ -69,7 +72,7 @@ class InvoiceController(http.Controller):
 
                 if not account:
                     return {
-                        "status": 500,
+                        "code": 500,
                         "message": "Please provide account for the given invoice line.",
                     }
                 else:
@@ -79,7 +82,8 @@ class InvoiceController(http.Controller):
                             'quantity': invl['quantity'],
                             'price_unit': invl['price_unit'],
                             'account_id': account.id,
-                            'invoice_id': inv_rec.id
+                            'invoice_id': inv_rec.id,
+                            'discount': invl['discount']
                         }
                     else:
                         inv_line_vals = {
@@ -88,7 +92,8 @@ class InvoiceController(http.Controller):
                             'price_unit': invl['price_unit'],
                             'account_id': account.id,
                             'invoice_id': inv_rec.id,
-                            'invoice_line_tax_ids': [(4, tax.id)]
+                            'invoice_line_tax_ids': [(4, tax.id)],
+                            'discount': invl['discount']
                         }
                 inv_line_id = invoice_line.create(inv_line_vals)
                 inv_lines.append(inv_line_id.id)
@@ -96,12 +101,13 @@ class InvoiceController(http.Controller):
                 # compute tax
                 inv_rec.compute_taxes()
 
-                # validate the invoice
-                inv_rec.action_invoice_open()
+                # validate invoice
+                # inv_rec.action_invoice_open()
 
             return {
-                "status": 202,
+                "code": 200,
                 "message": "Invoice created successfully...",
                 "invoice_id": inv_rec.id,
                 "invoice_lines": inv_lines
+                # "invoice_number": inv_rec.number
             }

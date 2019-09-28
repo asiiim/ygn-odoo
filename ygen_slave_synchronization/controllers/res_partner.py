@@ -35,13 +35,13 @@ class ResPartnerController(http.Controller):
             error = "authorization_failed"
             _logger.error(info)
             return {
-                'status': 401,
+                'code': 401,
                 'info': info,
                 'error': error
             }
 
         partner = request.env['res.partner']
-        customer = partner.sudo().search([('name', '=', name), ('mobile', '=', mobile)])
+        customer = partner.search([('name', '=', name), ('mobile', '=', mobile)])
         if not customer:
             vals = {
                 'name': name,
@@ -49,9 +49,9 @@ class ResPartnerController(http.Controller):
                 'phone': phone,
                 'vat': tin
             }
-            new_customer = partner.sudo().create(vals)
+            new_customer = partner.create(vals)
             return {
-                "status": 200,
+                "code": 200,
                 "message": "Contacts created successfully...",
                 "id": new_customer.id,
                 "name": new_customer.name
@@ -59,7 +59,7 @@ class ResPartnerController(http.Controller):
             
         else:
             return {
-                "status": 202,
+                "code": 202,
                 "message": "The contacts you try to create is already existed...",
             }
 
