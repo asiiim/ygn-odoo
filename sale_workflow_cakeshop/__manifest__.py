@@ -17,7 +17,7 @@ good for processing one product at a time.
     'installable': True,
     'application': True,
     'auto_install': False,
-    'depends': ['sale','account_payment', 'kitchen_order', 'kitchen_order_note', 'product_configurator'],
+    'depends': ['sale', 'stock', 'account_payment', 'kitchen_order', 'kitchen_order_note', 'product_configurator'],
     'data': [
         'views/product_views.xml',
         'views/sale_views.xml',
