@@ -21,20 +21,24 @@
                                         <div class="mt16 row">
                                             <label class="col-xs-3 col-md-3 o_light_label" string="Base URL" for="ygen_url"/>
                                             <field name="ygen_url"/>
-                                        </div>
-                                        <div class="mt16 row">
+
                                             <label class="col-xs-3 col-md-3 o_light_label" string="Database Name" for="ygen_db"/>
                                             <field name="ygen_db"/>
                                         </div>
                                         <div class="mt16 row">
                                             <label class="col-xs-3 col-md-3 o_light_label" string="Username" for="ygen_username"/>
                                             <field name="ygen_username"/>
-                                        </div>
-                                        <div class="mt16 row">
+
                                             <label class="col-xs-3 col-md-3 o_light_label" string="Password" for="ygen_password"/>
                                             <field name="ygen_password"/>
                                         </div>
                                     </div>
+                                    <footer>
+                                        <group>
+                                            <field name="ok_tested" widget="radio"/>
+                                        </group>
+                                        <button string="Test Connection" name="test_connection" type="object" class="btn-primary"/>
+                                    </footer>
                                 </div>
                             </div>
                         </div>
