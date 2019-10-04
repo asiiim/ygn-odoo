@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="invoice_form_inherit_tender_change" model="ir.ui.view">
+        <field name="name">account.invoice.form.inherit.tender.change</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="tender_amount"/>
+                <field name="change_amount"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
