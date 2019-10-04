@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 class SaleAdvancePaymentInv(models.TransientModel):
     _inherit = "sale.advance.payment.inv"
 
-    tender_amount = fields.Float(string='Tender', default=0.0)
+    tender_amount = fields.Float(string='Tender')
     change_amount = fields.Float(string='Change', default=0.0, compute="_get_change")
     total_due_amount = fields.Float(string='Total Due Amount', default=0.0, compute="_get_total_amount")
 

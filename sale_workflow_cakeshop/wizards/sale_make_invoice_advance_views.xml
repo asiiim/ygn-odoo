@@ -28,10 +28,24 @@
                                 attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}"/>
                         </group>
                         <group>
-                            <field name="tender_amount"/>
-                            <field name="change_amount" readonly="1"/>
-                            <field name="total_due_amount"/>
-                            <!-- <field name="journal_id" widget="selection" required="True"/> -->
+                            <label for="total_due_amount" string="Amount Due"/>
+                            <div class="oe_title">
+                                <h2 style="color: red;">
+                                    <strong><field name="total_due_amount"/></strong>
+                                </h2>
+                            </div>
+                            <label for="tender_amount" string="Tender"/>
+                            <div class="oe_title">
+                                <h1>
+                                    <field name="tender_amount" default_focus="1"/>
+                                </h1>
+                            </div>
+                            <label for="change_amount" string="Change"/>
+                            <div class="oe_title">
+                                <h2 style="color: blue;">
+                                    <field name="change_amount"/>
+                                </h2>
+                            </div>
                             <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                             <button name="pay_bill" string="Pay Bill" type="object" class="btn btn-primary"/>
                         </group>
