@@ -47,7 +47,7 @@ class ResConfigSettings(models.TransientModel):
     def test_connection(self):
         for record in self:
             headers = {'Content-Type': 'application/json'}
-            url = record.env['ir.config_parameter'].sudo().get_param('ygen_url') + 'test'
+            url = record.ygen_url + 'test'
             params = {
                 "params": {
                     "db": record.ygen_db,
