@@ -15,6 +15,7 @@ class SaleOrder(models.Model):
         # required=True,
         readonly=True
     )
+    advance_payment = fields.Monetary(related="payment_id.amount", string="Advance", store=True)
     amount_due = fields.Monetary(compute='_compute_amount_due', string='Amount Due', readonly=True)
     kitchen_order_ids = fields.One2many(
         comodel_name='kitchen.order',
@@ -28,9 +29,14 @@ class SaleOrder(models.Model):
         Compute the amount due of the SO.
         """
         for line in self:
-            # Check if the payment linked has already been matched 
-            # and set the amount_due accordingly
-            line.amount_due = line.amount_total - (line.payment_id.amount if line.payment_id.state == 'posted' and not line.payment_id.move_reconciled else 0)
+            if not line.invoice_ids:
+                # Check if the payment linked has already been matched 
+                # and set the amount_due accordingly
+                line.amount_due = line.amount_total - (line.payment_id.amount if line.payment_id.state == 'posted' and not line.payment_id.move_reconciled else 0)
+            else:
+                for invoice in line.invoice_ids:
+                    line.amount_due = invoice.residual
+                    break
 
     # Stock Picking Operation
     delivery_validated = fields.Boolean('Delivery Validated?', default=False, readonly=True, copy=False)

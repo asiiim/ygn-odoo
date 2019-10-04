@@ -38,9 +38,16 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <button name="action_unlock" position="after">
+                <button name="validate_picking" class="btn-primary" string="Validate Delivery" type="object" 
+                    attrs="{'invisible': [('delivery_validated', '=', True)]}"/>
+            </button>
             <field name="amount_total" position="after">
-                <field name="tender_amount"/>
-                <field name="change_amount"/>
+                <field name="delivery_validated" invisible="1"/>
+                <field name="advance_payment"/>
+                <field name="tender_amount" attrs="{'invisible': [('amount_due', '!=', 0.0)]}"/>
+                <field name="change_amount" attrs="{'invisible': [('amount_due', '!=', 0.0)]}"/>
+                <field name="amount_due" class="oe_subtotal_footer_separator"/>
             </field>
         </field>
     </record>

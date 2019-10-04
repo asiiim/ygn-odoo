@@ -13,7 +13,7 @@ class Picking(models.Model):
     @api.multi
     def button_validate(self):
         _logger.warning(self.state)
-        if self.state == "confirmed":
+        if self.state in ["confirmed", "assigned"]:
             for moveline in self.move_lines:
                 _logger.warning(moveline)
                 if moveline.product_uom_qty:

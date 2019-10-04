@@ -195,7 +195,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             'name': _('Sale Order'),
             'res_model': 'sale.order',
             'res_id': sale_order.id,
-            'views': [(sale_order_form_ref_id, 'form'),],
+            'views': [(sale_order_form_ref_id, 'form')],
             'type': 'ir.actions.act_window'
         }
 
