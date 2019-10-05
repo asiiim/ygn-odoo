@@ -53,7 +53,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     amount = fields.Monetary(string='Advance Amount', required=True, default=0)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.user.company_id.currency_id)
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False)
-    journal_id = fields.Many2one('account.journal', string='Payment Journal', domain=[('type', 'in', ('bank', 'cash'))])
+    journal_id = fields.Many2one('account.journal', string='Payment Journal', domain=[('type', 'in', ('bank', 'cash'))], default=lambda self: self.env['account.journal'].search([('type', '=', 'cash')], limit=1))
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
     price_unit = fields.Float(related="product_id.lst_price", string="Price", digits=dp.get_precision('Unit Price'), oldname="price")
     product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
@@ -103,6 +103,9 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         }
         return ko_vals
 
+    # select print option for KO & SO
+    kitchen_sale_order_print_selection = fields.Selection([('ko', 'Kitchen Order'), ('so', 'Sale Order'), ('both', 'Both')], string="Print SO/KO")
+
     @api.multi
     def _prepare_order(self):
         """
@@ -121,6 +124,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             'company_id': self.company_id.id,
             # 'user_id': self.user_id and self.user_id.id,
             # 'team_id': self.team_id.id
+            'kitchen_sale_order_print_selection': self.kitchen_sale_order_print_selection
         }
         return order_vals
 

@@ -63,3 +63,10 @@ class SaleOrder(models.Model):
             })
         return invoice_ids_arr
 
+    # print option selection for KO & SO
+    kitchen_sale_order_print_selection = fields.Selection([('ko', 'Kitchen Order'), ('so', 'Sale Order'), ('both', 'Both')], string="Print Sale Order or Kitchen Order?")
+
+    # print SO or KO
+    @api.multi
+    def print_koso_report(self):
+        return self.env.ref('sale_workflow_cakeshop.action_report_sale_or_kitchen_order').report_action(self)

@@ -38,10 +38,14 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <button name="action_unlock" position="after">
+            <button name='action_quotation_send' position="before">
                 <button name="validate_picking" class="btn-primary" string="Validate Delivery" type="object" 
                     attrs="{'invisible': [('delivery_validated', '=', True)]}"/>
+                <button name="print_koso_report" string="Print SO/KO" type="object" class="btn-primary"/>
             </button>
+            <field name="payment_term_id" position="after">
+                <field name="kitchen_sale_order_print_selection"/>
+            </field>
             <field name="amount_total" position="after">
                 <field name="delivery_validated" invisible="1"/>
                 <field name="advance_payment"/>

@@ -23,7 +23,8 @@ good for processing one product at a time.
         'views/sale_views.xml',
         'views/account_invoice.xml',
         'wizards/product_configurator_order_now.xml',
-        'wizards/sale_make_invoice_advance_views.xml'
+        'wizards/sale_make_invoice_advance_views.xml',
+        'report/kitchen_sale_order_report.xml'
     ],
     # 'images': ['static/description/banner.png'],
 }

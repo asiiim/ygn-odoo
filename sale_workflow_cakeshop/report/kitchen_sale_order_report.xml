@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Report -->
+        <template id="report_sale_or_kitchen_order">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-if="doc.kitchen_sale_order_print_selection == 'ko'">
+                        <t t-foreach="doc.kitchen_order_ids" t-as="doc">
+                            <t t-call="kitchen_order.report_kitchen_order_document"/>
+                        </t>
+                    </t>
+                    <t t-elif="doc.kitchen_sale_order_print_selection == 'so'">
+                        <t t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
+                    </t>
+                    <t t-else="">
+                        <t t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
+
+                        <p style="page-break-after: always;"/>
+
+                        <t t-foreach="doc.kitchen_order_ids" t-as="doc">
+                            <t t-call="kitchen_order.report_kitchen_order_document"/>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <report 
+            id="action_report_sale_or_kitchen_order"
+            string="Sale /Kitchen Order Details"
+            model="sale.order" 
+            report_type="qweb-pdf"
+            file="sale_workflow_cakeshop.report_sale_or_kitchen_order" 
+            name="sale_workflow_cakeshop.report_sale_or_kitchen_order"
+            print_report_name="('Sale/Kitchen Order - %s' % (object.name))"/>
+    </data>
+</odoo>

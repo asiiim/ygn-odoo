@@ -11,9 +11,9 @@
                 </header>
                 <sheet>
                     <!-- <field attrs="{'invisible': [('product_img', '=', False)]}" name="product_img" readonly="1" nolabel="1" widget="image"/> -->
-                    <group col="3">
+                    <group colspan="2">
                         <!-- <group name='static_form' colspan="2" states='select'> -->
-                        <group name='static_form' colspan="2">
+                        <group name='static_form'>
                             <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}"/>
                             <field name="product_tmpl_id" attrs="{'readonly': [('product_id', '!=', False)]}" required="True" options="{'no_create': True}"/>
                             <field name="order_description"/>
@@ -21,11 +21,12 @@
                             <field name="ko_note"/>
                             <field name="partner_id" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}' required="True"/>
                             <field name="requested_date"/>
+                            <field name="kitchen_sale_order_print_selection"/>
+                        </group>
+                        <group>
                             <field name="journal_id" widget="selection" required="True"/>
                             <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                             <field name="amount" widget="monetary"/>
-                        </group>
-                        <group colspan="1">
                             <field name="price_unit"/>
                             <field name="product_uom_qty"/>
                             <field name="discount"/>
