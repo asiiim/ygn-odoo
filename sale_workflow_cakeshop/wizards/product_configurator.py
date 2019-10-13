@@ -104,7 +104,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         return ko_vals
 
     # select print option for KO & SO
-    kitchen_sale_order_print_selection = fields.Selection([('ko', 'Kitchen Order'), ('so', 'Sale Order'), ('both', 'Both')], string="Print SO/KO")
+    kitchen_sale_order_print_selection = fields.Selection([('ko', 'Kitchen Order'), ('so', 'Sale Order'), ('both', 'Both')], string="Print SO/KO", default="both")
 
     @api.multi
     def _prepare_order(self):

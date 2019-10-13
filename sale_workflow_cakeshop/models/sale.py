@@ -64,7 +64,7 @@ class SaleOrder(models.Model):
         return invoice_ids_arr
 
     # print option selection for KO & SO
-    kitchen_sale_order_print_selection = fields.Selection([('ko', 'Kitchen Order'), ('so', 'Sale Order'), ('both', 'Both')], string="Print Sale Order or Kitchen Order?")
+    kitchen_sale_order_print_selection = fields.Selection([('ko', 'Kitchen Order'), ('so', 'Sale Order'), ('both', 'Both')], string="Print Sale Order or Kitchen Order?", default="both")
 
     # print SO or KO
     @api.multi
