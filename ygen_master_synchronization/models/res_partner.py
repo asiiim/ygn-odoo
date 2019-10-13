@@ -41,11 +41,14 @@ class ResPartner(models.Model):
                 raise UserError(_(
                     'Could not connect to server. \n(%s)') % e)
             if response:
-                if response['result'].get('code') == 200:
-                    remote_id = response['result'].get('id')
-                    return remote_id
+                if response.get('result'):
+                    if response['result'].get('code') == 200:
+                        remote_id = response['result'].get('id')
+                        return remote_id
+                    else:
+                        raise UserError(_('An Error Occured: '+ str(response['result'].get('message'))))
                 else:
-                    raise UserError(_('An Error Occured: '+ str(response['result'].get('message'))))
+                        raise UserError(_('An Error Occured: '+ str(response['error'].get('message'))))
             else:
                 raise UserError(_("An Error Occured"))
 

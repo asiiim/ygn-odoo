@@ -14,7 +14,6 @@ class AccountInvoice(models.Model):
     _inherit = "account.invoice"
 
     remote_id = fields.Integer("Remote ID", help="This is the remote id of the record which has been generated from another database server.", readonly=True, copy=False)
-    # remote_invoice_number = fields.Char("Remote Invoice Number", help="This is the remote invoice number of the record which has been generated from another database server.", readonly=True, copy=False)
 
     @api.multi
     def inv_synchronization(self, partner_id, sale_ref, invoice_lines):
@@ -35,17 +34,18 @@ class AccountInvoice(models.Model):
 
             try:
                 response = requests.post(url, data=json_params, headers=headers).json()
-
             except Exception as e:
                 raise UserError(_(
                     'Could not connect to server. \n(%s)') % e)
             if response:
-                if response['result'].get('code') == 200:
-                    remote_id = response['result'].get('invoice_id')
-                    # invoice_number = response['result'].get('invoice_number')
-                    return remote_id
+                if response.get('result'):
+                    if response['result'].get('code') == 200:
+                        remote_id = response['result'].get('invoice_id')
+                        return remote_id
+                    else:
+                        raise UserError(_('An Error Occured: '+ str(response['result'].get('message'))))
                 else:
-                    raise UserError(_('An Error Occured: '+ str(response['result'].get('message'))))
+                        raise UserError(_('An Error Occured: '+ str(response['error'].get('message'))))
             else:
                 raise UserError(_("An Error Occured"))
 
@@ -55,27 +55,25 @@ class AccountInvoice(models.Model):
 
         # account env
         account_env = self.env['account.account']
-
-        # tax env
-        tax_env = self.env['account.tax']
         
         # invoice line env
         invoice_lines = []
         for invoice_line in self.invoice_line_ids:
-            taxline_arr = []
             
+            taxline_arr = []
             for tax in invoice_line.invoice_line_tax_ids:
                 taxline_arr.append(tax.name)
 
-            invoice_lines.append({
+            inv_dict = {
                 'name': invoice_line.name,
                 'quantity': invoice_line.quantity,
                 'price_unit': invoice_line.price_unit,
                 'account_name': account_env.search([('name', '=', invoice_line.account_id.name)]).name,
-                'tax': tax_env.search([('name', '=', taxline_arr[0]), ('type_tax_use', '=', "sale")], limit=1).name,
-                'discount': invoice_line.discount
-            })
+                'discount': invoice_line.discount,
+                'tax': taxline_arr
+            }
 
+            invoice_lines.append(inv_dict)
         remote_id = self.inv_synchronization(self.partner_id.remote_id, self.name, invoice_lines)
         self.write({
             'remote_id': remote_id  

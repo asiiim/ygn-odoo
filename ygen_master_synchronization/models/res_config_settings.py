@@ -59,14 +59,16 @@ class ResConfigSettings(models.TransientModel):
 
             try:
                 response = requests.post(url, data=json_params, headers=headers).json()
-
             except Exception as e:
                 raise UserError(_(
                     'Could not connect to server. \n(%s)') % e)
             if response:
-                if response['result'].get('code') == 200:
-                    record.ok_tested = True
+                if response.get('result'):
+                    if response['result'].get('code') == 200:
+                        record.ok_tested = True
+                    else:
+                        raise UserError(_('An Error Occured: '+ str(response['result'].get('message'))))
                 else:
-                    raise UserError(_('An Error Occured: '+ str(response['result'].get('message'))))
+                    raise UserError(_('An Error Occured: '+ str(response['error'].get('message'))))
             else:
                 raise UserError(_("An Error Occured"))
