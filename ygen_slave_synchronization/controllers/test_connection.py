@@ -43,5 +43,5 @@ class TestConnectionController(http.Controller):
 
         return {
             "code": 200,
-            "message": "Connection Successfull !",
+            "message": "Connection Successfull !"
         }
