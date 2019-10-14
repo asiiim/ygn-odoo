@@ -69,6 +69,6 @@ class ResConfigSettings(models.TransientModel):
                     else:
                         raise UserError(_('An Error Occured: '+ str(response['result'].get('message'))))
                 else:
-                    raise UserError(_('An Error Occured: '+ str(response['error'].get('message'))))
+                    raise UserError(_('An Error Occured From the Slave Server: \n'+ str(response['error']['data'].get('message'))))
             else:
                 raise UserError(_("An Error Occured"))
