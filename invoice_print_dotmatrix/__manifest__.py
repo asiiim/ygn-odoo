@@ -9,7 +9,7 @@
     'license': 'OPL-1',
     'complexity': 'normal',
     'website': "https://ygen.io",
-    'depends': ['account_invoicing'],
+    'depends': ['account_invoicing', 'ygen_win32_print'],
     'data': [
         'views/report_invoice.xml',
         'views/account_report.xml',
