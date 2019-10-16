@@ -19,4 +19,7 @@ class HrContract(models.Model):
     undertime_buffer_hours = fields.Float(string="Under-time Buffer Hours", copy=True, help="Under-time Buffer Hours", index=True)
     undertime_fine_factor = fields.Float(string="Under-time Fine Factor", copy=True, help="For Eg:\nundertime_fine_factor is 0.3, salary is 500 per hour and leave hours totals to 5 hours then fine will be as follows:\nfine = 0.2 * 500 * 5", index=True)
 
+    # annual allowance
+    dashain_health_bonus = fields.Float(string="Dashain Health Bonus", copy=True, help="Allowance for Dashain")
+
     

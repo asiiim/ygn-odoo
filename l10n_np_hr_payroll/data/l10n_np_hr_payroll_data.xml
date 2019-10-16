@@ -6,6 +6,10 @@
             <field name="name">Fine</field>
             <field name="code">FINE</field>
         </record>
+        <record id="annual_allowance_salary_rule_category" model="hr.salary.rule.category">
+            <field name="name">Annual Allowance</field>
+            <field name="code">ANALW</field>
+        </record>
         <record id="non_taxable_allowance_salary_rule_category" model="hr.salary.rule.category">
             <field name="name">Non Taxable Allowance</field>
             <field name="code">NALW</field>
@@ -14,18 +18,26 @@
             <field name="name">Employee Contribution</field>
             <field name="code">EMP</field>
         </record>
+        <record id="employee_advance_salary_rule_category" model="hr.salary.rule.category">
+            <field name="name">Advance</field>
+            <field name="code">ADV</field>
+        </record>
+        <record id="employee_advance_due_category" model="hr.salary.rule.category">
+            <field name="name">Due</field>
+            <field name="code">DUE</field>
+        </record>
 
         <!-- Contribution Registers -->
         <record id="contrib_register_ird" model="hr.contribution.register">
             <field name="name">IRD</field>
             <field name="partner_id" eval="False"/>
         </record>
-        <record id="contrib_register_pf" model="hr.contribution.register">
-            <field name="name">Provident Fund</field>
+        <record id="contrib_register_ssf" model="hr.contribution.register">
+            <field name="name">Social Security Fund</field>
             <field name="partner_id" eval="False"/>
         </record>
-        <record id="contrib_register_upadan" model="hr.contribution.register">
-            <field name="name">Upadan Fund</field>
+        <record id="contrib_register_employee" model="hr.contribution.register">
+            <field name="name">Employee</field>
             <field name="partner_id" eval="False"/>
         </record>
 
@@ -38,9 +50,9 @@
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">
-                result = contract.wage
-                if contract.paid_hourly_attendance:
-                    result = contract.wage * contract.total_allocated_hours
+time_factor = payslip.payslip_days / 30
+if contract.paid_hourly_attendance:
+ result = contract.wage * contract.total_allocated_hours * time_factor
             </field>
         </record>
         
@@ -52,19 +64,19 @@
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">
-                result = categories.BASIC + categories.ALW + categories.FINE + categories.EMP
+result = categories.BASIC + categories.ALW + categories.FINE + categories.EMP + categories.ANALW
             </field>
         </record>
 
         <record id="hr_payroll.hr_rule_net" model="hr.salary.rule">
-            <field name="name">Net Salary</field>
+            <field name="name">TOTAL (Net Salary)</field>
             <field name="sequence" eval="200"/>
             <field name="code">NET</field>
             <field name="category_id" ref="hr_payroll.NET"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">
-                result = categories.BASIC + categories.ALW + categories.DED + categories.NALW + categories.FINE + categories.EMP
+result = categories.BASIC + categories.ALW + categories.DED +  categories.ADV + categories.NALW + categories.FINE + categories.EMP + categories.ANALW
             </field>
             <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
         </record>
@@ -77,38 +89,49 @@
             <field name="appears_on_payslip" eval="True"/>
             <field name="condition_select">python</field>
             <field name="condition_python">
-                # Available variables:
-                #----------------------
-                # payslip: object containing the payslips
-                # employee: hr.employee object
-                # contract: hr.contract object
-                # rules: object containing the rules code (previously computed)
-                # categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
-                # worked_days: object containing the computed worked days
-                # inputs: object containing the computed inputs
+# Available variables:
+#----------------------
+# payslip: object containing the payslips
+# employee: hr.employee object
+# contract: hr.contract object
+# rules: object containing the rules code (previously computed)
+# categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
+# worked_days: object containing the computed worked days
+# inputs: object containing the computed inputs
 
-                # Note: returned value have to be set in the variable 'result'
+# Note: returned value have to be set in the variable 'result'
 
-                result = contract.paid_hourly_attendance
+result = contract.paid_hourly_attendance
             </field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">
-                # Available variables:
-                #----------------------
-                # payslip: object containing the payslips
-                # employee: hr.employee object
-                # contract: hr.contract object
-                # rules: object containing the rules code (previously computed)
-                # categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
-                # worked_days: object containing the computed worked days.
-                # inputs: object containing the computed inputs.
+# Available variables:
+#----------------------
+# payslip: object containing the payslips
+# employee: hr.employee object
+# contract: hr.contract object
+# rules: object containing the rules code (previously computed)
+# categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
+# worked_days: object containing the computed worked days.
+# inputs: object containing the computed inputs.
 
-                # Note: returned value have to be set in the variable 'result'
+# Note: returned value have to be set in the variable 'result'
 
-                overtime = 0
-                if worked_days.ATTN.number_of_hours > (contract.total_allocated_hours + contract.overtime_buffer_hours):
-                    overtime = worked_days.ATTN.number_of_hours  - contract.total_allocated_hours
-                result = contract.wage * overtime * contract.overtime_pay_factor
+overtime = 0.0
+overtime_rate = 0.0
+total_allocated_hours = 0.0
+buffer_hours = 0.0
+time_factor = 0.0
+
+time_factor = payslip.payslip_days / 30
+total_allocated_hours = contract.total_allocated_hours * time_factor
+buffer_hours = contract.overtime_buffer_hours * time_factor
+
+if worked_days.ATTN.number_of_hours > (total_allocated_hours  + buffer_hours):
+ overtime = worked_days.ATTN.number_of_hours - total_allocated_hours - buffer_hours
+overtime_rate = (categories.BASIC + ((contract.allowance_khaja_tax + contract.allowance_trans_tax + contract.bonus)* time_factor)) / (240 * time_factor)
+
+result = overtime_rate * overtime * contract.overtime_pay_factor
             </field>
         </record>
 
@@ -120,38 +143,43 @@
             <field name="appears_on_payslip" eval="True"/>
             <field name="condition_select">python</field>
             <field name="condition_python">
-                # Available variables:
-                #----------------------
-                # payslip: object containing the payslips
-                # employee: hr.employee object
-                # contract: hr.contract object
-                # rules: object containing the rules code (previously computed)
-                # categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
-                # worked_days: object containing the computed worked days
-                # inputs: object containing the computed inputs
+# Available variables:
+#----------------------
+# payslip: object containing the payslips
+# employee: hr.employee object
+# contract: hr.contract object
+# rules: object containing the rules code (previously computed)
+# categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
+# worked_days: object containing the computed worked days
+# inputs: object containing the computed inputs
 
-                # Note: returned value have to be set in the variable 'result'
-                result = contract.paid_hourly_attendance
+# Note: returned value have to be set in the variable 'result'
+result = contract.paid_hourly_attendance
             </field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">
-                # Available variables:
-                #----------------------
-                # payslip: object containing the payslips
-                # employee: hr.employee object
-                # contract: hr.contract object
-                # rules: object containing the rules code (previously computed)
-                # categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
-                # worked_days: object containing the computed worked days.
-                # inputs: object containing the computed inputs.
+# Available variables:
+#----------------------
+# payslip: object containing the payslips
+# employee: hr.employee object
+# contract: hr.contract object
+# rules: object containing the rules code (previously computed)
+# categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
+# worked_days: object containing the computed worked days.
+# inputs: object containing the computed inputs.
 
-                # Note: returned value have to be set in the variable 'result'
+# Note: returned value have to be set in the variable 'result'
 
-                undertime = 0
+time_factor = payslip.payslip_days / 30
+undertime = 0
+undertime_rate= 0
+total_allocated_hours = contract.total_allocated_hours * time_factor
+buffer_hours = contract.undertime_buffer_hours * time_factor
 
-                if worked_days.ATTN.number_of_hours &lt; (contract.total_allocated_hours + contract.undertime_buffer_hours):
-                    undertime = worked_days.ATTN.number_of_hours  - contract.total_allocated_hours
-                result = contract.wage * overtime * contract.undertime_fine_factor
+if worked_days.ATTN.number_of_hours &lt; (total_allocated_hours - buffer_hours ):
+ undertime = worked_days.ATTN.number_of_hours - total_allocated_hours + buffer_hours
+undertime_rate= (categories.BASIC + ((contract.allowance_khaja_tax + contract.allowance_trans_tax + contract.bonus)* time_factor)) / (240 * time_factor)
+result = undertime_rate * undertime * contract.undertime_fine_factor
             </field>
         </record>
 
@@ -164,19 +192,20 @@
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">
-                # Available variables:
-                # payslip: object containing the payslips
-                # employee: hr.employee object
-                # contract: hr.contract object
-                # rules: object containing the rules code (previously computed)
-                # categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
-                # worked_days: object containing the computed worked days.
-                # inputs: object containing the computed inputs.
+# Available variables:
+# payslip: object containing the payslips
+# employee: hr.employee object
+# contract: hr.contract object
+# rules: object containing the rules code (previously computed)
+# categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
+# worked_days: object containing the computed worked days.
+# inputs: object containing the computed inputs.
 
-                # Note: returned value have to be set in the variable 'result'
+# Note: returned value have to be set in the variable 'result'
 
-                #result = inputs.BNS and inputs.BNS.amount
-                result = contract.bonus
+#result = inputs.BNS and inputs.BNS.amount
+time_factor = payslip.payslip_days / 30
+result = contract.bonus * time_factor
             </field>
         </record>
 
@@ -189,66 +218,68 @@
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">
-                # Available variables:
-                # payslip: object containing the payslips
-                # employee: hr.employee object
-                # contract: hr.contract object
-                # rules: object containing the rules code (previously computed)
-                # categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
-                # worked_days: object containing the computed worked days.
-                # inputs: object containing the computed inputs.
+# Available variables:
+# payslip: object containing the payslips
+# employee: hr.employee object
+# contract: hr.contract object
+# rules: object containing the rules code (previously computed)
+# categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
+# worked_days: object containing the computed worked days.
+# inputs: object containing the computed inputs.
 
-                # Note: returned value have to be set in the variable 'result'
+# Note: returned value have to be set in the variable 'result'
 
-                result = inputs.FINE and -inputs.FINE.amount
+result = inputs.FINE and -inputs.FINE.amount
             </field>
         </record>
 
         <record id="hr_rule_non_tax_lunch" model="hr.salary.rule">
             <field name="name">Khaja &amp; Khana</field>
-            <field name="code">KHAJA</field>
+            <field name="code">KHAJA-NTX</field>
             <field name="sequence">150</field>
             <field name="category_id" ref="non_taxable_allowance_salary_rule_category"/>
             <field name="appears_on_payslip" eval="True"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">
-                # Available variables:
-                # payslip: object containing the payslips
-                # employee: hr.employee object
-                # contract: hr.contract object
-                # rules: object containing the rules code (previously computed)
-                # categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
-                # worked_days: object containing the computed worked days.
-                # inputs: object containing the computed inputs.
+# Available variables:
+# payslip: object containing the payslips
+# employee: hr.employee object
+# contract: hr.contract object
+# rules: object containing the rules code (previously computed)
+# categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
+# worked_days: object containing the computed worked days.
+# inputs: object containing the computed inputs.
 
-                # Note: returned value have to be set in the variable 'result'
+# Note: returned value have to be set in the variable 'result'
 
-                result = contract.allowance_khaja
+time_factor = payslip.payslip_days / 30
+result = contract.allowance_khaja * time_factor
             </field>
         </record>
 
         <record id="hr_rule_transportation" model="hr.salary.rule">
-            <field name="name">Transportation</field>
-            <field name="code">TRANS</field>
+            <field name="name">Transportation [Non Taxable]</field>
+            <field name="code">TRANS-NTX</field>
             <field name="sequence">155</field>
             <field name="category_id" ref="non_taxable_allowance_salary_rule_category"/>
             <field name="appears_on_payslip" eval="True"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">
-                # Available variables:
-                # payslip: object containing the payslips
-                # employee: hr.employee object
-                # contract: hr.contract object
-                # rules: object containing the rules code (previously computed)
-                # categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
-                # worked_days: object containing the computed worked days.
-                # inputs: object containing the computed inputs.
+# Available variables:
+# payslip: object containing the payslips
+# employee: hr.employee object
+# contract: hr.contract object
+# rules: object containing the rules code (previously computed)
+# categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
+# worked_days: object containing the computed worked days.
+# inputs: object containing the computed inputs.
 
-                # Note: returned value have to be set in the variable 'result'
+# Note: returned value have to be set in the variable 'result'
 
-                result = contract.allowance_trans
+time_factor = payslip.payslip_days / 30
+result = contract.allowance_trans * time_factor
             </field>
         </record>
 
@@ -261,67 +292,99 @@
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">
-                # Available variables:
-                #--------------------------------------------------------------------
-                # payslip: object containing the payslips
-                # employee: hr.employee object
-                # contract: hr.contract object
-                # rules: object containing the rules code (previously computed)
-                # categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
-                # worked_days: object containing the computed worked days.
-                # inputs: object containing the computed inputs.
+# Available variables:
+#--------------------------------------------------------------------
+# payslip: object containing the payslips
+# employee: hr.employee object
+# contract: hr.contract object
+# rules: object containing the rules code (previously computed)
+# categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
+# worked_days: object containing the computed worked days.
+# inputs: object containing the computed inputs.
 
-                # Note: returned value have to be set in the variable 'result'
-                
-                tax_slabs = [350000,100000,200000,1350000,0]
-                tax_rates = [1,10,20,30,36]
+# Note: returned value have to be set in the variable 'result'
 
-                # process tax slab
-                total_tax = 0.00
-                i=0
-                tax_slab = (categories.GROSS * 12) - tax_slabs[0]
-                tax_slab_calculate = categories.GROSS * 12
-                while tax_slab > 0:
-                    total_tax += tax_rates[i] * tax_slabs[i] * 0.01
-                    i += 1
-                    if i >= len(tax_rates) - 1:
-                        break
-                    tax_slab_calculate = tax_slab
-                    tax_slab -= tax_slabs[i]
-                total_tax += tax_rates[i] * tax_slab_calculate * 0.01
-                result = -(total_tax/12)
+# time factor for the payslip duration other than 30 days, example 10 days, 14 days etc.
+time_factor = payslip.payslip_days / 30
+
+# tax_slabs = [350000,100000,200000,1350000,0] as of 2075/7076
+tax_slabs = [400000,100000,200000,1300000,0]
+tax_rates = [1,10,20,30,36]
+annual_gross = categories.ANALW
+
+# process tax slab
+total_tax = 0.00
+i=0
+tax_slab = ((categories.GROSS - annual_gross ) * (12 / time_factor)) + annual_gross - tax_slabs[0]
+tax_slab_calculate = (categories.GROSS - annual_gross ) * (12 / time_factor)
+while tax_slab > 0:
+ total_tax += tax_rates[i] * tax_slabs[i] * 0.01
+ i += 1
+ if i >= len(tax_rates) - 1:
+  break
+ tax_slab_calculate = tax_slab
+ tax_slab -= tax_slabs[i]
+total_tax += tax_rates[i] * tax_slab_calculate * 0.01
+result = -(total_tax / (12 / time_factor) + (tax_rates[i] * annual_gross * 0.01))
             </field>
             <field name="register_id" ref="contrib_register_ird"/>
         </record>
 
         <record id="hr_rule_tax_khaja" model="hr.salary.rule">
-            <field name="name">Taxable Khaja</field>
-            <field name="code">KHAJATAX</field>
+            <field name="name">Khaja</field>
+            <field name="code">KHAJA</field>
             <field name="sequence">70</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="appears_on_payslip" eval="True"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">
-                # Available variables:
-                #----------------------
-                # payslip: object containing the payslips
-                # employee: hr.employee object
-                # contract: hr.contract object
-                # rules: object containing the rules code (previously computed)
-                # categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
-                # worked_days: object containing the computed worked days.
-                # inputs: object containing the computed inputs.
+# Available variables:
+#-------------------------------------------------------------
+# payslip: object containing the payslips
+# employee: hr.employee object
+# contract: hr.contract object
+# rules: object containing the rules code (previously computed)
+# categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
+# worked_days: object containing the computed worked days.
+# inputs: object containing the computed inputs.
 
-                # Note: returned value have to be set in the variable 'result'
+# Note: returned value have to be set in the variable 'result'
 
-                result = contract.allowance_khaja_tax
+time_factor = payslip.payslip_days / 30
+result = contract.allowance_khaja_tax * time_factor
             </field>
         </record>
 
-        <record id="hr_rule_tax_emp_pf" model="hr.salary.rule">
-            <field name="name">Provident Fund (EMP)</field>
-            <field name="code">PFEMP</field>
+        <record id="hr_rule_tax_trans" model="hr.salary.rule">
+            <field name="name">Transportation</field>
+            <field name="code">TRANS</field>
+            <field name="sequence">72</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+# Available variables:
+#----------------------
+# payslip: object containing the payslips
+# employee: hr.employee object
+# contract: hr.contract object
+# rules: object containing the rules code (previously computed)
+# categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
+# worked_days: object containing the computed worked days.
+# inputs: object containing the computed inputs.
+
+# Note: returned value have to be set in the variable 'result'
+
+time_factor = payslip.payslip_days / 30
+result = contract.allowance_trans_tax * time_factor
+            </field>
+        </record>
+
+        <record id="hr_rule_tax_emp_ssf" model="hr.salary.rule">
+            <field name="name">Social Security Fund (EMP)</field>
+            <field name="code">SSF-EMP</field>
             <field name="sequence">90</field>
             <field name="category_id" ref="employee_contribution_salary_rule_category"/>
             <field name="appears_on_payslip" eval="True"/>
@@ -330,12 +393,12 @@
             <field name="amount_percentage_base">categories.BASIC</field>
             <field name="quantity">-1.0</field>
             <field name="amount_percentage">10.0</field>
-            <field name="register_id" ref="contrib_register_pf"/>        
+            <field name="register_id" ref="contrib_register_ssf"/>        
         </record>
 
-        <record id="hr_rule_tax_comp_pf" model="hr.salary.rule">
-            <field name="name">Provident Fund (COMP)</field>
-            <field name="code">PFCOMP</field>
+        <record id="hr_rule_tax_comp_ssf" model="hr.salary.rule">
+            <field name="name">Social Security Fund (COMP)</field>
+            <field name="code">SSF-COMP</field>
             <field name="sequence">300</field>
             <field name="category_id" ref="hr_payroll.COMP"/>
             <field name="appears_on_payslip" eval="True"/>
@@ -343,85 +406,96 @@
             <field name="amount_select">percentage</field>
             <field name="amount_percentage_base">categories.BASIC</field>
             <field name="quantity">1.0</field>
-            <field name="amount_percentage">10.0</field>
-            <field name="register_id" ref="contrib_register_pf"/>        
+            <field name="amount_percentage">11.67</field>
+            <field name="register_id" ref="contrib_register_ssf"/>        
         </record>
 
         <record id="hr_rule_tax_upadan" model="hr.salary.rule">
             <field name="name">Upadan (Bonus)</field>
             <field name="code">UPADAN</field>
-            <field name="sequence">3</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="sequence">331</field>
+            <field name="category_id" ref="hr_payroll.COMP"/>
             <field name="appears_on_payslip" eval="True"/>
             <field name="condition_select">none</field>
             <field name="amount_select">percentage</field>
             <field name="amount_percentage_base">categories.BASIC</field>
             <field name="quantity">1.0</field>
-            <field name="amount_percentage">7.0</field>
+            <field name="amount_percentage">8.33</field>
+            <field name="register_id" ref="contrib_register_ssf"/>
         </record>
 
-        <record id="hr_rule_tax_grade" model="hr.salary.rule">
-            <field name="name">Grade</field>
-            <field name="code">GRADE</field>
+        <record id="hr_rule_salary_advance" model="hr.salary.rule">
+            <field name="name">Salary Advance</field>
+            <field name="code">ADVANCE</field>
+            <field name="sequence">170</field>
+            <field name="category_id" ref="employee_advance_salary_rule_category"/>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+# Available variables:
+#----------------------
+# payslip: object containing the payslips
+# employee: hr.employee object
+# contract: hr.contract object
+# rules: object containing the rules code (previously computed)
+# categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
+# worked_days: object containing the computed worked days.
+# inputs: object containing the computed inputs.
+
+# Note: returned value have to be set in the variable 'result'
+
+credit = contract.employee_id.address_home_id.credit
+net = categories.BASIC + categories.ALW + categories.DED + categories.NALW + categories.FINE + categories.EMP
+if credit >= net:
+ result = -net
+else:
+ result = -contract.employee_id.address_home_id.credit
+            </field>
+            <field name="register_id" ref="contrib_register_employee"/>
+        </record>
+
+        <record id="hr_rule_salary_remaining_due_advance" model="hr.salary.rule">
+            <field name="name">Remaining Advance Due</field>
+            <field name="code">ADVANCE</field>
+            <field name="sequence">210</field>
+            <field name="category_id" ref="employee_advance_due_category"/>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+# Available variables:
+#----------------------
+# payslip: object containing the payslips
+# employee: hr.employee object
+# contract: hr.contract object
+# rules: object containing the rules code (previously computed)
+# categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
+# worked_days: object containing the computed worked days.
+# inputs: object containing the computed inputs.
+
+# Note: returned value have to be set in the variable 'result'
+credit = contract.employee_id.address_home_id.credit
+salary_adv = categories.ADV
+if credit:
+ result = -(credit + salary_adv)
+else:
+ result = 0.0
+            </field>
+            <field name="register_id" ref="contrib_register_employee"/>
+        </record>
+
+        <record id="hr_rule_dashain_health_bonus" model="hr.salary.rule">
+            <field name="name">Dashain Health Bonus</field>
+            <field name="code">Dashain</field>
             <field name="sequence">5</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="category_id" ref="annual_allowance_salary_rule_category"/>
             <field name="appears_on_payslip" eval="True"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">
-                # Available variables:
-                #----------------------
-                # payslip: object containing the payslips
-                # employee: hr.employee object
-                # contract: hr.contract object
-                # rules: object containing the rules code (previously computed)
-                # categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
-                # worked_days: object containing the computed worked days.
-                # inputs: object containing the computed inputs.
-
-                # Note: returned value have to be set in the variable 'result'
-
-                result = contract.emp_grade_amount
+result = contract.dashain_health_bonus
             </field>
-        </record>
-
-        <record id="hr_rule_tax_wwf" model="hr.salary.rule">
-            <field name="name">WWF</field>
-            <field name="code">WWF</field>
-            <field name="sequence">145</field>
-            <field name="category_id" ref="hr_payroll.DED"/>
-            <field name="appears_on_payslip" eval="True"/>
-            <field name="condition_select">none</field>
-            <field name="amount_select">fix</field>
-            <field name="quantity">-1.0</field>
-            <field name="amount_fix">100</field>
-            <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
-        </record>
-
-        <record id="hr_rule_tax_dress_fine" model="hr.salary.rule">
-            <field name="name">Dress Fine</field>
-            <field name="code">DFINE</field>
-            <field name="sequence">15</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="appears_on_payslip" eval="True"/>
-            <field name="condition_select">none</field>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">
-                # Available variables:
-                #---------------------------------------------------------------------
-                # payslip: object containing the payslips
-                # employee: hr.employee object
-                # contract: hr.contract object
-                # rules: object containing the rules code (previously computed)
-                # categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
-                # worked_days: object containing the computed worked days.
-                # inputs: object containing the computed inputs.
-
-                # Note: returned value have to be set in the variable 'result'
-
-                result = inputs.DFINE and -inputs.DFINE.amount
-            </field>
-            <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
         </record>
     </data>
 </odoo>

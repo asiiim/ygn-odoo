@@ -26,6 +26,7 @@
                         </group>
                         <group name="misc_info" string="Miscellaneous">
                             <field name="bonus"/>
+                            <field name="dashain_health_bonus"/>
                             <field name="emp_grade_amount"/>
                         </group>
                         </group>
