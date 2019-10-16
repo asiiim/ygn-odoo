@@ -17,7 +17,7 @@
             <!-- fonts -->
             <!-- <div class="page"> -->
             <style type="text/css">
-            <![CDATA[
+            
             /* cyrillic-ext */
             @font-face {
                 font-family: 'Open Sans';
@@ -81,7 +81,7 @@
                 src: local('Open Sans Regular'), local('OpenSans-Regular'), url(/invoice_print_dotmatrix/static/src/fonts/mem8YaGs126MiZpBA-UFVZ0b.woff2) format('woff2');
                 unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
             }
-            ]]>
+            
             </style>
             <div class="dotmatrix-print" style="width: 76mm; margin:0px;">
 
@@ -100,7 +100,7 @@
                         </div>
                     </div>
                     <!-- Body Section -->
-                    <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)" />
+                    <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
                     <div class="page">
                         <!-- Tax Invoice or Invoice Section -->
                         <div class="row mt8 mb8">
@@ -124,9 +124,9 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div name="invoice_address" class="col-xs-6">
-                                <div>Tel: <span t-esc="o.partner_id.mobile"/></div>
-                            </div>
+                            <!--<div name="invoice_address" class="col-xs-6">-->
+                            <!--    <div>Tel: <span t-esc="o.partner_id.mobile"/></div>-->
+                            <!--</div>-->
                             <div name="invoice_address" class="col-xs-6">
                                 <div t-if="o.partner_id.vat" class="mt8"><t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="o.partner_id.vat"/></div>
                             </div>
@@ -197,19 +197,19 @@
                                         <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.invoice_line_tax_ids))"/>
                                     </td> -->
                                     <td class="text-right" id="subtotal">
-                                        <span t-field="l.price_subtotal" t-field-options='{"widget": "False"}'/>
+                                        <span t-field="l.price_subtotal" t-field-options="{&quot;widget&quot;: &quot;False&quot;}"/>
                                         <!-- <span t-field="l.price_subtotal"
                                             t-options='{"widget": "monetary", "display_currency": o.currency_id}'/> -->
                                     </td>
                                 </tr>
                                 <tr t-foreach="range(max(3-len(o.invoice_line_ids),0))" t-as="l">
                                     <td t-translation="off">&amp;nbsp;</td>
-                                    <td class="hidden"></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td t-if="display_discount"></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td class="hidden"/>
+                                    <td/>
+                                    <td/>
+                                    <td t-if="display_discount"/>
+                                    <td/>
+                                    <td/>
                                 </tr>
                             </tbody>
                         </table>
@@ -222,7 +222,7 @@
                                         <tr class="border-black" style="border-bottom:1px solid #dddddd;">
                                             <td>Subtotal</td>
                                             <td class="text-right">
-                                                <span t-field="o.amount_untaxed" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                <span t-field="o.amount_untaxed" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
                                             </td>
                                         </tr>
                                         <t t-foreach="o._get_tax_amount_by_group()" t-as="amount_by_group">
@@ -230,7 +230,7 @@
                                                 <t t-if="len(o.tax_line_ids) == 1 and o.amount_untaxed == amount_by_group[2]">
                                                     <td><span t-esc="amount_by_group[0]"/></td>
                                                     <td class="text-right">
-                                                        <span t-esc="amount_by_group[3]" />
+                                                        <span t-esc="amount_by_group[3]"/>
                                                     </td>
                                                 </t>
                                                 <t t-else="">
@@ -249,7 +249,7 @@
                                         <tr class="border-black">
                                             <td>Total</td>
                                             <td class="text-right">
-                                                <span t-field="o.amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                <span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
                                             </td>
                                         </tr>
                                     </table>
