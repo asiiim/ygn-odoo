@@ -59,4 +59,7 @@ class AccountInvoice(models.Model):
             self.printed_copy_count += 1
         else:
             self.write({'print_datetime':str(datetime.datetime.utcnow()), 'print_uid': self._uid})
-        return super(AccountInvoice, self).invoice_print()
+        invoice = super(AccountInvoice, self).invoice_print()
+        if self.sent:
+            self.tax_invoice_printed = True
+        return invoice
