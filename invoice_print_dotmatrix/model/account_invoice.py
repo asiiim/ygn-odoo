@@ -20,7 +20,6 @@ class AccountInvoice(models.Model):
         self.ensure_one()
         
         report_ref = self.env.ref('invoice_print_dotmatrix.account_invoices_dot_matrix')
-        report_ref.write({'direct_print': True})
 
         invoice = super(AccountInvoice, self).invoice_print()
         return report_ref.report_action(self)

@@ -13,6 +13,7 @@
     'data': [
         'views/report_invoice.xml',
         'views/account_report.xml',
+        'data/ir_actions_report.xml',
     ],
     'auto_install': False,
     'installable': True,

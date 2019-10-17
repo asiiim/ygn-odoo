@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_invoices_dot_matrix" model="ir.actions.report">
+        <field name="direct_print" eval="True"/>
+    </record>
+</odoo>
