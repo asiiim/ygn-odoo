@@ -18,7 +18,6 @@ class ResPartner(models.Model):
     @api.multi
     def partner_synchronization(self, name, mobile, phone, tin):
         for record in self:
-
             headers = {'Content-Type': 'application/json'}
             url = record.env['ir.config_parameter'].sudo().get_param('ygen_url') + 'invoice/customer'
             params = {
@@ -52,9 +51,41 @@ class ResPartner(models.Model):
             else:
                 raise UserError(_("An Error Occured"))
 
+    @api.multi
+    def _test_connection(self):
+        _logger.warning('Testing connection from Res Partner')
+        for record in self:
+            headers = {'Content-Type': 'application/json'}
+            url = record.env['ir.config_parameter'].sudo().get_param('ygen_url') + 'test'
+            params = {
+                "params": {
+                    "db": record.env['ir.config_parameter'].sudo().get_param('ygen_db'),
+                    "username": record.env['ir.config_parameter'].sudo().get_param('ygen_username'),
+                    "password": record.env['ir.config_parameter'].sudo().get_param('ygen_password')
+                }
+            }
+            json_params = json.dumps(params)
+
+            try:
+                response = requests.post(url, data=json_params, headers=headers).json()
+                _logger.warning(response)
+            except:
+                return False
+            if response:
+                if response.get('result'):
+                    if response['result'].get('code') == 200:
+                        return True
+                    else:
+                        return False
+                else:
+                    return False
+            else:
+                return False
+
     @api.model
     def create(self, values):
         partner = super(ResPartner, self).create(values)
-        remote_id = partner.partner_synchronization(partner.name or "", partner.mobile or "", partner.phone or "", partner.vat or "")
-        partner.write({'remote_id': remote_id})
+        if partner._test_connection():
+            remote_id = partner.partner_synchronization(partner.name or "", partner.mobile or "", partner.phone or "", partner.vat or "")
+            partner.write({'remote_id': remote_id})
         return partner
