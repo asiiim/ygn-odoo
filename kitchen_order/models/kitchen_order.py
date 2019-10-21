@@ -34,9 +34,7 @@ class KitchenOrder(models.Model):
         'sale.order', string="Sale Order", track_visibility='onchange')
     product_description = fields.Text(
         related="product_id.description", string="Product Details")
-    order_description = fields.Text(
-        string="Order Description", track_visibility='onchange')
-    ko_note = fields.Text(string="Note/Content for the Order",
+    ko_note = fields.Text(string="Kitchen Order Note",
                           translate=True, track_visibility='onchange')
     image = fields.Binary(related="product_id.image", attachment=True,
                           track_visibility='onchange')
@@ -144,9 +142,18 @@ class KitchenOrder(models.Model):
     # Kitchen Order Message
     message_id = fields.Many2one(
         'kitchen.message', string="Message", track_visibility='onchange')
-    message = fields.Char(related='message_id.name',
-                          string="Message", track_visibility='onchange')
+    related_template_message = fields.Char(related='message_id.name', string="Related Template Message")
+    name_for_message = fields.Text(
+        string="Name for Message", track_visibility='onchange')
+    message = fields.Char(compute="_compute_order_message", 
+        string="Message", track_visibility='onchange')
+    
+    @api.multi
+    @api.depends('message_id', 'name_for_message', 'related_template_message')
+    def _compute_order_message(self):
+        for ko in self:
+            ko.message = ko.related_template_message or 'Message with name: '
+            ko.message += ' ' + str(ko.name_for_message)
 
     # Link Invoice(s) With Kitchen Order
-    invoice_ids = fields.Many2many(
-        related="saleorder_id.invoice_ids", string='Invoice Ref.')
+    invoice_ids = fields.Many2many(related="saleorder_id.invoice_ids", string='Invoice Ref.')

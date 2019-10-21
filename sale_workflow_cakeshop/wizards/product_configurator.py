@@ -47,7 +47,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     )
 
     requested_date = fields.Datetime(string='Requested Date', required=True, index=True, copy=False, default=fields.Datetime.now)
-    order_description = fields.Text(string="Order Description", copy=False)
+    name_for_message = fields.Text(string="Name for Message", copy=False)
     ko_note = fields.Text(string="KO Note", track_visibility='onchange')
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
     amount = fields.Monetary(string='Advance Amount', required=True, default=0)
@@ -62,6 +62,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     price_total = fields.Monetary(compute='_compute_amount', string='Total', readonly=True)
 
     ko_notes_ids = fields.Many2many('kitchen.order.notes', 'sale_workflow_cakeshop_kitchen_order_notes_', string='KO Notes')
+    order_message_id = fields.Many2one('kitchen.message', string='Message')
     
     @api.depends('product_uom_qty', 'discount', 'price_unit')
     def _compute_amount(self):
@@ -85,19 +86,21 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         self.ensure_one()
         notes = ''
         for note in self.ko_notes_ids:
-            notes = notes + note.name + "\n"
-        notes = notes + self.ko_note if self.ko_note else ''
+            notes += note.name + "\n "
+        if self.ko_note:
+            notes += self.ko_note
 
         ko_vals = {
             'product_id': self.product_id.id,
             'requested_date': self.requested_date,
             # 'pricelist_id': self.partner_id.property_product_pricelist.id,
             'saleorder_id': self.order_id.id,
-            'order_description': self.order_description or '',
+            'name_for_message': self.name_for_message or '',
             'ko_note': notes,
             'ko_notes_ids': self.ko_notes_ids,
             'product_uom_qty': self.product_uom_qty,
             'company_id': self.company_id.id,
+            'message_id': self.order_message_id.id
             # 'user_id': self.user_id and self.user_id.id,
             # 'team_id': self.team_id.id
         }
@@ -119,7 +122,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             'partner_id': self.partner_id.id,
             'requested_date': self.requested_date,
             # 'pricelist_id': self.partner_id.property_product_pricelist.id,
-            # 'note': self.order_description,
+            # 'note': self.name_for_message,
             # 'payment_term_id': self.payment_term_id.id,
             'company_id': self.company_id.id,
             # 'user_id': self.user_id and self.user_id.id,

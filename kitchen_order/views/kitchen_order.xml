@@ -10,6 +10,7 @@
                     <field name="name" string="Kitchen Order Number"/>
                     <field name="product_id"/>
                     <field name="requested_date"/>
+                    <field name="message"/>
                     <field name="product_uom_qty"/>
                     <field name="uom"/>
                     <field name="saleorder_id"/>
@@ -27,6 +28,7 @@
                     <header>
                         <field name="active" invisible="1"/>
                         <field name="stage_name" invisible="1"/>
+                        <field name="related_template_message" invisible="1"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"/>
                         <button name="print_kitchen_order" string="Print" type="object" class="btn-primary"/>
@@ -55,8 +57,9 @@
                                 <field name="product_uom_qty"/>
                                 <field name="uom"/>
                                 <field name="saleorder_id" options='{"always_reload": True}'/>
-                                <field name="message_id"/>
-                                <field name="order_description"/>
+                                <field name="message_id" string="Message Template" invisible="1"/>
+                                <field name="name_for_message" invisible="1"/>
+                                <field name="message"/>
                             </group>
                             <group>
                                 <field name="legend_red" invisible="1"/>
@@ -97,7 +100,8 @@
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description", "legend_priority": "Use of stars"}}'/>
                     <field name="product_id"/>
                     <field name="product_description"/>
-                    <field name="order_description"/>
+                    <field name="name_for_message"/>
+                    <field name="related_template_message"/>
                     <field name="ko_note"/>
                     <field name="saleorder_id"/>
                     <field name="requested_date"/>
@@ -160,8 +164,7 @@
                                         <div class="col-xs-12">
                                             <ul>
                                                 <li t-if="record.product_description.value"> <b>Product Details: </b> <field name="product_description"/></li>
-                                                <li t-if="record.message_id.value"> <b>Message: </b><br/> <i class="fa fa-pencil"></i> <field name="message"/></li>
-                                                <li t-if="record.order_description.value"> <b>Order Details: </b><br/> <i class="fa fa-pencil"></i> <field name="order_description"/></li>
+                                                <li t-if="record.message.value"> <b>Message: </b><br/> <i class="fa fa-pencil"></i> <field name="message"/></li>
                                                 <li t-if="record.ko_note.value"> <b>Order Note: </b><br/><i class="fa fa-edit"></i> <field name="ko_note"/></li><br/><br/>
                                             </ul>
                                         </div>
@@ -186,7 +189,7 @@
                     <field name="product_id"/>
                     <field name="requested_date"/>
                     <field name="product_description"/>
-                    <field name="order_description"/>
+                    <field name="name_for_message"/>
                     <field name="ko_note"/>
                     <field name="saleorder_id"/>
                     
@@ -219,7 +222,7 @@
                     <field name="saleorder_id"/>
                     <field name="name"/>
                     <field name="product_description"/>
-                    <field name="order_description"/>
+                    <field name="name_for_message"/>
                     <field name="ko_note"/>
                 </calendar>
             </field>

@@ -16,7 +16,8 @@
                         <group name='static_form'>
                             <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}"/>
                             <field name="product_tmpl_id" attrs="{'readonly': [('product_id', '!=', False)]}" required="True" options="{'no_create': True}"/>
-                            <field name="order_description"/>
+                            <field name="order_message_id"/>
+                            <field name="name_for_message"/>
                             <field name="ko_notes_ids" widget="many2many_tags"/>
                             <field name="ko_note"/>
                             <field name="partner_id" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}' required="True"/>
