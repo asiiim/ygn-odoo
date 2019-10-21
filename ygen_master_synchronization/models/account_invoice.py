@@ -51,10 +51,12 @@ class AccountInvoice(models.Model):
     
     @api.multi
     def _test_connection(self):
-        _logger.warning('Testing connection from Res Partner')
         for record in self:
             headers = {'Content-Type': 'application/json'}
-            url = record.env['ir.config_parameter'].sudo().get_param('ygen_url') + 'test'
+            base_url = record.env['ir.config_parameter'].sudo().get_param('ygen_url')
+            if not base_url:
+                return False
+            url = base_url + 'test'
             params = {
                 "params": {
                     "db": record.env['ir.config_parameter'].sudo().get_param('ygen_db'),
