@@ -70,3 +70,19 @@ class SaleOrder(models.Model):
     @api.multi
     def print_koso_report(self):
         return self.env.ref('sale_workflow_cakeshop.action_report_sale_or_kitchen_order').report_action(self)
+
+    # view related kitchen orders of the sale order
+    @api.multi
+    def view_kitchen_order(self):
+        ko_id = []
+        
+        for ko in self.kitchen_order_ids:
+            ko_id.append(ko.id)
+        
+        return {
+            'name': _('Kitchen Order'),
+            'res_model': 'kitchen.order',
+            'res_id': ko_id[0],
+            'views': [(self.env.ref('kitchen_order.view_kitchen_order_form').id, 'form')],
+            'type': 'ir.actions.act_window'
+        }

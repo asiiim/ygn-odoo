@@ -42,6 +42,7 @@
                 <button name="validate_picking" class="btn-primary" string="Validate Delivery" type="object" 
                     attrs="{'invisible': [('delivery_validated', '=', True)]}"/>
                 <button name="print_koso_report" string="Print SO/KO" type="object" class="btn-primary"/>
+                <button name="view_kitchen_order" string="View KO" type="object" class="btn-primary"/>
             </button>
             <field name="payment_term_id" position="after">
                 <field name="kitchen_sale_order_print_selection"/>

@@ -59,7 +59,7 @@
                                 <field name="saleorder_id" options='{"always_reload": True}'/>
                                 <field name="message_id" string="Message Template" invisible="1"/>
                                 <field name="name_for_message" invisible="1"/>
-                                <field name="message"/>
+                                <field name="message" attrs="{'invisible': [('name_for_message', '=', False)]}"/>
                             </group>
                             <group>
                                 <field name="legend_red" invisible="1"/>
