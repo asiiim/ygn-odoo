@@ -1,0 +1,15 @@
+<odoo>
+  <data>
+    <record id="view_res_partner_ygen_inherit_form" model="ir.ui.view">
+      <field name="name">res.partner.form.expand.ygen</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='type']" position="after">
+          <field name="house_number" placeholder="House Number..."/>
+          <field name="delivery_zone_id" placeholder="Delivery Zone..."/>
+        </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>
