@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.ygen.sale.kitchen.report</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="50"/>
+            <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Sales/Kitchen Report Template Selection" string="Report Template Selection" data-key="ygen_sale_kitchen_report_selection">
+                        <h2>Report Template</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_right_pane">
+                                    <label string="Sales Order"/>
+                                    <span class="fa fa-lg fa-building-o" title="Select the report template for sales order." groups="base.group_multi_company"/>
+                                    <div class="text-muted">
+                                        Select the report template for Sales Order.
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16 row">
+                                            <label class="col-xs-6 col-md-3 o_light_label" string="Sales Order Report" for="sale_order_report"/>
+                                            <field name="sale_order_report" required="1"/>
+                                        </div>
+                                    </div>
+                                    <br/><br/>
+                                    <label string="Kitchen Order"/>
+                                    <span class="fa fa-lg fa-building-o" title="Select the report template for kitchen order." groups="base.group_multi_company"/>
+                                    <div class="text-muted">
+                                        Select the report template for Kitchen Order.
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16 row">
+                                            <label class="col-xs-6 col-md-3 o_light_label" string="Kitchen Order Report" for="kitchen_order_report"/>
+                                            <field name="kitchen_order_report" required="1"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

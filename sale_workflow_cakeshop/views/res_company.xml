@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_inherit_sale_kitchen_order_report" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.sale.kitchen.order.report</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sequence']" position="after">
+                <field name="sale_order_report" invisible="1"/>
+                <field name="kitchen_order_report" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
