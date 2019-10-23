@@ -55,7 +55,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False)
     journal_id = fields.Many2one('account.journal', string='Payment Journal', domain=[('type', 'in', ('bank', 'cash'))], default=lambda self: self.env['account.journal'].search([('type', '=', 'cash')], limit=1))
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
-    price_unit = fields.Float(related="product_id.lst_price", string="Price", digits=dp.get_precision('Unit Price'), oldname="price")
+    price_unit = fields.Float(string="Price", digits=dp.get_precision('Unit Price'), oldname="price", compute="_compute_price")
     product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
     tax_id = fields.Many2many('account.tax', related="product_id.taxes_id",string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
@@ -63,6 +63,10 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
 
     ko_notes_ids = fields.Many2many('kitchen.order.notes', 'sale_workflow_cakeshop_kitchen_order_notes_', string='KO Notes')
     order_message_id = fields.Many2one('kitchen.message', string='Message')
+
+    @api.depends('partner_id')
+    def _compute_price(self):
+        self.price_unit = float(self.product_id.price_compute('list_price').get(self.product_id.id))
     
     @api.depends('product_uom_qty', 'discount', 'price_unit')
     def _compute_amount(self):
