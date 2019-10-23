@@ -9,7 +9,7 @@
     'license': 'OPL-1',
     'complexity': 'normal',
     'website': "https://ygen.io",
-    'depends': ['base', 'sale', 'ygen_win32_print', 'sale_workflow_cakeshop'],
+    'depends': ['base', 'sale', 'sale_workflow_cakeshop'],
     'data': [
         'views/report_order_ticket.xml',
         'views/order_ticket_report.xml'
