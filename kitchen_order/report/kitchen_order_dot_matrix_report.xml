@@ -99,10 +99,10 @@
                                     <p t-field="o.saleorder_id.name"/>
                                     
                                     <strong>KO Date:</strong>
-                                    <p t-field="o.create_date"/>
+                                    <p t-field="o.create_date" t-field-options='{"format": "MM/dd/y h:mm a"}'/>
                                     
                                     <strong>Delivery Date:</strong>
-                                    <p t-field="o.requested_date"/>
+                                    <p t-field="o.requested_date" t-field-options='{"format": "MM/dd/y h:mm a"}'/>
                                     
                                     <strong>Ordered Qty: </strong>
                                     <p>

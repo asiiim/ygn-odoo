@@ -3,58 +3,60 @@
     <data>
         <!-- Kitchen Order Detail Template -->
         <template id="report_kitchen_order_document">
-            <t t-call="web.external_layout">
-                <t t-set="doc" t-value="doc.with_context()" />
-                <div class="page">
-                    <div class="oe_structure"/>
-                    <div class="row">
-                        <div class="row mt32 mb32" id="order-informations">
-                            <div t-if="doc.name" class="col-xs-4">
-                                <strong>Order No.: </strong><span t-field="doc.name"/>
-                            </div>
-                            <div t-if="doc.saleorder_id" class="col-xs-4">
-                                <strong>Sale Order: </strong><span t-field="doc.saleorder_id.name"/>
-                            </div>
-                            <div t-if="doc.product_uom_qty" class="col-xs-4">
-                                <strong>Ordered Qty: </strong>
-                                <span t-field="doc.product_uom_qty"/>
-                                <span t-field="doc.uom"/>
-                            </div>
-                        </div>
-                        <div class="row mt32 mb32" id="order-informations">
-                            <div class="col-xs-4">
-                                <div t-if="doc.product_id">
-                                    <strong>Product: </strong><span t-field="doc.product_id"/><br/><br/>
+            <t t-name="kitchen_order.report_kitchen_order_document">
+                <t t-call="web.basic_layout">
+                    <t t-set="doc" t-value="doc.with_context()"/>
+                    <div class="page" style="font-size:14px;">
+                        <div class="oe_structure"/>
+                        <div class="row">
+                            <div class="row mt32 mb32" id="order-informations">
+                                <div t-if="doc.name" class="col-xs-4">
+                                    <strong>Order No.: </strong><span t-field="doc.name"/>
                                 </div>
-                                <div t-if="doc.create_date">
-                                    <strong>KO Date: </strong><span t-field="doc.create_date"/><br/>
+                                <div t-if="doc.saleorder_id" class="col-xs-4">
+                                    <strong>Sale Order: </strong><span t-field="doc.saleorder_id.name"/>
                                 </div>
-                                <div t-if="doc.requested_date">
-                                    <strong>Delivery Date: </strong><span t-field="doc.requested_date"/><br/>
-                                </div><br/>
+                                <div t-if="doc.product_uom_qty" class="col-xs-4">
+                                    <strong>Ordered Qty: </strong>
+                                    <span t-field="doc.product_uom_qty"/>
+                                    <span t-field="doc.uom"/>
+                                </div>
+                            </div>
+                            <div class="row mt32 mb32" id="order-informations">
+                                <div class="col-xs-4">
+                                    <div t-if="doc.product_id">
+                                        <strong>Product: </strong><span t-field="doc.product_id"/><br/><br/>
+                                    </div>
+                                    <div t-if="doc.create_date">
+                                        <strong>KO Date: </strong><span t-field="doc.create_date" t-field-options='{"format": "MM/dd/y h:mm a"}'/><br/>
+                                    </div>
+                                    <div t-if="doc.requested_date">
+                                        <strong>Delivery Date: </strong><span t-field="doc.requested_date" t-field-options='{"format": "MM/dd/y h:mm a"}'/><br/>
+                                    </div><br/>
 
-                                <div t-if="doc.create_date">
-                                    <strong>Product Details:</strong>
-                                    <p t-field="doc.product_description"/>
+                                    <div t-if="doc.create_date">
+                                        <strong>Product Details:</strong>
+                                        <p t-field="doc.product_description"/>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-xs-4">
-                                <div t-if="doc.message">
-                                    <strong>Message:</strong>
-                                    <p t-field="doc.message"/>
+                                <div class="col-xs-4">
+                                    <div t-if="doc.message">
+                                        <strong>Message:</strong>
+                                        <p t-field="doc.message"/>
+                                    </div>
+                                    <div t-if="doc.create_date">
+                                        <strong>KO Note:</strong>
+                                        <p t-field="doc.ko_note"/>
+                                    </div>
                                 </div>
-                                <div t-if="doc.create_date">
-                                    <strong>KO Note:</strong>
-                                    <p t-field="doc.ko_note"/>
+                                <div t-if="doc.image" class="col-xs-4">
+                                    <img style="max-width:70%; height:auto;" t-if="doc.image" t-att-src="'data:image/png;base64,%s' % to_text(doc.image)"/>
                                 </div>
-                            </div>
-                            <div t-if="doc.image" class="col-xs-4">
-                                <img style="max-width:70%; height:auto;" t-if="doc.image" t-att-src="'data:image/png;base64,%s' % to_text(doc.image)"/>
                             </div>
                         </div>
+                        <div class="oe_structure"/>
                     </div>
-                    <div class="oe_structure"/>
-                </div>
+                </t>
             </t>
         </template>
 
@@ -70,7 +72,7 @@
         <template id="report_kitchen_order_list">
             <t t-name="kitchen_order.report_kitchen_order_list">
                 <t t-call="web.html_container">
-                    <t t-call="web.internal_layout">
+                    <t t-call="web.basic_layout">
                         <div class="page" style="font-size:14px;">
                             <t t-foreach="docs" t-as="o">
                                 <div class="container" style="padding-bottom:20px;">
@@ -91,10 +93,10 @@
                                             <p t-field="o.product_id"/>
                                             
                                             <strong>KO Date:</strong>
-                                            <p t-field="o.create_date"/>
+                                            <p t-field="o.create_date" t-field-options='{"format": "MM/dd/y h:mm a"}'/>
 
                                             <strong>Delivery Date:</strong>
-                                            <p t-field="o.requested_date"/>
+                                            <p t-field="o.requested_date" t-field-options='{"format": "MM/dd/y h:mm a"}'/>
                                         </div>
                                         <div class="col-xs-5" style="border-right:1px solid #000; padding:2px 5px;">
                                             <strong>Product Details:</strong>

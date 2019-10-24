@@ -85,7 +85,7 @@
             </style>
             <div class="dotmatrix-print" style="width: 76mm; margin:0px;">
 
-                <div class="article" style="font-family:'Open Sans', sans-serif; font-size:17px;">
+                <div class="article" style="font-family:'Open Sans', sans-serif; font-size:16px;">
                     <!-- Header Company Information Section -->
                     <div class="row mb4">
                         <div class="col-xs-12 text-center">
@@ -95,7 +95,7 @@
                                 <t t-esc="company.partner_id.city"/>, <t t-esc="company.partner_id.country_id.name"/>
                             </span>
                             <div name="company_address" class="mb8">
-                                <div t-if="company.vat"><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/><t t-if="company.phone">, Tel: <span t-field="company.phone"/></t></div>
+                                <div t-if="company.vat"><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/><t t-if="company.phone">, Tel: <span t-raw="company.phone"/></t></div>
                             </div>
                         </div>
                     </div>
@@ -109,27 +109,30 @@
                                 <div class="mt8">Address: <span t-esc="o.partner_id.street"/><t t-if="o.partner_id.city">, <span t-esc="o.partner_id.city"/></t></div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div name="invoice_address" class="col-xs-6">
-                                <div t-if="o.partner_id.vat" class="mt8"><t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="o.partner_id.vat"/></div>
-                            </div>
-                        </div>
+                        <!--<div class="row">-->
+                        <!--    <div name="invoice_address" class="col-xs-6">-->
+                        <!--        <div t-if="o.partner_id.vat" class="mt8"><t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="o.partner_id.vat"/></div>-->
+                        <!--    </div>-->
+                        <!--</div>-->
 
-                        <!-- Sale order number -->
-                        <div class="row mt16">
-                            <div class="col-xs-6"> 
-                                <span t-field="o.name" style="font-size:21px;"/>
-                            </div>
-                        </div>
 
                         <!-- Transaction and Invoice Dates -->
                         <div class="row mt16 mb16">
-                            <div class="col-xs-5" t-if="o.confirmation_date">
-                                Date:
-                                <p t-field="o.confirmation_date"/>
+                            <!-- Sale order number -->
+                            <div class="col-xs-5"> 
+                                <span t-field="o.name" style="font-size:21px;"/>
+                            </div>
+                            <div class="col-xs-7" t-if="o.requested_date">
+                                Delivery Date:
+                                <p t-field="o.requested_date" t-field-options='{"format": "MM/dd/y h:mm a"}'/>
                             </div>
                         </div>
-
+                        <div class="row mt16">
+                         <div class="col-xs-12">
+                           Message: 
+                           <span t-field="o.kitchen_order_ids[0].message"/>
+                         </div>
+                        </div>
                         <!-- Order Lines -->
                         <table class="table table-condensed" style="width: 100%;" name="order_line_table">
                             <thead>
