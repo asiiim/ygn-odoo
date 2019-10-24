@@ -66,7 +66,7 @@ class GoogleDrive(models.Model):
         except requests.HTTPError:
             raise UserError(_("The Google Template cannot be found. Maybe it has been deleted."))
 
-        record_url = "Click on link to open Record in Odoo\n %s/?db=%s#id=%s&model=%s" % (google_web_base_url, self._cr.dbname, res_id, res_model)
+        record_url = "Click on link to open Record in Ygen\n %s/?db=%s#id=%s&model=%s" % (google_web_base_url, self._cr.dbname, res_id, res_model)
         configs = {
             "google_web_base_url": google_web_base_url,
             "access_token": access_token,
@@ -97,7 +97,7 @@ class GoogleDrive(models.Model):
     def _write_permissions(self, res, configs):
         key = self._get_key_from_url(res['url'])
         _logger.warning("key-> " + key)
-        request_url = "https://www.googleapis.com/drive/v2/files/%s/permissions?emailMessage=This+is+a+drive+folder+created+by+Odoo&sendNotificationEmails=false&access_token=%s" % (key, configs["access_token"])
+        request_url = "https://www.googleapis.com/drive/v2/files/%s/permissions?emailMessage=This+is+a+drive+folder+created+by+Ygen&sendNotificationEmails=false&access_token=%s" % (key, configs["access_token"])
         headers = {
             'Content-type': 'application/json',
             'Accept': 'text/plain'
