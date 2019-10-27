@@ -68,13 +68,16 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     def _compute_price(self):
         self.price_unit = float(self.product_id.price_compute('list_price').get(self.product_id.id))
     
-    @api.depends('product_uom_qty', 'discount', 'price_unit')
+    @api.depends('product_uom_qty', 'discount', 'price_unit', 'manual_price')
     def _compute_amount(self):
         """
         Compute the amounts of the SO line.
         """
         for line in self:
-            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            if line.manual_price:
+                price = line.manual_price * (1 - (line.discount or 0.0) / 100.0)
+            else:
+                price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             taxes = line.tax_id.compute_all(price, line.currency_id, line.product_uom_qty, product=line.product_id, partner=line.partner_id)
             line.update({
                 'price_total': taxes['total_included'],
@@ -159,6 +162,9 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         }
         return payment_vals
 
+    # Add manual price during order
+    manual_price = fields.Float(string="Manual Price", digits=dp.get_precision('Manual Price'))
+
     def _get_order_line_vals(self, product_id):
         """Hook to allow custom line values to be put on the newly
         created or edited lines."""
@@ -167,7 +173,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         return {
             'product_id': product_id,
             'name': product._get_mako_tmpl_name(),
-            'price_unit': self.price_unit,
+            'price_unit': self.manual_price if self.manual_price else self.price_unit,
             'product_uom_qty': self.product_uom_qty,
             'product_uom': product.uom_id.id,
             'discount': self.discount,
