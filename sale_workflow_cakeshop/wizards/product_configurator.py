@@ -205,16 +205,16 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         sale_order.payment_id = payment
 
         # sale order form view reference
-        sale_order_form_ref_id = self.env.ref('sale.view_order_form').id
+        # sale_order_form_ref_id = self.env.ref('sale.view_order_form').id
 
         # Do other works here
-        return {
-            'name': _('Sale Order'),
-            'res_model': 'sale.order',
-            'res_id': sale_order.id,
-            'views': [(sale_order_form_ref_id, 'form')],
-            'type': 'ir.actions.act_window'
-        }
+        # return {
+        #     'name': _('Sale Order'),
+        #     'res_model': 'sale.order',
+        #     'res_id': sale_order.id,
+        #     'views': [(sale_order_form_ref_id, 'form')],
+        #     'type': 'ir.actions.act_window'
+        # }
 
 class ProductConfiguratorSaleOrderNow(models.TransientModel):
     _name = 'product.configurator.ordernow'
