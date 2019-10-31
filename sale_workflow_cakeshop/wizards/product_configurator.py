@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, api, _
-from odoo.exceptions import Warning, ValidationError
+from odoo.exceptions import Warning, ValidationError, UserError
 
 from odoo.addons import decimal_precision as dp
 
@@ -184,6 +184,11 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     def action_order_config_done(self):
         """Parse values and execute final code before closing the wizard"""
         # Create Order)
+
+        # Check if manual price is less than the computed unit price
+        if self.manual_price and self.manual_price < self.price_unit:
+            raise UserError(_('Manual price cannot be set less than the Standard Price.\n Please check Manual Price again !'))
+
         SaleOrder = self.env['sale.order']
         sale_order = SaleOrder.create(self._prepare_order())
         sale_order.action_confirm()
