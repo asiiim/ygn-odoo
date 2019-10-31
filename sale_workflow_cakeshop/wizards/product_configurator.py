@@ -203,11 +203,12 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         kitchen_order = KitchenOrder.create(self._prepare_kitchen_order())
         
         # Create Payment if any
-        Payment = self.env['account.payment']
-        payment = Payment.create(self._prepare_payment())
-        payment.post()
-        self.payment_id = payment
-        sale_order.payment_id = payment
+        if self.amount:
+            Payment = self.env['account.payment']
+            payment = Payment.create(self._prepare_payment())
+            payment.post()
+            self.payment_id = payment
+            sale_order.payment_id = payment
 
         # sale order form view reference
         # sale_order_form_ref_id = self.env.ref('sale.view_order_form').id

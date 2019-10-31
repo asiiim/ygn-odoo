@@ -157,3 +157,12 @@ class KitchenOrder(models.Model):
 
     # Link Invoice(s) With Kitchen Order
     invoice_ids = fields.Many2many(related="saleorder_id.invoice_ids", string='Invoice Ref.')
+
+    # Change Requested Date
+    # @api.multi
+    # def change_request_date(self):
+    #     self.ensure_one()
+    #     for rec in self:
+    #         rec.write({
+    #             'stage_id': self.env['kitchen.stage'].search([('name', '=', 'Done')], limit=1).id
+    #         })
