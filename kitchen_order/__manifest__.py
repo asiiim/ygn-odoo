@@ -31,6 +31,6 @@
         'views/kitchen_message.xml',
         'report/kitchen_order_report.xml',
         'report/kitchen_order_dot_matrix_report.xml',
-        'wizards/kitchen_wizard.xml'
+        # 'wizards/kitchen_wizard.xml'
     ],
 }

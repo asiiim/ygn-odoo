@@ -35,7 +35,7 @@
                         <button name="cancel_kitchen_order" string="Cancel Order" 
                                 type="object" class="btn-secondary" 
                                 attrs="{'invisible': [('stage_name', '=', 'Cancel')]}"/>
-                        <button name="change_request_date" string="Change Requested Date" type="object" class="btn-primary"/>
+                        <!-- <button name="change_request_date" string="Change Requested Date" type="object" class="btn-primary"/> -->
                     </header>
                     <sheet>
                         <field name="image" widget="image" class="oe_avatar"/>
