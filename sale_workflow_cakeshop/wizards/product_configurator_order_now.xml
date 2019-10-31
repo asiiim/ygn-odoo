@@ -20,7 +20,7 @@
                             <field name="name_for_message"/>
                             <field name="ko_notes_ids" widget="many2many_tags"/>
                             <field name="ko_note"/>
-                            <field name="partner_id" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1, 'form_view_ref': 'ygen_partner_delivery_zone.view_partner_reduced_form'}" options='{"always_reload": True}' required="True"/>
+                            <field name="partner_id" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1, 'form_view_ref': 'ygen_partner_delivery_zone.view_partner_reduced_form'}" options="{&quot;always_reload&quot;: True, &quot;no_quick_create&quot;: True}" required="True"/>
                             <field name="requested_date"/>
                             <field name="kitchen_sale_order_print_selection"/>
                         </group>
