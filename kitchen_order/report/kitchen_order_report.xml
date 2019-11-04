@@ -6,7 +6,7 @@
             <t t-name="kitchen_order.report_kitchen_order_document">
                 <t t-call="web.basic_layout">
                     <t t-set="doc" t-value="doc.with_context()"/>
-                    <div class="page" style="font-size:14px;">
+                    <div class="page" style="font-size:22px;">
                         <div class="oe_structure"/>
                         <div class="row">
                             <div class="row mt32 mb32" id="order-informations">
@@ -34,10 +34,10 @@
                                         <strong>Delivery Date: </strong><span t-field="doc.requested_date" t-field-options='{"format": "MM/dd/y h:mm a"}'/><br/>
                                     </div><br/>
 
-                                    <div t-if="doc.create_date">
+                                    <!-- <div t-if="doc.product_description">
                                         <strong>Product Details:</strong>
                                         <p t-field="doc.product_description"/>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="col-xs-4">
                                     <div t-if="doc.message">
@@ -99,8 +99,8 @@
                                             <p t-field="o.requested_date" t-field-options='{"format": "MM/dd/y h:mm a"}'/>
                                         </div>
                                         <div class="col-xs-5" style="border-right:1px solid #000; padding:2px 5px;">
-                                            <strong>Product Details:</strong>
-                                            <p t-field="o.product_description"/>
+                                            <!-- <strong>Product Details:</strong>
+                                            <p t-field="o.product_description"/> -->
 
                                             <strong>KO Note:</strong>
                                             <p t-field="o.ko_note"/>
