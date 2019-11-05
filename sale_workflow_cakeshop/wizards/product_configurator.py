@@ -224,7 +224,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
 
 class ProductConfiguratorSaleOrderNow(models.TransientModel):
     _name = 'product.configurator.ordernow'
-    _inherit = 'product.configurator'
+    # _inherit = 'product.configurator'
 
     @api.multi
     def configure_order(self, product_id):
