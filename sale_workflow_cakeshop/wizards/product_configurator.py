@@ -222,33 +222,33 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         #     'type': 'ir.actions.act_window'
         # }
 
-class ProductConfiguratorSaleOrderNow(models.TransientModel):
-    _name = 'product.configurator.ordernow'
-    # _inherit = 'product.configurator'
+# class ProductConfiguratorSaleOrderNow(models.TransientModel):
+#     _name = 'product.configurator.ordernow'
+#     _inherit = 'product.configurator'
 
-    @api.multi
-    def configure_order(self, product_id):
-        product = self.env['product.product'].browse(product_id)
-        order_configurator_view_id = self.env.ref('sale_workflow_cakeshop.product_configurator_ordernow_ko_form').id
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'product.configurator.ordernow.ko',
-            'name': "Order Configurator",
-            'view_mode': 'form',
-            'view_id': order_configurator_view_id,
-            'target': 'new',
-            'context': dict(
-                self.env.context,
-                default_product_tmpl_id=product.product_tmpl_id.id,
-                default_product_id=product.id,
-                wizard_model='product.configurator.ordernow.ko',
-            ),
-        }
+#     @api.multi
+#     def configure_order(self, product_id):
+#         product = self.env['product.product'].browse(product_id)
+#         order_configurator_view_id = self.env.ref('sale_workflow_cakeshop.product_configurator_ordernow_ko_form').id
+#         return {
+#             'type': 'ir.actions.act_window',
+#             'res_model': 'product.configurator.ordernow.ko',
+#             'name': "Order Configurator",
+#             'view_mode': 'form',
+#             'view_id': order_configurator_view_id,
+#             'target': 'new',
+#             'context': dict(
+#                 self.env.context,
+#                 default_product_tmpl_id=product.product_tmpl_id.id,
+#                 default_product_id=product.id,
+#                 wizard_model='product.configurator.ordernow.ko',
+#             ),
+#         }
     
-    @api.multi
-    def action_config_done(self):
-        """Parse values and execute final code before closing the wizard"""
-        res = super(ProductConfiguratorSaleOrderNow, self).action_config_done()
-        _logger.error("res id after config is: %s" % str(res['res_id']))
-        # Call order configurator wizard
-        return self.configure_order(res['res_id'])
+#     @api.multi
+#     def action_config_done(self):
+#         """Parse values and execute final code before closing the wizard"""
+#         res = super(ProductConfiguratorSaleOrderNow, self).action_config_done()
+#         _logger.error("res id after config is: %s" % str(res['res_id']))
+#         # Call order configurator wizard
+#         return self.configure_order(res['res_id'])
