@@ -43,6 +43,7 @@
                     attrs="{'invisible': [('delivery_validated', '=', True)]}"/>
                 <button name="print_koso_report" string="Print SO/KO" type="object" class="btn-primary"/>
                 <button name="view_kitchen_order" string="View KO" type="object" class="btn-primary"/>
+                <button name="action_change_requested_date" class="btn-primary" string="Change Delivery Date" type="object"/>
             </button>
             <field name="payment_term_id" position="after">
                 <field name="kitchen_sale_order_print_selection"/>
