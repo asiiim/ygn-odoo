@@ -84,5 +84,6 @@ class SaleOrder(models.Model):
             'res_model': 'kitchen.order',
             'res_id': ko_id[0],
             'views': [(self.env.ref('kitchen_order.view_kitchen_order_form').id, 'form')],
-            'type': 'ir.actions.act_window'
+            'type': 'ir.actions.act_window',
+            'target':'new'
         }

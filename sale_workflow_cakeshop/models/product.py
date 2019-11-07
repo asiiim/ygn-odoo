@@ -32,3 +32,21 @@ class ProductTemplate(models.Model):
             }
         return
         # return self.create_config_wizard(model_name="product.configurator.ordernow")
+
+    # This field is used to check if the product is addon
+    is_addon = fields.Boolean('Is Addon', default=False)
+    has_attr = fields.Boolean('Has Attribute', compute="_has_attribute")
+
+    # set true if the product template has attributes
+    @api.depends('attribute_line_ids')
+    def _has_attribute(self):
+        for product in self:
+            if len(product.attribute_line_ids) > 0:
+                product.has_attr = True
+
+class ProductProduct(models.Model):
+    _inherit = "product.product"
+
+    # This field is used to check if the product is addon
+    is_addon = fields.Boolean(related="product_tmpl_id.is_addon", default=False)
+    product_addon_line_ids = fields.One2many('product.addons.line', 'product_id', string='Addon Lines', copy=True, auto_join=True)
