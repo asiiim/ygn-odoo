@@ -20,4 +20,11 @@ class SaleRequestedDate(models.TransientModel):
 
         so_obj = self.env['sale.order']
         so = so_obj.browse(self._context.get('active_id'))
+
+        stock_pickings = self.env['stock.picking'].search([('origin', '=', so.name)])
+        
+        for stkpk in stock_pickings:
+            if stkpk.state in ['confirmed', 'assigned']:
+                stkpk.write({'scheduled_date': self.requested_date})
+
         so.write({'requested_date': self.requested_date})
