@@ -17,15 +17,16 @@ good for processing one product at a time.
     'installable': True,
     'application': True,
     'auto_install': False,
-    'depends': ['sale', 'stock', 'account_payment', 'kitchen_order', 'kitchen_order_note', 'product_price_factor', 'ygen_partner_delivery_zone'],
+    'depends': ['sale', 'stock', 'account_payment', 'kitchen_order', 'kitchen_order_note', 'ygen_partner_delivery_zone'],
     'data': [
-        'views/product_views.xml',
         'views/sale_views.xml',
+        'views/product_views.xml',
         'views/account_invoice.xml',
         'views/res_company.xml',
         'views/res_config_settings.xml',
         'wizards/product_configurator_order_now.xml',
         'wizards/sale_make_invoice_advance_views.xml',
+        'wizards/sale_requested_date.xml',
         'report/kitchen_sale_order_report.xml'
     ],
     # 'images': ['static/description/banner.png'],

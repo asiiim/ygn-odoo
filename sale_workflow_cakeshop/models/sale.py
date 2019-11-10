@@ -84,5 +84,24 @@ class SaleOrder(models.Model):
             'res_model': 'kitchen.order',
             'res_id': ko_id[0],
             'views': [(self.env.ref('kitchen_order.view_kitchen_order_form').id, 'form')],
-            'type': 'ir.actions.act_window'
+            'type': 'ir.actions.act_window',
+            'target':'new'
+        }
+
+    # change requested date
+    @api.multi
+    def action_change_requested_date(self):
+        """Return action to change the requested date"""
+        sale_requested_date_view_id = self.env.ref('sale_workflow_cakeshop.sale_change_requested_date_form').id
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.requested.date',
+            'name': "Change Delivery Date",
+            'view_mode': 'form',
+            'view_id': sale_requested_date_view_id,
+            'target': 'new',
+            'context': dict(
+                self.env.context,
+                wizard_model='sale.requested.date'
+            ),
         }

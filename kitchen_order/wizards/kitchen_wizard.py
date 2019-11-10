@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 class KitchenRequestedDateWizard(models.TransientModel):
     _name = "kitchen.requested.date.wizard"
 
-    new_req_date = fields.Datetime(string='New Requested Date', default=fields.Datetime.now)
+    new_req_date = fields.Datetime(string='New Requested Date')
 
     @api.multi
     def change_requested_date(self):

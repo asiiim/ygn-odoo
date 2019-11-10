@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Part of Ygen. See LICENSE file for full copyright and licensing details.
+
 
 from odoo import api, fields, models, api, _
 from odoo.exceptions import Warning, ValidationError, UserError
@@ -46,8 +48,8 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         string="Customer"
     )
 
-    requested_date = fields.Datetime(string='Requested Date', required=True, index=True, copy=False, default=fields.Datetime.now)
-    name_for_message = fields.Text(string="Name for Message", copy=False)
+    requested_date = fields.Datetime(string='Requested Date', required=True, index=True, copy=False)
+    name_for_message = fields.Char(string="Name for Message", copy=False)
     ko_note = fields.Text(string="KO Note", track_visibility='onchange')
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
     amount = fields.Monetary(string='Advance Amount', required=True, default=0)
@@ -57,30 +59,67 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
     price_unit = fields.Float(string="Price", digits=dp.get_precision('Unit Price'), oldname="price", compute="_compute_price")
     product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
+    
+    # discount styles
     discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
+    fix_discount = fields.Float(string='Fixed Discount', default=0.0)
+    
     tax_id = fields.Many2many('account.tax', related="product_id.taxes_id",string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     price_total = fields.Monetary(compute='_compute_amount', string='Total', readonly=True)
 
     ko_notes_ids = fields.Many2many('kitchen.order.notes', 'sale_workflow_cakeshop_kitchen_order_notes_', string='KO Notes')
     order_message_id = fields.Many2one('kitchen.message', string='Message')
-
-    @api.depends('partner_id')
-    def _compute_price(self):
-        self.price_unit = float(self.product_id.price_compute('list_price').get(self.product_id.id))
     
-    @api.depends('product_uom_qty', 'discount', 'price_unit', 'manual_price')
+    # Add manual price during order
+    manual_price = fields.Float(string="Manual Price", digits=dp.get_precision('Manual Price'))
+
+    # Product Addons Line
+    product_addon_lines = fields.One2many('product.addons.line', 'product_config_soko', string="Addon Lines")
+
+    # Compute unit price
+    @api.depends('product_id', 'product_addon_lines')
+    def _compute_price(self):
+        self.price_unit = self.product_id.list_price
+    
+    # Compute total price
+    @api.depends('product_uom_qty', 'discount', 'price_unit', 'manual_price', 'product_addon_lines', 'fix_discount')
     def _compute_amount(self):
-        """
-        Compute the amounts of the SO line.
-        """
+
         for line in self:
+            addon_price = 0.0
+            discount = 0.0
+            gross_total = 0.0
+
+            # check if it has unit price or manual price
             if line.manual_price:
-                price = line.manual_price * (1 - (line.discount or 0.0) / 100.0)
+                price = line.manual_price
             else:
-                price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+                price = line.price_unit
+
+            # check if product addons are selected
+            if line.product_addon_lines:
+                for addon in line.product_addon_lines:
+                    addon_price += addon.amount
+
+                price *= line.product_uom_qty
+                price += addon_price
+                price /= line.product_uom_qty
+            
+            # take gross total before discount to convert fix discount to percentage
+            gross_total = price * line.product_uom_qty
+            
+            # apply discount if provided
+            if line.discount:
+                discount = line.discount
+            else:
+                discount = (line.fix_discount / gross_total) * 100
+            
+            price *= (1 - (discount or 0.0) / 100.0)
+
             taxes = line.tax_id.compute_all(price, line.currency_id, line.product_uom_qty, product=line.product_id, partner=line.partner_id)
+            
             line.update({
-                'price_total': taxes['total_included'],
+                'price_total': taxes['total_included']
             })
 
     @api.multi
@@ -93,9 +132,16 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         self.ensure_one()
         notes = ''
         for note in self.ko_notes_ids:
-            notes += note.name + "\n "
+            notes += note.name + "\n"
         if self.ko_note:
             notes += self.ko_note
+        if self.product_addon_lines:
+            notes += "\n\nAddons:\n"
+            for addon in self.product_addon_lines:
+                notes += "- "
+                notes += addon.product_id.name
+                notes += " x" + str(int(addon.quantity))
+                notes += "\n"
 
         ko_vals = {
             'product_id': self.product_id.id,
@@ -162,21 +208,43 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         }
         return payment_vals
 
-    # Add manual price during order
-    manual_price = fields.Float(string="Manual Price", digits=dp.get_precision('Manual Price'))
-
     def _get_order_line_vals(self, product_id):
         """Hook to allow custom line values to be put on the newly
         created or edited lines."""
         product = self.env['product.product'].browse(product_id)
+        
+        # Add addon description and price unit in orderline
+        orderline_desc = product.name or ""
+        addon_price = 0.0
+        discount = 0.0
+        gross_total = 0.0
 
+        if self.product_addon_lines:
+            for addon in self.product_addon_lines:
+                orderline_desc += " | "
+                orderline_desc += addon.product_id.name
+                
+                addon_price += addon.amount
+                    
+            self.price_unit *= self.product_uom_qty
+            self.price_unit += addon_price
+            self.price_unit /= self.product_uom_qty
+        
+
+        # apply discount if provided
+        if self.discount:
+            discount = self.discount
+        else:
+            gross_total = self.price_unit * self.product_uom_qty
+            discount = (self.fix_discount / gross_total) * 100
+        
         return {
             'product_id': product_id,
-            'name': product._get_mako_tmpl_name(),
+            'name': orderline_desc,
             'price_unit': self.manual_price if self.manual_price else self.price_unit,
             'product_uom_qty': self.product_uom_qty,
             'product_uom': product.uom_id.id,
-            'discount': self.discount,
+            'discount': discount,
             # 'tax_id': self.tax_id,
         }
 
@@ -200,7 +268,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         
         # Create Kitchen Order
         KitchenOrder = self.env['kitchen.order']
-        kitchen_order = KitchenOrder.create(self._prepare_kitchen_order())
+        KitchenOrder.create(self._prepare_kitchen_order())
         
         # Create Payment if any
         if self.amount:
@@ -211,44 +279,35 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             sale_order.payment_id = payment
 
         # sale order form view reference
-        # sale_order_form_ref_id = self.env.ref('sale.view_order_form').id
+        sale_order_form_ref_id = self.env.ref('sale.view_order_form').id
 
         # Do other works here
-        # return {
-        #     'name': _('Sale Order'),
-        #     'res_model': 'sale.order',
-        #     'res_id': sale_order.id,
-        #     'views': [(sale_order_form_ref_id, 'form')],
-        #     'type': 'ir.actions.act_window'
-        # }
+        return {
+            'name': _('Sale Order'),
+            'res_model': 'sale.order',
+            'res_id': sale_order.id,
+            'views': [(sale_order_form_ref_id, 'form')],
+            'type': 'ir.actions.act_window'
+        }
 
-# class ProductConfiguratorSaleOrderNow(models.TransientModel):
-#     _name = 'product.configurator.ordernow'
-#     _inherit = 'product.configurator'
 
-#     @api.multi
-#     def configure_order(self, product_id):
-#         product = self.env['product.product'].browse(product_id)
-#         order_configurator_view_id = self.env.ref('sale_workflow_cakeshop.product_configurator_ordernow_ko_form').id
-#         return {
-#             'type': 'ir.actions.act_window',
-#             'res_model': 'product.configurator.ordernow.ko',
-#             'name': "Order Configurator",
-#             'view_mode': 'form',
-#             'view_id': order_configurator_view_id,
-#             'target': 'new',
-#             'context': dict(
-#                 self.env.context,
-#                 default_product_tmpl_id=product.product_tmpl_id.id,
-#                 default_product_id=product.id,
-#                 wizard_model='product.configurator.ordernow.ko',
-#             ),
-#         }
+class ProductAddonsLine(models.TransientModel):
+    _name = "product.addons.line"
+    _description = 'Product Addon Line'
+    _order = 'product_id, sequence, id'
     
-#     @api.multi
-#     def action_config_done(self):
-#         """Parse values and execute final code before closing the wizard"""
-#         res = super(ProductConfiguratorSaleOrderNow, self).action_config_done()
-#         _logger.error("res id after config is: %s" % str(res['res_id']))
-#         # Call order configurator wizard
-#         return self.configure_order(res['res_id'])
+    sequence = fields.Integer(string='Sequence', default=10)
+    product_config_soko = fields.Many2one('product.configurator.ordernow.ko', string="Product Config SOKO")
+    product_id = fields.Many2one('product.product', string="Addon", domain="[('is_addon', '=', True)]")
+    quantity = fields.Float(string='Qty', default=1.0)
+    uom_id = fields.Many2one(related="product_id.uom_id", string="UOM")
+    unit_price = fields.Float(string='Rate')
+    amount = fields.Float(string='Amount', compute="_compute_addon_amount")
+
+    @api.depends('quantity', 'unit_price')
+    def _compute_addon_amount(self):
+        for addon in self:
+            if addon.quantity and addon.unit_price:
+                addon.amount = addon.quantity * addon.unit_price
+            else:
+                addon.amount = 0.0
