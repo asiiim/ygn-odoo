@@ -5,9 +5,12 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_kanban_view"/>
         <field name="arch" type="xml">
-            <!-- <field name="lst_price" position="after">
-                <field name="type"/>
-            </field> -->
+            <strong class="o_kanban_record_title" position="replace">
+                <strong class="o_kanban_record_title">
+                    <field name="name"/>
+                    <big t-if="record.default_code.value">[<field name="default_code"/>]</big>
+                </strong>
+            </strong>
             <xpath expr="//div[hasclass('oe_kanban_details')]" position="after">
                 <field name="has_attr" invisible="1"/>
                 <field name="is_addon" invisible="1"/>
