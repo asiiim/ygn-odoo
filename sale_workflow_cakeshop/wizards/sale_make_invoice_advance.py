@@ -15,7 +15,17 @@ _logger = logging.getLogger(__name__)
 class SaleAdvancePaymentInv(models.TransientModel):
     _inherit = "sale.advance.payment.inv"
 
-    tender_amount = fields.Float(string='Tender')
+    # take tender amount
+    tender_amount = fields.Float(string='Tender', compute="_take_tender")
+    tender_amount_char = fields.Char(string="Tender")
+
+    @api.depends('tender_amount_char')
+    def _take_tender(self):
+        try:
+            self.tender_amount = float(self.tender_amount_char)
+        except:
+            raise UserError(_("Plese enter number NOT text!"))
+
     change_amount = fields.Float(string='Change', default=0.0, compute="_get_change")
     total_due_amount = fields.Float(string='Total Due Amount', default=0.0, compute="_get_total_amount")
 
