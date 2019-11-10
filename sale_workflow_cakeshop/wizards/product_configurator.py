@@ -36,10 +36,8 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         # required=True,
         readonly=True
     )
-    # order_line_id = fields.Many2one(
-    #     comodel_name='sale.order.line',
-    #     readonly=True
-    # )
+    
+    saleorder_date = fields.Datetime(string='Order Date', required=True, index=True, copy=False, default=fields.Datetime.now)
 
     partner_id = fields.Many2one(
         comodel_name='res.partner',
@@ -173,6 +171,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         order_vals = {
             # 'client_order_ref': self.client_order_ref or '',
             'partner_id': self.partner_id.id,
+            'date_order': self.saleorder_date,
             'requested_date': self.requested_date,
             # 'pricelist_id': self.partner_id.property_product_pricelist.id,
             # 'note': self.name_for_message,
