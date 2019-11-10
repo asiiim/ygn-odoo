@@ -59,7 +59,11 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
     price_unit = fields.Float(string="Price", digits=dp.get_precision('Unit Price'), oldname="price", compute="_compute_price")
     product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
+    
+    # discount styles
     discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
+    fix_discount = fields.Float(string='Fixed Discount', default=0.0)
+    
     tax_id = fields.Many2many('account.tax', related="product_id.taxes_id",string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     price_total = fields.Monetary(compute='_compute_amount', string='Total', readonly=True)
 
@@ -78,16 +82,21 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         self.price_unit = self.product_id.list_price
     
     # Compute total price
-    @api.depends('product_uom_qty', 'discount', 'price_unit', 'manual_price', 'product_addon_lines')
+    @api.depends('product_uom_qty', 'discount', 'price_unit', 'manual_price', 'product_addon_lines', 'fix_discount')
     def _compute_amount(self):
 
         for line in self:
-            if line.manual_price:
-                price = line.manual_price * (1 - (line.discount or 0.0) / 100.0)
-            else:
-                price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            
             addon_price = 0.0
+            discount = 0.0
+            gross_total = 0.0
+
+            # check if it has unit price or manual price
+            if line.manual_price:
+                price = line.manual_price
+            else:
+                price = line.price_unit
+
+            # check if product addons are selected
             if line.product_addon_lines:
                 for addon in line.product_addon_lines:
                     addon_price += addon.amount
@@ -96,9 +105,21 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
                 price += addon_price
                 price /= line.product_uom_qty
             
+            # take gross total before discount to convert fix discount to percentage
+            gross_total = price * line.product_uom_qty
+            
+            # apply discount if provided
+            if line.discount:
+                discount = line.discount
+            else:
+                discount = (line.fix_discount / gross_total) * 100
+            
+            price *= (1 - (discount or 0.0) / 100.0)
+
             taxes = line.tax_id.compute_all(price, line.currency_id, line.product_uom_qty, product=line.product_id, partner=line.partner_id)
+            
             line.update({
-                'price_total': taxes['total_included'],
+                'price_total': taxes['total_included']
             })
 
     @api.multi
@@ -195,6 +216,8 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         # Add addon description and price unit in orderline
         orderline_desc = product.name or ""
         addon_price = 0.0
+        discount = 0.0
+        gross_total = 0.0
 
         if self.product_addon_lines:
             for addon in self.product_addon_lines:
@@ -207,13 +230,21 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             self.price_unit += addon_price
             self.price_unit /= self.product_uom_qty
         
+
+        # apply discount if provided
+        if self.discount:
+            discount = self.discount
+        else:
+            gross_total = self.price_unit * self.product_uom_qty
+            discount = (self.fix_discount / gross_total) * 100
+        
         return {
             'product_id': product_id,
             'name': orderline_desc,
             'price_unit': self.manual_price if self.manual_price else self.price_unit,
             'product_uom_qty': self.product_uom_qty,
             'product_uom': product.uom_id.id,
-            'discount': self.discount,
+            'discount': discount,
             # 'tax_id': self.tax_id,
         }
 
