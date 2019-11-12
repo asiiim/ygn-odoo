@@ -116,6 +116,18 @@
             <field name="kitchen_sale_order_print_selection" position="replace">
                 <field name="kitchen_sale_order_print_selection" invisible="1"/>
             </field>
+            <field name="order_message_id" position="replace">
+                <field name="order_message_id" invisible="1"/>
+            </field>
+            <field name="name_for_message" position="replace">
+                <field name="name_for_message" invisible="1"/>
+            </field>
+            <field name="ko_notes_ids" position="replace">
+                <field name="ko_notes_ids" invisible="1"/>
+            </field>
+            <field name="ko_note" position="replace">
+                <field name="ko_note" invisible="1"/>
+            </field>
         </field>
     </record>
 </odoo>

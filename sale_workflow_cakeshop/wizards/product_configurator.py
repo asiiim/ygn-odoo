@@ -218,6 +218,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         addon_price = 0.0
         discount = 0.0
         gross_total = 0.0
+        addon_details = ""
 
         if self.product_addon_lines:
             for addon in self.product_addon_lines:
@@ -225,6 +226,8 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
                 orderline_desc += addon.product_id.name
                 
                 addon_price += addon.amount
+                
+                addon_details += "<li>" + str(addon.product_id.name) + " x" + str(addon.quantity) + " @" + str(addon.unit_price) + " = " + str(addon.amount) + "/-<br/>"
                     
             self.price_unit *= self.product_uom_qty
             self.price_unit += addon_price
@@ -247,6 +250,8 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             'product_uom': product.uom_id.id,
             'discount': discount,
             # 'tax_id': self.tax_id,
+            'uom_name': product.uom_id.name,
+            'addon_details': addon_details
         }
 
     @api.multi
@@ -288,6 +293,15 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             # sale order form view reference
             sale_order_form_ref_id = self.env.ref('sale.view_order_form').id
 
+            # Log the sale order details in the chatter
+            orderline_vals = self._get_order_line_vals(self.product_id.id)
+            msg = "<b>Order Details</b><br/>"
+            msg += "<li>Product: " + str(orderline_vals.get('name')) + "<br/>"
+            msg += "<li>Qty: " + str(orderline_vals.get('product_uom_qty')) + " " + str(orderline_vals.get('uom_name')) + "<br/>"
+            msg += "<br/><b>Addons Details</b><br/>"
+            msg += str(orderline_vals.get('addon_details'))
+            self.order_id.message_post(body=msg)
+
             # Show sale order form view
             return {
                 'name': _('Sale Order'),
@@ -319,6 +333,15 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             
             # Confirm the sale order
             self.order_id.action_confirm()
+
+            # Log the sale order details in the chatter
+            orderline_vals = self._get_order_line_vals(self.product_id.id)
+            msg = "<b>Order Details</b><br/>"
+            msg += "<li>Product: " + str(orderline_vals.get('name')) + "<br/>"
+            msg += "<li>Qty: " + str(orderline_vals.get('product_uom_qty')) + " " + str(orderline_vals.get('uom_name')) + "<br/>"
+            msg += "<br/><b>Addons Details</b><br/>"
+            msg += str(orderline_vals.get('addon_details'))
+            self.order_id.message_post(body=msg)
 
 class ProductAddonsLine(models.TransientModel):
     _name = "product.addons.line"
