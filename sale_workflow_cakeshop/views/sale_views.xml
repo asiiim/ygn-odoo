@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- <record model="ir.ui.view" id="view_order_kitchen_order_form">
-        <field name="name">Sale Order form view kitchen order</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//page" position="after">
-                <page string="Kitchen Orders">
-                    <field name="kitchen_order_ids"/>
-                </page>
-            </xpath>
-        </field>
-    </record> -->
     <record id="view_order_tree" model="ir.ui.view">
         <field name="name">sale.order.tree. create invoice</field>
         <field name="model">sale.order</field>
@@ -43,7 +31,8 @@
                     attrs="{'invisible': [('delivery_validated', '=', True)]}"/>
                 <button name="print_koso_report" string="Print SO/KO" type="object" class="btn-primary"/>
                 <button name="view_kitchen_order" string="View KO" type="object" class="btn-primary"/>
-                <button name="action_change_requested_date" class="btn-primary" string="Change Delivery Date" type="object"/>
+                <button name="action_change_requested_date" class="btn-primary" string="Change Delivery Date" type="object" attrs="{'invisible': ['|',('invoice_count', &quot;&gt;&quot;, 0.0), ('delivery_validated', '=', True)]}"/>
+                <button name="action_edit_sale_order" class="btn-primary" string="Edit Order" type="object" attrs="{'invisible': ['|',('invoice_count', &quot;&gt;&quot;, 0.0), ('delivery_validated', '=', True)]}"/>
             </button>
             <field name="payment_term_id" position="after">
                 <field name="kitchen_sale_order_print_selection"/>

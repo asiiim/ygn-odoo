@@ -38,12 +38,12 @@ class SaleOrder(models.Model):
                     line.amount_due = invoice.residual
                     break
 
-    # Stock Picking Operation
+    # Validate Stock Picking Operation
     delivery_validated = fields.Boolean('Delivery Validated?', default=False, readonly=True, copy=False)
 
     @api.multi
     def validate_picking(self):
-        stock_picking = self.env['stock.picking'].search([('origin', '=', self.name)], limit=1)
+        stock_picking = self.env['stock.picking'].search([('origin', '=', self.name), ('state', '!=', 'cancel')], limit=1)
         stock_picking.button_validate()
         if stock_picking.state == "done":
             self.write({'delivery_validated': True})
@@ -63,15 +63,15 @@ class SaleOrder(models.Model):
             })
         return invoice_ids_arr
 
-    # print option selection for KO & SO
+    # Print option selection for KO & SO
     kitchen_sale_order_print_selection = fields.Selection([('ko', 'Kitchen Order'), ('so', 'Sale Order'), ('both', 'Both')], string="Print Sale Order or Kitchen Order?", default="both")
 
-    # print SO or KO
+    # Print SO or KO
     @api.multi
     def print_koso_report(self):
         return self.env.ref('sale_workflow_cakeshop.action_report_sale_or_kitchen_order').report_action(self)
 
-    # view related kitchen orders of the sale order
+    # View related kitchen orders of the sale order
     @api.multi
     def view_kitchen_order(self):
         ko_id = []
@@ -88,7 +88,7 @@ class SaleOrder(models.Model):
             'target':'new'
         }
 
-    # change requested date
+    # Change requested date
     @api.multi
     def action_change_requested_date(self):
         """Return action to change the requested date"""
@@ -103,5 +103,27 @@ class SaleOrder(models.Model):
             'context': dict(
                 self.env.context,
                 wizard_model='sale.requested.date'
+            ),
+        }
+
+    # Edit sale order
+    @api.multi
+    def action_edit_sale_order(self):
+        order_configurator_view_id = self.env.ref('sale_workflow_cakeshop.product_configurator_ordernow_ko_product_edit_form').id
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.configurator.ordernow.ko',
+            'name': "Edit Sale Order",
+            'view_mode': 'form',
+            'view_id': order_configurator_view_id,
+            'target': 'new',
+            'context': dict(
+                self.env.context,
+                default_order_id=self.id,
+                default_partner_id = self.partner_id.id,
+                default_requested_date = self.requested_date,
+                default_saleorder_date = self.date_order,
+                wizard_model='product.configurator.ordernow.ko',
             ),
         }

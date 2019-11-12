@@ -21,7 +21,7 @@ class SaleRequestedDate(models.TransientModel):
         so_obj = self.env['sale.order']
         so = so_obj.browse(self._context.get('active_id'))
 
-        stock_pickings = self.env['stock.picking'].search([('origin', '=', so.name)])
+        stock_pickings = self.env['stock.picking'].search([('origin', '=', so.name), ('state', '!=', 'cancel')])
         
         for stkpk in stock_pickings:
             if stkpk.state in ['confirmed', 'assigned']:

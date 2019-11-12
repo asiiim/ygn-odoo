@@ -18,12 +18,12 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     product_tmpl_id = fields.Many2one(
         comodel_name='product.template',
         domain=[('config_ok', '=', True)],
-        string='Configurable Template',
-        required=True
+        string='Configurable Template'
     )
     product_id = fields.Many2one(
         comodel_name='product.product',
         string='Product',
+        domain="[('is_addon', '=', False), ('sale_ok', '=', True), ('has_attr', '=', False)]",
         required=True
     )
     order_id = fields.Many2one(
@@ -110,7 +110,8 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             if line.discount:
                 discount = line.discount
             else:
-                discount = (line.fix_discount / gross_total) * 100
+                if gross_total:
+                    discount = (line.fix_discount / gross_total) * 100
             
             price *= (1 - (discount or 0.0) / 100.0)
 
@@ -235,7 +236,8 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             discount = self.discount
         else:
             gross_total = self.price_unit * self.product_uom_qty
-            discount = (self.fix_discount / gross_total) * 100
+            if gross_total:
+                discount = (self.fix_discount / gross_total) * 100
         
         return {
             'product_id': product_id,
@@ -252,43 +254,71 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         """Parse values and execute final code before closing the wizard"""
         # Create Order)
 
+        # Check if product template exists
+        if not self.product_tmpl_id:
+            self.product_tmpl_id = self.product_id.product_tmpl_id
+
         # Check if manual price is less than the computed unit price
         if self.manual_price and self.manual_price < self.price_unit:
             raise UserError(_('Manual price cannot be set less than the Standard Price.\n Please check Manual Price again !'))
 
-        SaleOrder = self.env['sale.order']
-        sale_order = SaleOrder.create(self._prepare_order())
-        sale_order.action_confirm()
-        self.order_id = sale_order
+        # Check sale order from the context
+        if not self.order_id:
+            SaleOrder = self.env['sale.order']
+            sale_order = SaleOrder.create(self._prepare_order())
+            sale_order.action_confirm()
+            self.order_id = sale_order
 
-        # Attach sale order line
-        line_vals = self._get_order_line_vals(self.product_id.id)
-        self.order_id.write({'order_line': [(0, 0, line_vals)]})
-        
-        # Create Kitchen Order
-        KitchenOrder = self.env['kitchen.order']
-        KitchenOrder.create(self._prepare_kitchen_order())
-        
-        # Create Payment if any
-        if self.amount:
-            Payment = self.env['account.payment']
-            payment = Payment.create(self._prepare_payment())
-            payment.post()
-            self.payment_id = payment
-            sale_order.payment_id = payment
+            # Attach sale order line
+            line_vals = self._get_order_line_vals(self.product_id.id)
+            self.order_id.write({'order_line': [(0, 0, line_vals)]})
+            
+            # Create Kitchen Order
+            KitchenOrder = self.env['kitchen.order']
+            KitchenOrder.create(self._prepare_kitchen_order())
+            
+            # Create Payment if any
+            if self.amount:
+                Payment = self.env['account.payment']
+                payment = Payment.create(self._prepare_payment())
+                payment.post()
+                self.payment_id = payment
+                sale_order.payment_id = payment
 
-        # sale order form view reference
-        sale_order_form_ref_id = self.env.ref('sale.view_order_form').id
+            # sale order form view reference
+            sale_order_form_ref_id = self.env.ref('sale.view_order_form').id
 
-        # Do other works here
-        return {
-            'name': _('Sale Order'),
-            'res_model': 'sale.order',
-            'res_id': sale_order.id,
-            'views': [(sale_order_form_ref_id, 'form')],
-            'type': 'ir.actions.act_window'
-        }
+            # Show sale order form view
+            return {
+                'name': _('Sale Order'),
+                'res_model': 'sale.order',
+                'res_id': self.order_id.id,
+                'views': [(sale_order_form_ref_id, 'form')],
+                'type': 'ir.actions.act_window'
+            }
+        else:
+            # Cancel the existing stock delivery
+            stock_picking = self.env['stock.picking']
+            stock_picking.search([('origin', '=', self.order_id.name)], limit=1).action_cancel()
 
+            # Cancel the sale order
+            self.order_id.action_cancel()
+
+            # Set the sale order to quotation
+            self.order_id.action_draft()
+
+            # Place new vals for the sale order
+            self.order_id.write(self._prepare_order())
+
+            # Replace sale order line with new product
+            line_vals = self._get_order_line_vals(self.product_id.id)
+            for orderline in self.order_id.order_line:
+                if orderline.product_id.is_custom:
+                    self.order_id.write({'order_line': [(1, orderline.id, line_vals)]})
+                    break
+            
+            # Confirm the sale order
+            self.order_id.action_confirm()
 
 class ProductAddonsLine(models.TransientModel):
     _name = "product.addons.line"
@@ -297,10 +327,10 @@ class ProductAddonsLine(models.TransientModel):
     
     sequence = fields.Integer(string='Sequence', default=10)
     product_config_soko = fields.Many2one('product.configurator.ordernow.ko', string="Product Config SOKO")
-    product_id = fields.Many2one('product.product', string="Addon", domain="[('is_addon', '=', True)]")
+    product_id = fields.Many2one('product.product', string="Addon", domain="[('is_addon', '=', True), ('sale_ok', '=', True)]", default=lambda self: self.env['product.product'].search([('is_addon', '=', True), ('sale_ok', '=', True)], limit=1), ondelete='restrict', required=True)
     quantity = fields.Float(string='Qty', default=1.0)
     uom_id = fields.Many2one(related="product_id.uom_id", string="UOM")
-    unit_price = fields.Float(string='Rate')
+    unit_price = fields.Float(string='Rate', required=True)
     amount = fields.Float(string='Amount', compute="_compute_addon_amount")
 
     @api.depends('quantity', 'unit_price')

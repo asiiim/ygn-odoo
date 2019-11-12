@@ -35,6 +35,7 @@ class ProductTemplate(models.Model):
 
     # This field is used to check if the product is addon
     is_addon = fields.Boolean('Is Addon', default=False)
+    is_custom = fields.Boolean('Is Custom', default=False)
     has_attr = fields.Boolean('Has Attribute', compute="_has_attribute")
 
     # set true if the product template has attributes
@@ -48,5 +49,8 @@ class ProductProduct(models.Model):
     _inherit = "product.product"
 
     # This field is used to check if the product is addon
-    is_addon = fields.Boolean(related="product_tmpl_id.is_addon", default=False)
+    is_addon = fields.Boolean(related="product_tmpl_id.is_addon")
+    is_custom = fields.Boolean(related="product_tmpl_id.is_custom")
+    has_attr = fields.Boolean('Has Attribute', related="product_tmpl_id.has_attr", store=True)
+    
     product_addon_line_ids = fields.One2many('product.addons.line', 'product_id', string='Addon Lines', copy=True, auto_join=True)

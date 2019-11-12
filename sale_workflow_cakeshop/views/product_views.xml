@@ -34,6 +34,10 @@
                     <field name="is_addon"/>
                     <label for="is_addon"/>
                 </div>
+                <div>
+                    <field name="is_custom"/>
+                    <label for="is_custom"/>
+                </div>
             </xpath>
         </field>
     </record>
@@ -46,6 +50,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='purchase_ok']" postion="after">
                 <field name="product_addon_line_ids" invisible="1"/>
+                <field name="has_attr" invisible="1"/>
             </xpath>
         </field>
     </record>
