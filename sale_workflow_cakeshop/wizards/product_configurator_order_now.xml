@@ -74,7 +74,7 @@
                             <field name="discount" attrs="{'invisible': [('fix_discount', '&gt;', 0)]}"/>
                             <field name="fix_discount" attrs="{'invisible': [('discount', '&gt;', 0)]}"/>
                             <label for="amount" string="Advance"/>
-                            <div class="oe_title">
+                            <div class="oe_title" name="advance_amount">
                                 <h2 style="color:red;">
                                     <strong><field name="amount" widget="monetary"/></strong>
                                 </h2>
@@ -129,10 +129,10 @@
                 <field name="ko_note" invisible="1"/>
             </field>
             <label for="amount" position="replace"></label>
-            <div class="oe_title" position="replace">
-                <div class="oe_title" invisible="1">
+            <div name="advance_amount" position="replace">
+                <div class="oe_title" name="advance_amount" invisible="1">
                     <h2 style="color:red;">
-                        <strong><field name="amount" widget="monetary"/></strong>
+                        <strong><field name="amount" widget="monetary" invisible="1"/></strong>
                     </h2>
                 </div>
             </div>
