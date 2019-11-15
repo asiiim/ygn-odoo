@@ -363,3 +363,11 @@ class ProductAddonsLine(models.TransientModel):
                 addon.amount = addon.quantity * addon.unit_price
             else:
                 addon.amount = 0.0
+
+    @api.multi
+    @api.onchange('product_id')
+    def get_product_unit_price(self):
+
+        vals = {}
+        vals['unit_price'] = self.product_id.list_price
+        self.update(vals)
