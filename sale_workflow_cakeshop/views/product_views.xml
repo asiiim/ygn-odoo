@@ -63,7 +63,7 @@
         <field name="inherit_id" ref="product.product_normal_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='purchase_ok']" postion="after">
-                <field name="product_addon_line_ids" invisible="1"/>
+                <!-- <field name="product_addon_line_ids" invisible="1"/> -->
                 <field name="has_attr" invisible="1"/>
             </xpath>
         </field>

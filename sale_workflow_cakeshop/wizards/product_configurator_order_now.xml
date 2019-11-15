@@ -34,7 +34,7 @@
                                     <field name="product_addon_lines" mode="tree">
                                         <tree string="Addon Lines" editable="bottom">
                                             <field name="sequence" widget="handle"/>
-                                            <field name="product_id" string="Extra Addons" options="{&quot;always_reload&quot;: True, &quot;no_quick_create&quot;: True, &quot;no_create&quot;: True}"/>
+                                            <field name="addon_id" string="Extra Addons" options="{&quot;always_reload&quot;: True, &quot;no_quick_create&quot;: True, &quot;no_create&quot;: True}"/>
                                             <field name="quantity"/>
                                             <field name="unit_price"/>
                                             <field name="amount"/>

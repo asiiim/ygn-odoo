@@ -53,4 +53,4 @@ class ProductProduct(models.Model):
     is_custom = fields.Boolean(related="product_tmpl_id.is_custom")
     has_attr = fields.Boolean('Has Attribute', related="product_tmpl_id.has_attr", store=True)
     
-    product_addon_line_ids = fields.One2many('product.addons.line', 'product_id', string='Addon Lines', copy=True, auto_join=True)
+    # product_addon_line_ids = fields.One2many('product.addons.line', 'product_id', string='Addon Lines', copy=True, auto_join=True)

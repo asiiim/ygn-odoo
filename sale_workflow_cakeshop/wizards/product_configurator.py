@@ -138,7 +138,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             notes += "\n\nAddons:\n"
             for addon in self.product_addon_lines:
                 notes += "- "
-                notes += addon.product_id.name
+                notes += addon.addon_id.name
                 notes += " x" + str(int(addon.quantity))
                 notes += "\n"
 
@@ -223,11 +223,11 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         if self.product_addon_lines:
             for addon in self.product_addon_lines:
                 orderline_desc += " | "
-                orderline_desc += addon.product_id.name
+                orderline_desc += addon.addon_id.name
                 
                 addon_price += addon.amount
                 
-                addon_details += "<li>" + str(addon.product_id.name) + " x" + str(addon.quantity) + " @" + str(addon.unit_price) + " = " + str(addon.amount) + "/-<br/>"
+                addon_details += "<li>" + str(addon.addon_id.name) + " x" + str(addon.quantity) + " @" + str(addon.unit_price) + " = " + str(addon.amount) + "/-<br/>"
                     
             self.price_unit *= self.product_uom_qty
             self.price_unit += addon_price
@@ -346,13 +346,13 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
 class ProductAddonsLine(models.TransientModel):
     _name = "product.addons.line"
     _description = 'Product Addon Line'
-    _order = 'product_id, sequence, id'
+    _order = 'addon_id, sequence, id'
     
     sequence = fields.Integer(string='Sequence', default=10)
     product_config_soko = fields.Many2one('product.configurator.ordernow.ko', string="Product Config SOKO")
-    product_id = fields.Many2one('product.product', string="Addon", domain="[('is_addon', '=', True), ('sale_ok', '=', True)]", default=lambda self: self.env['product.product'].search([('is_addon', '=', True), ('sale_ok', '=', True)], limit=1), ondelete='restrict', required=True)
+    addon_id = fields.Many2one('product.product', string="Addon", domain="[('is_addon', '=', True), ('sale_ok', '=', True)]", ondelete='restrict', required=True, oldname="product_id")
     quantity = fields.Float(string='Qty', default=1.0)
-    uom_id = fields.Many2one(related="product_id.uom_id", string="UOM")
+    uom_id = fields.Many2one(related="addon_id.uom_id", string="UOM")
     unit_price = fields.Float(string='Rate', required=True)
     amount = fields.Float(string='Amount', compute="_compute_addon_amount")
 
@@ -365,9 +365,9 @@ class ProductAddonsLine(models.TransientModel):
                 addon.amount = 0.0
 
     @api.multi
-    @api.onchange('product_id')
+    @api.onchange('addon_id')
     def get_product_unit_price(self):
 
         vals = {}
-        vals['unit_price'] = self.product_id.list_price
+        vals['unit_price'] = self.addon_id.list_price
         self.update(vals)
