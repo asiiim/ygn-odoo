@@ -257,7 +257,10 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     @api.multi
     def action_order_config_done(self):
         """Parse values and execute final code before closing the wizard"""
-        # Create Order)
+
+        # Check if advance payment is greater than the total amount
+        if self.amount > self.price_total:
+            raise UserError(_("The Advance Amount exceeds the Total Amount.\nMake it equal to Total Amount !"))
 
         # Check if product template exists
         if not self.product_tmpl_id:
