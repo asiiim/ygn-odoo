@@ -34,6 +34,7 @@
                                     <strong><field name="total_due_amount"/></strong>
                                 </h2>
                             </div>
+                            <field name="journal_id" required="1"/>
                             <label for="tender_amount" string="Tender"/>
                             <div class="oe_title">
                                 <h1>

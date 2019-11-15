@@ -20,6 +20,12 @@
                                         <field name="order_id" readonly="1"/>
                                         <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}"/>
                                         <field name="product_tmpl_id" attrs="{'readonly': [('product_id', '!=', False)]}" options="{'no_create': True}" invisible="1"/>
+                                        <label for="product_uom_qty" string="Pound(s)"/>
+                                        <div class="oe_title">
+                                            <h2>
+                                                <strong><field name="product_uom_qty"/></strong>
+                                            </h2>
+                                        </div>
                                         <field name="order_message_id"/>
                                         <field name="name_for_message" string="Name(in message)"/>
                                         <field name="ko_notes_ids" widget="many2many_tags"/>
@@ -65,12 +71,6 @@
                                 </h3>
                             </div>
 
-                            <label for="product_uom_qty" string="Pound(s)"/>
-                            <div class="oe_title">
-                                <h2>
-                                    <strong><field name="product_uom_qty"/></strong>
-                                </h2>
-                            </div>
                             <field name="discount" attrs="{'invisible': [('fix_discount', '&gt;', 0)]}"/>
                             <field name="fix_discount" attrs="{'invisible': [('discount', '&gt;', 0)]}"/>
                             <label for="amount" string="Advance"/>

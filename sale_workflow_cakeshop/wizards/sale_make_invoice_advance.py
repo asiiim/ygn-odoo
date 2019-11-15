@@ -18,6 +18,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
     # take tender amount
     tender_amount = fields.Float(string='Tender', compute="_take_tender")
     tender_amount_char = fields.Char(string="Tender")
+    journal_id = fields.Many2one('account.journal', string='Payment Journal', domain=[('type', 'in', ('bank', 'cash'))], default=lambda self: self.env['account.journal'].search([('type', '=', 'cash')], limit=1))
 
     @api.depends('tender_amount_char')
     def _take_tender(self):
@@ -69,39 +70,36 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'change_amount': self.change_amount
         })
         self.create_invoices()
-
-        # validate the invoice
-        for record in self.env['account.invoice'].search([('origin', '=', str(order.name))]):
-            if record.state != 'draft':
-                raise UserError(_("Selected invoice(s) cannot be confirmed as they are not in 'Draft' state."))
-            record.action_invoice_open()
+        invoice = order.invoice_ids.filtered(lambda inv: inv.amount_total_signed > 0 and inv.state == 'draft')[0]
         
-        # register the payment
-        advance_payment = self.env['account.payment'].search([('id', '=', order.payment_id.id)])
-        credit_aml = advance_payment.move_line_ids.filtered(lambda aml: aml.credit > 0)
+        if invoice and not invoice.action_invoice_open():
+            raise UserError(_("Invoice could not be validated, you can review them before validation."))
+        
+        # Reconcile advance payment
+        if order.payment_id:
+            credit_aml = order.payment_id.move_line_ids.filtered(lambda aml: aml.credit > 0)
+            invoice.assign_outstanding_credit(credit_aml.id)
 
-        invoice = order.invoice_ids.filtered(lambda inv: inv.amount_total_signed > 0)
-        invoice.assign_outstanding_credit(credit_aml.id)
+        # Register the payment
+        if self.total_due_amount > 0.0:
+            payment_methods = self.journal_id.inbound_payment_method_ids
+            payment_method_id = payment_methods and payment_methods[0] or False
 
-        journal = self.env['account.journal'].search([('type', '=', 'cash')], limit=1)
-        payment_methods = journal.inbound_payment_method_ids
-        payment_method_id = payment_methods and payment_methods[0] or False
+            payment_vals = {
+                'payment_method_id': payment_method_id.id,
+                'payment_type': 'inbound',
+                'partner_type': 'customer',
+                'partner_id': order.partner_id.id,
+                'amount': self.total_due_amount,
+                'journal_id': self.journal_id.id,
+                'payment_date': self.payment_date,
+                'communication': 'Total Due Payement for order no %s' % order.name,
+                'company_id': order.company_id.id,
+                'invoice_ids': [(4, invoice.id)]
+            }
 
-        payment_vals = {
-            'payment_method_id': payment_method_id.id,
-            'payment_type': 'inbound',
-            'partner_type': 'customer',
-            'partner_id': order.partner_id.id,
-            'amount': self.total_due_amount,
-            'journal_id': journal.id,
-            'payment_date': self.payment_date,
-            'communication': 'Total Due Payement for order no %s' % order.name,
-            'company_id': order.company_id.id,
-            'invoice_ids': [(4, invoice.id)]
-        }
-
-        payment_obj = self.env['account.payment']
-        payment = payment_obj.create(payment_vals)
-        payment.post()
-        self.payment_id = payment
+            payment_obj = self.env['account.payment']
+            payment = payment_obj.create(payment_vals)
+            payment.post()
+            self.payment_id = payment
 
