@@ -49,18 +49,21 @@ class SaleChangeAdvance(models.TransientModel):
         if self.adv_amount and self.adv_amount > self.so_id.amount_total:
             raise UserError(_("The Advance Amount exceeds the Total Amount.\nMake it equal to Total Amount !"))
 
+        # Check if the advance payment has been selected in payment_id
+        if self.payment_id:
+            # Check if payment has already been matched
+            if self.payment_id.move_reconciled:
+                raise UserError('This payment has already been matched. Please select another payment!!!')
+            payment = self.payment_id
+        else:
+            Payment = self.env['account.payment']
+            payment = Payment.create(self._prepare_payment())
+            payment.post()
+        
         # Return the advance amount
         if self.so_id.payment_id:
             return_payment = self.so_id.cancel_advance_payment()
 
-        # Check if the advance payment has been selected in payment_id
-        if self.payment_id:
-            payment = self.payment_id
-        else:
-            _logger.warning("Else Inside payment")
-            Payment = self.env['account.payment']
-            payment = Payment.create(self._prepare_payment())
-            payment.post()
         # Assign new payment
         self.so_id.payment_id = payment
         # Open payment matching screen if it was edit advance
