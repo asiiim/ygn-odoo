@@ -27,7 +27,7 @@
                     </group>
                 </sheet>
                 <footer>
-                    <!-- <button type="button" class="oe_highlight" string="Close"/> -->
+                    <button string="Close" class="oe_link" special="cancel" />
                 </footer>
             </form>
         </field>
