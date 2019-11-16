@@ -26,7 +26,7 @@
                                                 <strong><field name="product_uom_qty"/></strong>
                                             </h2>
                                         </div>
-                                        <field name="order_message_id"/>
+                                        <field name="order_message_id" options="{&quot;no_quick_create&quot;: True}"/>
                                         <field name="name_for_message" string="Name(in message)"/>
                                         <field name="ko_notes_ids" widget="many2many_tags"/>
                                         <field name="ko_note" string="Other Notes"/>
