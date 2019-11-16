@@ -6,6 +6,7 @@
         <field name="arch" type="xml">
             <form string="Change Advance Amount">
                 <group>
+                    <field name="is_adv_sel" invisible="1"/>
                     <field name="add_advance" readonly="1" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="so_id" readonly="1" invisible="1"/>
@@ -13,13 +14,20 @@
                     <div attrs="{'invisible': [('add_advance', '=', False)]}">
                         <p>Either use advance payment for linking already created payment by filling up Advance Payment field or create one.</p>
                     </div>
-                    <field name="payment_id" options="{'no_create': True, 'no_open': True}" domain="[('partner_id','=',partner_id),('payment_type', '=', 'inbound'),('state','in',('sent','posted'))]" attrs="{'invisible': [('add_advance', '=', False)]}"/>
-                    <field name="adv_amount"/>
-                    <field name="journal_id"/>
-                    <field name="payment_date"/>
+                    <field name="payment_id" options="{'no_create': True, 'no_open': True}" domain="[('partner_id','=',partner_id),('payment_type', '=', 'inbound'),('state','in',('sent','posted')), ('move_reconciled', '=', False)]" attrs="{'invisible': [('add_advance', '=', False)]}"/>
+                    <field name="adv_amount" attrs="{'invisible': [('is_adv_sel', '=', True)]}"/>
+                    <field name="journal_id" attrs="{'invisible': [('is_adv_sel', '=', True)]}"/>
+                    <field name="payment_date" attrs="{'invisible': [('is_adv_sel', '=', True)]}"/>
                     <footer>
                         <button name="change_advance" string="Confirm" type="object" class="btn btn-primary"/>
                     </footer>
+                </group>
+                <group name="selected_adv_info" string="Advance Details" attrs="{'invisible': [('is_adv_sel', '=', False)]}">
+                    <field name="sel_adv_date"/>
+                    <field name="sel_adv_amt"/>
+                    <field name="currency_id" invisible="1" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
+                    <field name="sel_pay_journ"/>
+                    <field name="sel_adv_memo"/>
                 </group>
             </form>
         </field>
