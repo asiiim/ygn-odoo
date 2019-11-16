@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_change_advance_form" model="ir.ui.view">
+        <field name="name">sale.change.advance.form</field>
+        <field name="model">sale.change.advance</field>
+        <field name="arch" type="xml">
+            <form string="Change Advance Amount">
+                <group>
+                    <field name="adv_amount"/>
+                    <field name="journal_id"/>
+                    <field name="payment_date"/>
+                    <footer>
+                        <button name="change_advance" string="Confirm" type="object" class="btn btn-primary"/>
+                    </footer>
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>

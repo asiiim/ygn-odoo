@@ -127,3 +127,62 @@ class SaleOrder(models.Model):
                 wizard_model='product.configurator.ordernow.ko',
             ),
         }
+
+    # Cancel the advance payment
+    is_advance = fields.Boolean('Advance', compute='_compute_if_advance')
+
+    @api.depends('payment_id')
+    def _compute_if_advance(self):
+        for so in self:
+            if so.payment_id:
+                self.is_advance = True
+            else:
+                self.is_advance = False
+    
+    @api.multi
+    def _prepare_return_payment(self):
+        """
+        Prepare the dict of values to create the return payment for a paid advance.
+        """
+        self.ensure_one()
+        payment_methods = self.payment_id.journal_id.outbound_payment_method_ids
+        payment_method_id = payment_methods and payment_methods[0] or False
+        payment_return_vals = {
+            'payment_method_id': payment_method_id.id,
+            'payment_type': 'outbound',
+            'partner_type': 'customer',
+            'partner_id': self.partner_id.id,
+            'amount': self.payment_id.amount,
+            'journal_id': self.payment_id.journal_id.id,
+            'payment_date': self.payment_id.payment_date,
+            'communication': 'Return Advance Payement to for order no %s' % self.name,
+            'company_id': self.company_id.id
+        }
+        return payment_return_vals
+
+    @api.multi
+    def cancel_advance_payment(self):
+        # Create Payment if any
+        if self.payment_id:
+            Payment = self.env['account.payment']
+            payment = Payment.create(self._prepare_return_payment())
+            payment.post()
+            self.payment_id = None
+
+    @api.multi
+    def edit_advance_payment(self):
+        
+        sale_change_advance_view_id = self.env.ref('sale_workflow_cakeshop.sale_change_advance_form').id
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.change.advance',
+            'name': "Change Advance Amount",
+            'view_mode': 'form',
+            'view_id': sale_change_advance_view_id,
+            'target': 'new',
+            'context': dict(
+                self.env.context,
+                default_so_id=self.id,
+                wizard_model='sale.change.advance'
+            )
+        }

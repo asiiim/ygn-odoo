@@ -39,10 +39,14 @@
             </field>
             <field name="amount_total" position="after">
                 <field name="delivery_validated" invisible="1"/>
+                <field name="is_advance" invisible="1"/>
                 <field name="advance_payment"/>
                 <field name="tender_amount" attrs="{'invisible': [('amount_due', '!=', 0.0)]}"/>
                 <field name="change_amount" attrs="{'invisible': [('amount_due', '!=', 0.0)]}"/>
                 <field name="amount_due" class="oe_subtotal_footer_separator"/>
+                <button name="edit_advance_payment" class="btn-primary" string="Edit Advance" type="object" attrs="{'invisible': [('is_advance', '=', False)]}" groups="sales_team.group_sale_manager"/>
+                <button name="cancel_advance_payment" string="Cancel Advance" type="object" attrs="{'invisible': [('is_advance', '=', False)]}" groups="sales_team.group_sale_manager"/>
+                <button name="edit_advance_payment" class="btn-primary" string="Add Advance" type="object" attrs="{'invisible': [('is_advance', '=', True)]}" groups="sales_team.group_sale_manager"/>
             </field>
         </field>
     </record>
