@@ -186,3 +186,21 @@ class SaleOrder(models.Model):
                 wizard_model='sale.change.advance'
             )
         }
+
+    @api.multi
+    def add_advance_payment(self): 
+        sale_change_advance_view_id = self.env.ref('sale_workflow_cakeshop.sale_change_advance_form').id
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.change.advance',
+            'name': "Add Advance Amount",
+            'view_mode': 'form',
+            'view_id': sale_change_advance_view_id,
+            'target': 'new',
+            'context': dict(
+                self.env.context,
+                default_so_id=self.id,
+                default_add_advance = True,
+                wizard_model='sale.change.advance'
+            )
+        }

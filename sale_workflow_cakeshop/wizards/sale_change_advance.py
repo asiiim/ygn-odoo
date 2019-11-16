@@ -18,6 +18,8 @@ class SaleChangeAdvance(models.TransientModel):
     journal_id = fields.Many2one('account.journal', string='Payment Journal', domain=[('type', 'in', ('bank', 'cash'))], default=lambda self: self.env['account.journal'].search([('type', '=', 'cash')], limit=1))
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False)
+    payment_id = fields.Many2one(comodel_name='account.payment', domain=[('payment_type', '=', 'inbound')], string="Advance Payment")
+    add_advance = fields.Boolean(string='Advance', readonly=True, default=False)
 
     @api.multi
     def _prepare_payment(self):
@@ -42,17 +44,24 @@ class SaleChangeAdvance(models.TransientModel):
 
     @api.multi
     def change_advance(self):
-        if self.adv_amount:
+        # Check if advance payment is greater than the total amount
+        if self.adv_amount and self.adv_amount > self.so_id.amount_total:
+            raise UserError(_("The Advance Amount exceeds the Total Amount.\nMake it equal to Total Amount !"))
 
-            # Check if advance payment is greater than the total amount
-            if self.adv_amount > self.so_id.amount_total:
-                raise UserError(_("The Advance Amount exceeds the Total Amount.\nMake it equal to Total Amount !"))
+        # Return the advance amount
+        if self.so_id.payment_id:
+            _logger.warning("Inside Cancel")
+            self.so_id.cancel_advance_payment()
 
+        # Check if the advance payment has been selected in payment_id
+        if self.payment_id:
+            _logger.warning("Inside payment")
             # Return the advance amount
-            if self.so_id.is_advance:
-                self.so_id.cancel_advance_payment()
-
+            _logger.warning(self.payment_id)
+            payment = self.payment_id
+        else:
+            _logger.warning("Else Inside payment")
             Payment = self.env['account.payment']
             payment = Payment.create(self._prepare_payment())
             payment.post()
-            self.so_id.payment_id = payment
+        self.so_id.payment_id = payment

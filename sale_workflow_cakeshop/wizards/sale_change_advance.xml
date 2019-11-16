@@ -6,6 +6,11 @@
         <field name="arch" type="xml">
             <form string="Change Advance Amount">
                 <group>
+                    <field name="add_advance" readonly="1" invisible="1"/>
+                    <div attrs="{'invisible': [('add_advance', '=', False)]}">
+                        <p>Either use advance payment for linking already created payment by filling up Advance Payment field or create one.</p>
+                    </div>
+                    <field name="payment_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('add_advance', '=', False)]}"/>
                     <field name="adv_amount"/>
                     <field name="journal_id"/>
                     <field name="payment_date"/>
