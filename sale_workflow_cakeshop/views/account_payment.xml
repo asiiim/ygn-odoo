@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ygen_view_account_payment_search" model="ir.ui.view">
+        <field name="name">ygen.account.payment.search</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_search"/>
+        <field name="arch" type="xml">
+            <field name="journal_id" position="after">
+                <field name="move_reconciled"/>
+                <filter name="move_reconciled_filter" string="Unmatch Payments" domain="[('move_reconciled','=',False)]"/>
+            </field>
+        </field>
+    </record>
+    <record id="ygen_view_account_payment_tree" model="ir.ui.view">
+        <field name="name">ygen.account.payment.tree</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="communication"/>
+            </field>
+        </field>
+    </record>
+    <record id="account.action_account_payments" model="ir.actions.act_window">
+        <field name="name">Payments</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form,graph</field>
+        <field name="context">{'default_payment_type': 'inbound', 'default_partner_type': 'customer', 'search_default_move_reconciled_filter': 1}</field>
+        <field name="domain">[]</field>
+        <field name="view_id" ref="account.view_account_payment_tree"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to register a payment
+            </p><p>
+                Payments are used to register liquidity movements (send, collect or transfer money).
+                You can then process those payments by your own means or by using installed facilities.
+            </p>
+        </field>
+    </record>
+</odoo>
