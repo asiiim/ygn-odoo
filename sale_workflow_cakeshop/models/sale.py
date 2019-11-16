@@ -162,12 +162,14 @@ class SaleOrder(models.Model):
 
     @api.multi
     def cancel_advance_payment(self):
-        # Create Payment if any
+        # Create return Payment if any
         if self.payment_id:
             Payment = self.env['account.payment']
             payment = Payment.create(self._prepare_return_payment())
             payment.post()
+            # Open payment matching screen
             self.payment_id = None
+            return payment.open_payment_matching_screen()
 
     @api.multi
     def edit_advance_payment(self):

@@ -14,11 +14,12 @@ class SaleChangeAdvance(models.TransientModel):
     _name = 'sale.change.advance'
 
     so_id = fields.Many2one('sale.order', string="Sale Order")
+    partner_id = fields.Many2one('res.partner', related='so_id.partner_id',readonly=True)
     adv_amount = fields.Float(string='New Advance Amount', required=True, default=0)
     journal_id = fields.Many2one('account.journal', string='Payment Journal', domain=[('type', 'in', ('bank', 'cash'))], default=lambda self: self.env['account.journal'].search([('type', '=', 'cash')], limit=1))
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False)
-    payment_id = fields.Many2one(comodel_name='account.payment', domain=[('payment_type', '=', 'inbound')], string="Advance Payment")
+    payment_id = fields.Many2one(comodel_name='account.payment', domain=[('payment_type', '=', 'inbound'),('state','in',('sent','posted'))], string="Advance Payment")
     add_advance = fields.Boolean(string='Advance', readonly=True, default=False)
 
     @api.multi
@@ -50,18 +51,18 @@ class SaleChangeAdvance(models.TransientModel):
 
         # Return the advance amount
         if self.so_id.payment_id:
-            _logger.warning("Inside Cancel")
-            self.so_id.cancel_advance_payment()
+            return_payment = self.so_id.cancel_advance_payment()
 
         # Check if the advance payment has been selected in payment_id
         if self.payment_id:
-            _logger.warning("Inside payment")
-            # Return the advance amount
-            _logger.warning(self.payment_id)
             payment = self.payment_id
         else:
             _logger.warning("Else Inside payment")
             Payment = self.env['account.payment']
             payment = Payment.create(self._prepare_payment())
             payment.post()
+        # Assign new payment
         self.so_id.payment_id = payment
+        # Open payment matching screen if it was edit advance
+        if not self.add_advance:
+            return return_payment

@@ -7,10 +7,13 @@
             <form string="Change Advance Amount">
                 <group>
                     <field name="add_advance" readonly="1" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="so_id" readonly="1" invisible="1"/>
+                    <field name="partner_id" readonly="1" invisible="1"/>
                     <div attrs="{'invisible': [('add_advance', '=', False)]}">
                         <p>Either use advance payment for linking already created payment by filling up Advance Payment field or create one.</p>
                     </div>
-                    <field name="payment_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('add_advance', '=', False)]}"/>
+                    <field name="payment_id" options="{'no_create': True, 'no_open': True}" domain="[('partner_id','=',partner_id)]" attrs="{'invisible': [('add_advance', '=', False)]}"/>
                     <field name="adv_amount"/>
                     <field name="journal_id"/>
                     <field name="payment_date"/>
