@@ -17,6 +17,9 @@ good for processing one product at a time.
     'installable': True,
     'application': True,
     'auto_install': False,
+    # price
+    'price': 1500.00,
+    'currency': 'EUR',
     'depends': ['sale', 'stock', 'account_payment', 'kitchen_order', 'kitchen_order_note', 'ygen_partner_delivery_zone'],
     'data': [
         'views/sale_views.xml',
