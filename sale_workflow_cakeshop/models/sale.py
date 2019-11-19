@@ -43,10 +43,11 @@ class SaleOrder(models.Model):
 
     @api.multi
     def validate_picking(self):
-        stock_picking = self.env['stock.picking'].search([('origin', '=', self.name), ('state', '!=', 'cancel')], limit=1)
-        stock_picking.button_validate()
-        if stock_picking.state == "done":
-            self.write({'delivery_validated': True})
+        for so in self:
+            stock_picking = self.env['stock.picking'].search([('origin', '=', so.name), ('state', '!=', 'cancel')], limit=1)
+            stock_picking.button_validate()
+            if stock_picking.state == "done":
+                so.write({'delivery_validated': True})
 
     # Tender and Change
     tender_amount = fields.Monetary(string='Tender', track_visibility='always', default=0.0)
@@ -128,7 +129,7 @@ class SaleOrder(models.Model):
             ),
         }
 
-    # Cancel the advance payment
+    # Add, Edit or Cancel the advance payment
     is_advance = fields.Boolean('Advance', compute='_compute_if_advance')
 
     @api.depends('payment_id')
