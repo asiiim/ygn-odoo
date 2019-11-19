@@ -346,6 +346,56 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             msg += str(orderline_vals.get('addon_details'))
             self.order_id.message_post(body=msg)
 
+    @api.multi
+    def action_new_order_config_done(self):
+        """Parse values and execute final code before closing the wizard"""
+
+        # Check if advance payment is greater than the total amount
+        if self.amount > self.price_total:
+            raise UserError(_("The Advance Amount exceeds the Total Amount.\nMake it equal to Total Amount !"))
+
+        # Check if product template exists
+        if not self.product_tmpl_id:
+            self.product_tmpl_id = self.product_id.product_tmpl_id
+
+        # Check if manual price is less than the computed unit price
+        if self.manual_price and self.manual_price < self.price_unit:
+            raise UserError(_('Manual price cannot be set less than the Standard Price.\n Please check Manual Price again !'))
+
+        SaleOrder = self.env['sale.order']
+        sale_order = SaleOrder.create(self._prepare_order())
+        sale_order.action_confirm()
+        self.order_id = sale_order
+
+        # Attach sale order line
+        line_vals = self._get_order_line_vals(self.product_id.id)
+        self.order_id.write({'order_line': [(0, 0, line_vals)]})
+        
+        # Create Kitchen Order
+        KitchenOrder = self.env['kitchen.order']
+        KitchenOrder.create(self._prepare_kitchen_order())
+        
+        # Create Payment if any
+        if self.amount:
+            Payment = self.env['account.payment']
+            payment = Payment.create(self._prepare_payment())
+            payment.post()
+            self.payment_id = payment
+            sale_order.payment_id = payment
+
+        # Log the sale order details in the chatter
+        orderline_vals = self._get_order_line_vals(self.product_id.id)
+        msg = "<b>Order Details</b><br/>"
+        msg += "<li>Product: " + str(orderline_vals.get('name')) + "<br/>"
+        msg += "<li>Qty: " + str(orderline_vals.get('product_uom_qty')) + " " + str(orderline_vals.get('uom_name')) + "<br/>"
+        msg += "<br/><b>Addons Details</b><br/>"
+        msg += str(orderline_vals.get('addon_details'))
+        self.order_id.message_post(body=msg)
+
+        # Call Order now view again
+        return self.product_tmpl_id.action_order_now()
+        
+
 class ProductAddonsLine(models.TransientModel):
     _name = "product.addons.line"
     _description = 'Product Addon Line'

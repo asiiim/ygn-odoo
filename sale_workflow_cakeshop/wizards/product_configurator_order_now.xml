@@ -90,7 +90,8 @@
                     </group>
                 </sheet>
                 <footer>
-                    <button type="object" name="action_order_config_done" class="oe_highlight" string="Order Now"/>
+                    <button type="object" name="action_order_config_done" class="oe_highlight" string="Order and Close"/>
+                    <button type="object" name="action_new_order_config_done" class="oe_highlight" string="Order and New"/>
                 </footer>
             </form>
         </field>
@@ -136,6 +137,7 @@
                     </h2>
                 </div>
             </div>
+            <button name="action_new_order_config_done" position="replace"></button>
         </field>
     </record>
 
