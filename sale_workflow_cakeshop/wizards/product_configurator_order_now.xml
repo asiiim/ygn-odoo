@@ -18,7 +18,7 @@
                                 <page name="general" string="General">
                                     <group>
                                         <field name="order_id" readonly="1"/>
-                                        <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}"/>
+                                        <field name="product_id" options="{'no_create': True, 'no_create_edit': True}"/>
                                         <field name="product_tmpl_id" attrs="{'readonly': [('product_id', '!=', False)]}" options="{'no_create': True}" invisible="1"/>
                                         <label for="product_uom_qty" string="Pound(s)"/>
                                         <div class="oe_title">
@@ -137,5 +137,16 @@
                 </div>
             </div>
         </field>
+    </record>
+
+    <!--Action to order now-->
+    <record id="action_order_now" model="ir.actions.act_window">
+      <field name="name">Order Now</field>
+      <field name="res_model">product.configurator.ordernow.ko</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="product_configurator_ordernow_ko_form"/>
+      <field name="target">new</field>
     </record>
 </odoo>
