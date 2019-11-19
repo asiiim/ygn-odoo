@@ -114,9 +114,6 @@
                                     
                                     <strong>Product:</strong>
                                     <p t-field="o.product_id"/>
-                                    
-                                    <!-- <strong>Product Details:</strong>
-                                    <p t-field="o.product_description"/> -->
 
                                     <strong>KO Note:</strong>
                                     <p t-field="o.ko_note"/>

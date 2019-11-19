@@ -135,7 +135,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         if self.ko_note:
             notes += self.ko_note
         if self.product_addon_lines:
-            notes += "\n\nAddons:\n"
+            notes += "\nAddons:\n"
             for addon in self.product_addon_lines:
                 notes += "- "
                 notes += addon.addon_id.name
