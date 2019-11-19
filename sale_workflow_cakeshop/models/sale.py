@@ -45,9 +45,9 @@ class SaleOrder(models.Model):
     def validate_picking(self):
         for so in self:
             stock_picking = self.env['stock.picking'].search([('origin', '=', so.name), ('state', '!=', 'cancel')], limit=1)
-            stock_picking.button_validate()
-            if stock_picking.state == "done":
-                so.write({'delivery_validated': True})
+            if stock_picking.state not in ["done", "cancel"]:
+                stock_picking.button_validate()
+            so.write({'delivery_validated': True})
 
     # Tender and Change
     tender_amount = fields.Monetary(string='Tender', track_visibility='always', default=0.0)
