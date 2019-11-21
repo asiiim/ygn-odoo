@@ -3,53 +3,51 @@
     <data>
         <!-- Kitchen Order Detail Template -->
         <template id="report_kitchen_order_document">
-            <t t-name="kitchen_order.report_kitchen_order_document">
-                <t t-call="web.basic_layout">
-                    <t t-set="doc" t-value="doc.with_context()"/>
-                    <div class="page" style="font-size:22px;">
-                        <div class="oe_structure"/>
-                        <div class="row">
-                            <div class="row mt32 mb32" id="order-informations">
-                                <div class="col-xs-5">
-                                    <div t-if="doc.name">
-                                        <strong>Order No.: </strong><span t-field="doc.name"/>
-                                    </div><br/>
-                                    <div t-if="doc.product_id">
-                                        <strong>Product: </strong><span t-field="doc.product_id"/>
-                                    </div>
-                                    <div t-if="doc.product_uom_qty">
-                                        <strong>Qty(Pounds): </strong>
-                                        <span t-field="doc.product_uom_qty"/>
-                                        <span t-field="doc.uom"/>
-                                    </div><br/>
-                                    <div t-if="doc.create_date">
-                                        <strong>KO Date: </strong><span t-field="doc.create_date" t-field-options='{"format": "MM/dd/y h:mm a"}'/><br/>
-                                    </div>
-                                    <div t-if="doc.requested_date">
-                                        <strong>Delivery Date: </strong><span t-field="doc.requested_date" t-field-options='{"format": "MM/dd/y h:mm a"}'/><br/>
-                                    </div>
+            <t t-call="web.basic_layout">
+                <t t-set="doc" t-value="doc.with_context()"/>
+                <div class="page" style="font-size:22px;">
+                    <div class="oe_structure"/>
+                    <div class="row">
+                        <div class="row mt32 mb32" id="order-informations">
+                            <div class="col-xs-4">
+                                <div t-if="doc.name">
+                                    <strong>KO No.: </strong><span t-field="doc.name"/>
+                                </div><br/>
+                                <div t-if="doc.saleorder_id">
+                                    <strong>Sale Order: </strong><span t-field="doc.saleorder_id.name"/>
+                                </div><br/>
+                                <div t-if="doc.create_date">
+                                    <strong>KO Date: </strong><span t-field="doc.create_date" t-field-options="{&quot;format&quot;: &quot;MM/dd/y h:mm a&quot;}"/><br/>
                                 </div>
-                                <div class="col-xs-4">
-                                    <div t-if="doc.saleorder_id">
-                                        <strong>Sale Order: </strong><span t-field="doc.saleorder_id.name"/>
-                                    </div><br/>
-                                    <div t-if="doc.message">
-                                        <strong>Message:</strong>
-                                        <p t-field="doc.message"/>
-                                    </div>
-                                    <div t-if="doc.create_date">
-                                        <strong>KO Note:</strong>
-                                        <p t-field="doc.ko_note"/>
-                                    </div>
+                                <div t-if="doc.requested_date">
+                                    <strong>Delivery Date: </strong><span t-field="doc.requested_date" t-field-options="{&quot;format&quot;: &quot;MM/dd/y h:mm a&quot;}"/><br/>
                                 </div>
-                                <div t-if="doc.image" class="col-xs-3">
+                            </div>
+                            <div class="col-xs-8">
+                                <div t-if="doc.product_id">
+                                    <strong>Product: </strong><span t-field="doc.product_id"/>
+                                </div>
+                                <div t-if="doc.product_uom_qty">
+                                    <strong>Qty: </strong>
+                                    <span t-field="doc.product_uom_qty"/>
+                                    <span t-field="doc.uom"/>
+                                </div><br/>
+                                <div t-if="doc.message">
+                                    <strong>Message:</strong>
+                                    <p t-field="doc.message"/>
+                                </div>
+                                <div t-if="doc.create_date">
+                                    <strong>KO Note:</strong>
+                                    <p t-field="doc.ko_note"/>
+                                </div>
+                                <div t-if="doc.image">
                                     <img style="max-width:70%; height:auto;" t-if="doc.image" t-att-src="'data:image/png;base64,%s' % to_text(doc.image)"/>
                                 </div>
                             </div>
                         </div>
-                        <div class="oe_structure"/>
                     </div>
-                </t>
+                    <div class="oe_structure"/>
+                </div>
             </t>
         </template>
 
@@ -75,21 +73,22 @@
                                             <p t-field="o.name"/>
                                             <strong>Sale Order: </strong>
                                             <p t-field="o.saleorder_id.name"/>
+                                            <strong>KO Date:</strong>
+                                            <p t-field="o.create_date" t-field-options='{"format": "MM/dd/y h:mm a"}'/>
+                                        </div>
+                                        <div class="col-xs-3" style="border-right:1px solid #000; padding:2px 5px;">
+                                            <strong>Delivery Date:</strong>
+                                            <p t-field="o.requested_date" t-field-options='{"format": "MM/dd/y h:mm a"}'/>
+                                            
+                                            <strong>Product:</strong>
+                                            <p t-field="o.product_id"/>
+                                            
                                             <strong>Ordered Qty: </strong>
                                             <p>
                                                 <span t-field="o.product_uom_qty"/>
                                                 <span t-field="o.uom"/>
                                             </p>
-                                        </div>
-                                        <div class="col-xs-3" style="border-right:1px solid #000; padding:2px 5px;">
-                                            <strong>Product:</strong>
-                                            <p t-field="o.product_id"/>
-                                            
-                                            <strong>KO Date:</strong>
-                                            <p t-field="o.create_date" t-field-options='{"format": "MM/dd/y h:mm a"}'/>
 
-                                            <strong>Delivery Date:</strong>
-                                            <p t-field="o.requested_date" t-field-options='{"format": "MM/dd/y h:mm a"}'/>
                                         </div>
                                         <div class="col-xs-5" style="border-right:1px solid #000; padding:2px 5px;">
                                             <!-- <strong>Product Details:</strong>
