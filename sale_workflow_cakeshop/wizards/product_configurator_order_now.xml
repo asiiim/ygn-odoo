@@ -151,4 +151,26 @@
       <field name="view_id" ref="product_configurator_ordernow_ko_form"/>
       <field name="target">new</field>
     </record>
+
+    <!-- Product Order Details Wizard View -->
+    <record id="product_configurator_order_details_form" model="ir.ui.view">
+        <field name="name">product.configurator.ordernow.detail_form</field>
+        <field name="model">product.order.desc</field>
+        <field name="arch" type="xml">
+            <form string="Order Description">
+                <sheet>
+                    <group>
+                        <field name="config_ko_id" invisible="1"/>
+                        <field name="so_id" readonly="1"/>
+                        <field name="ko_ids" readonly="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button type="object" name="print_order" class="btn-primary oe_highlight" string="Print"/>
+                    <button type="object" name="new_order" class="btn-secondary oe_highlight" string="Close and New"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
 </odoo>

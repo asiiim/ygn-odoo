@@ -346,6 +346,24 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             msg += str(orderline_vals.get('addon_details'))
             self.order_id.message_post(body=msg)
 
+    # To Trigger order details wizard view 
+    @api.multi
+    def view_order_description(self):
+        sale_order_view_id = self.env.ref('sale_workflow_cakeshop.product_configurator_order_details_form').id
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.order.desc',
+            'name': "Order Description",
+            'view_mode': 'form',
+            'view_id': sale_order_view_id,
+            'target': 'new',
+            'context': dict(
+                self.env.context,
+                default_config_ko_id=self.id,
+                wizard_model='product.order.desc'
+            )
+        }
+    
     @api.multi
     def action_new_order_config_done(self):
         """Parse values and execute final code before closing the wizard"""
@@ -392,23 +410,8 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         msg += str(orderline_vals.get('addon_details'))
         self.order_id.message_post(body=msg)
 
-        # Call Order now view again
-        new_order_configurator_view_id = self.env.ref('sale_workflow_cakeshop.product_configurator_ordernow_ko_form').id
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'product.configurator.ordernow.ko',
-            'name': "New Order Configurator",
-            'view_mode': 'form',
-            'view_id': new_order_configurator_view_id,
-            'target': 'new',
-            'context': dict(
-                self.env.context,
-                default_product_tmpl_id=None,
-                default_product_id=None,
-                wizard_model='product.configurator.ordernow.ko',
-            )
-        }
-        
+        # Ask to print the order/kitchen order
+        return self.view_order_description()
 
 class ProductAddonsLine(models.TransientModel):
     _name = "product.addons.line"
@@ -438,3 +441,36 @@ class ProductAddonsLine(models.TransientModel):
         vals = {}
         vals['unit_price'] = self.addon_id.list_price
         self.update(vals)
+
+class ProductOrderDescription(models.TransientModel):
+    _name = "product.order.desc"
+    _description = 'Product Order Description'
+    
+
+    config_ko_id = fields.Many2one('product.configurator.ordernow.ko', 'Configurator Ordernow Description')
+    so_id = fields.Many2one(related='config_ko_id.order_id', string='Order Ref.')
+    ko_ids = fields.One2many(related='so_id.kitchen_order_ids', string="Kitchen Order Ref.")
+
+    # Print SO or KO
+    @api.multi
+    def print_order(self):
+        return self.so_id.print_koso_report()
+
+    # Order again
+    @api.multi
+    def new_order(self):
+        new_order_configurator_view_id = self.env.ref('sale_workflow_cakeshop.product_configurator_ordernow_ko_form').id
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.configurator.ordernow.ko',
+            'name': "New Order Configurator",
+            'view_mode': 'form',
+            'view_id': new_order_configurator_view_id,
+            'target': 'new',
+            'context': dict(
+                self.env.context,
+                default_product_tmpl_id=None,
+                default_product_id=None,
+                wizard_model='product.configurator.ordernow.ko',
+            )
+        }
