@@ -393,7 +393,21 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         self.order_id.message_post(body=msg)
 
         # Call Order now view again
-        return self.product_tmpl_id.action_order_now()
+        new_order_configurator_view_id = self.env.ref('sale_workflow_cakeshop.product_configurator_ordernow_ko_form').id
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.configurator.ordernow.ko',
+            'name': "New Order Configurator",
+            'view_mode': 'form',
+            'view_id': new_order_configurator_view_id,
+            'target': 'new',
+            'context': dict(
+                self.env.context,
+                default_product_tmpl_id=None,
+                default_product_id=None,
+                wizard_model='product.configurator.ordernow.ko',
+            )
+        }
         
 
 class ProductAddonsLine(models.TransientModel):
