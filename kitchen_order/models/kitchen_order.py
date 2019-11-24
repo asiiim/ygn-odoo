@@ -152,7 +152,7 @@ class KitchenOrder(models.Model):
     @api.depends('message_id', 'name_for_message', 'related_template_message')
     def _compute_order_message(self):
         for ko in self:
-            ko.message = ko.related_template_message or 'Message with name: '
+            ko.message = ko.related_template_message or 'MESSAGE NOT PROVIDED'
             ko.message += ' ' + str(ko.name_for_message)
 
     # Link Invoice(s) With Kitchen Order

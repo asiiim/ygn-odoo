@@ -15,8 +15,8 @@ class SaleOrder(models.Model):
         # required=True,
         readonly=True
     )
-    advance_payment = fields.Monetary(related="payment_id.amount", string="Advance", store=True, track_visibility='onchange')
-    amount_due = fields.Monetary(compute='_compute_amount_due', string='Amount Due', readonly=True, track_visibility='onchange')
+    advance_payment = fields.Monetary(related="payment_id.amount", string="Advance", store=True, track_visibility='always')
+    amount_due = fields.Monetary(compute='_compute_amount_due', string='Amount Due', readonly=True, track_visibility='always')
     kitchen_order_ids = fields.One2many(
         comodel_name='kitchen.order',
         inverse_name='saleorder_id',
