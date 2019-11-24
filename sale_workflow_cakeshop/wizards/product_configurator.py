@@ -289,7 +289,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             if self.amount:
                 Payment = self.env['account.payment']
                 payment = Payment.create(self._prepare_payment())
-                payment.post()
+                # payment.post()
                 self.payment_id = payment
                 sale_order.payment_id = payment
 
@@ -359,7 +359,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             'target': 'new',
             'context': dict(
                 self.env.context,
-                default_config_ko_id=self.id,
+                default_so_id=self.order_id.id,
                 wizard_model='product.order.desc'
             )
         }
@@ -397,7 +397,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         if self.amount:
             Payment = self.env['account.payment']
             payment = Payment.create(self._prepare_payment())
-            payment.post()
+            # payment.post()
             self.payment_id = payment
             sale_order.payment_id = payment
 
@@ -447,8 +447,7 @@ class ProductOrderDescription(models.TransientModel):
     _description = 'Product Order Description'
     
 
-    config_ko_id = fields.Many2one('product.configurator.ordernow.ko', 'Configurator Ordernow Description')
-    so_id = fields.Many2one(related='config_ko_id.order_id', string='Order Ref.')
+    so_id = fields.Many2one('sale.order', string='Order Ref.')
     ko_ids = fields.One2many(related='so_id.kitchen_order_ids', string="Kitchen Order Ref.")
 
     # Print SO or KO
@@ -474,3 +473,16 @@ class ProductOrderDescription(models.TransientModel):
                 wizard_model='product.configurator.ordernow.ko',
             )
         }
+    
+    # Order again
+    @api.multi
+    def view_order(self):
+        sale_order_form_ref_id = self.env.ref('sale.view_order_form').id
+        return {
+            'name': _('Sale Order'),
+            'res_model': 'sale.order',
+            'res_id': self.so_id.id,
+            'views': [(sale_order_form_ref_id, 'form')],
+            'type': 'ir.actions.act_window'
+        }
+    

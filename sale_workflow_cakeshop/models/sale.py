@@ -15,12 +15,13 @@ class SaleOrder(models.Model):
         # required=True,
         readonly=True
     )
-    advance_payment = fields.Monetary(related="payment_id.amount", string="Advance", store=True)
-    amount_due = fields.Monetary(compute='_compute_amount_due', string='Amount Due', readonly=True)
+    advance_payment = fields.Monetary(related="payment_id.amount", string="Advance", store=True, track_visibility='onchange')
+    amount_due = fields.Monetary(compute='_compute_amount_due', string='Amount Due', readonly=True, track_visibility='onchange')
     kitchen_order_ids = fields.One2many(
         comodel_name='kitchen.order',
         inverse_name='saleorder_id',
-        string="Kitchen Orders"
+        string="Kitchen Orders",
+        track_visibility='onchange'
     )
 
     @api.depends('amount_total')
@@ -32,7 +33,7 @@ class SaleOrder(models.Model):
             if not line.invoice_ids:
                 # Check if the payment linked has already been matched 
                 # and set the amount_due accordingly
-                line.amount_due = line.amount_total - (line.payment_id.amount if line.payment_id.state == 'posted' and not line.payment_id.move_reconciled else 0)
+                line.amount_due = line.amount_total - (line.payment_id.amount if ((line.payment_id.state == 'draft') or (line.payment_id.state == 'posted' and not line.payment_id.move_reconciled)) else 0)
             else:
                 for invoice in line.invoice_ids:
                     line.amount_due = invoice.residual
@@ -163,14 +164,18 @@ class SaleOrder(models.Model):
 
     @api.multi
     def cancel_advance_payment(self):
-        # Create return Payment if any
-        if self.payment_id:
-            Payment = self.env['account.payment']
-            payment = Payment.create(self._prepare_return_payment())
-            payment.post()
-            # Open payment matching screen
-            self.payment_id = None
-            return payment.open_payment_matching_screen()
+            if self.payment_id.state == "draft":
+                return self.payment_id.unlink()
+
+            elif self.payment_id.state == "posted":
+                Payment = self.env['account.payment']
+                payment = Payment.create(self._prepare_return_payment())
+                payment.post()
+                self.payment_id = None
+                
+                # Open payment matching screen
+                return payment.open_payment_matching_screen()
+                
 
     @api.multi
     def edit_advance_payment(self):

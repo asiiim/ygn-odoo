@@ -80,7 +80,7 @@ class SaleChangeAdvance(models.TransientModel):
         else:
             Payment = self.env['account.payment']
             payment = Payment.create(self._prepare_payment())
-            payment.post()
+            # payment.post()
         
         # Return the advance amount
         if self.so_id.payment_id:
