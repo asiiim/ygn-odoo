@@ -79,8 +79,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
         if order.payment_id:
             
             # Post the draft advance payment:
-            if order.payment_id.state == "draft":
-                order.payment_id.post()
+            # if order.payment_id.state == "draft":
+            #     order.payment_id.post()
             
             credit_aml = order.payment_id.move_line_ids.filtered(lambda aml: aml.credit > 0)
             invoice.assign_outstanding_credit(credit_aml.id)

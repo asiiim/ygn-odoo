@@ -289,7 +289,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             if self.amount:
                 Payment = self.env['account.payment']
                 payment = Payment.create(self._prepare_payment())
-                # payment.post()
+                payment.post()
                 self.payment_id = payment
                 sale_order.payment_id = payment
 
@@ -397,7 +397,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         if self.amount:
             Payment = self.env['account.payment']
             payment = Payment.create(self._prepare_payment())
-            # payment.post()
+            payment.post()
             self.payment_id = payment
             sale_order.payment_id = payment
 
