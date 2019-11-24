@@ -48,6 +48,11 @@
                 <button name="cancel_advance_payment" string="Cancel Advance" type="object" attrs="{'invisible': ['|', '|', ('is_advance', '=', False), ('invoice_status', '!=', 'to invoice')]}" groups="sales_team.group_sale_manager" confirm="Are you sure you want to cancel?"/>
                 <button name="add_advance_payment" class="btn-primary" string="Add Advance" type="object" attrs="{'invisible': ['|', '|', ('is_advance', '=', True), ('invoice_status', '!=', 'to invoice')]}" groups="sales_team.group_sale_manager"/>
             </field>
+            
+            <!-- Add on hand detail in order line -->
+            <xpath expr="//tree/field[@name='name']" position="after">
+                <field name="on_hand" readonly="1"/>
+            </xpath>
         </field>
     </record>
 </odoo>

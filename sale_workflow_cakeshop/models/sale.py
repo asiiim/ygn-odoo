@@ -212,3 +212,8 @@ class SaleOrder(models.Model):
                 wizard_model='sale.change.advance'
             )
         }
+
+class SaleOrderLine(models.Model):
+    _inherit = "sale.order.line"
+
+    on_hand = fields.Float(related="product_id.qty_available", string="On Hand")
