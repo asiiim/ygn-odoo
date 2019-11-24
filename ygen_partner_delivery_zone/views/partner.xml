@@ -25,9 +25,10 @@
                 </h1>
             </div>
             <group>
+                <field name="mobile" widget="phone"/>
+                <field name="ref" string="Code"/>
                 <field name="house_number" placeholder="House Number..."/>
                 <field name="delivery_zone_id" placeholder="Delivery Zone..."/>
-                <field name="mobile" widget="phone"/>
             </group>
           </form>
       </field>

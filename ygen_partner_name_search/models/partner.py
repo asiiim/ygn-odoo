@@ -27,11 +27,12 @@ class ResPartner(models.Model):
         args = args or []
         domain = []
         if name:
-            domain = ['|', ('mobile', '=ilike', name + '%'), ('name', operator, name)]
+            domain = ['|', '|', ('ref', operator, name), ('mobile', operator, name + '%'), ('name', operator, name)]
             if operator in expression.NEGATIVE_TERM_OPERATORS:
                 domain = ['&', '!'] + domain[1:]
-        partners = self.search(domain + args, limit=limit)
-        return partners.name_get()
+        self.search(domain + args, limit=limit)
+        # return partners.name_get()
+        return super(ResPartner, self).name_search(name, args, operator=operator, limit=limit)
 
     @api.multi
     @api.depends('name', 'mobile')
