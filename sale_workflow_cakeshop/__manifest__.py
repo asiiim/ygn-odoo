@@ -32,6 +32,7 @@ good for processing one product at a time.
         'wizards/sale_make_invoice_advance_views.xml',
         'wizards/sale_requested_date.xml',
         'wizards/sale_change_advance.xml',
+        'wizards/sale_change_customer.xml',
         'report/kitchen_sale_order_report.xml'
     ],
     # 'images': ['static/description/banner.png'],

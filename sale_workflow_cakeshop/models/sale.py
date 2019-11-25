@@ -217,6 +217,24 @@ class SaleOrder(models.Model):
             ko.cancel_kitchen_order()
         return super(SaleOrder, self).action_cancel()
 
+    # Change customer
+    @api.multi
+    def action_change_customer(self):
+        """Return action to change the customer"""
+        sale_customer_view_id = self.env.ref('sale_workflow_cakeshop.sale_change_partner_form').id
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.change.customer',
+            'name': "Change Customer",
+            'view_mode': 'form',
+            'view_id': sale_customer_view_id,
+            'target': 'new',
+            'context': dict(
+                self.env.context,
+                wizard_model='sale.change.customer'
+            ),
+        }
+
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
