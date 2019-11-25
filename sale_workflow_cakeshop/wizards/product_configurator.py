@@ -202,7 +202,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             'amount': self.amount,
             'journal_id': self.journal_id.id,
             'payment_date': self.payment_date,
-            'communication': 'Advance Payement for order no %s' % self.order_id.name,
+            'communication': 'Advance Payment for order no %s' % self.order_id.name,
             'company_id': self.company_id.id,
             # 'user_id': self.user_id and self.user_id.id,
         }

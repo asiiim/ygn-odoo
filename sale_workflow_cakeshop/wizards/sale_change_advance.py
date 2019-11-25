@@ -54,7 +54,7 @@ class SaleChangeAdvance(models.TransientModel):
             'amount': self.adv_amount,
             'journal_id': self.journal_id.id,
             'payment_date': self.payment_date,
-            'communication': 'New Advance Payement for order no %s' % self.so_id.name,
+            'communication': 'New Advance Payment for order no %s' % self.so_id.name,
             'company_id': self.company_id.id,
         }
         return payment_vals

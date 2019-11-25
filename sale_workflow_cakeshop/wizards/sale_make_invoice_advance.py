@@ -98,7 +98,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'amount': self.total_due_amount,
                 'journal_id': self.journal_id.id,
                 'payment_date': self.payment_date,
-                'communication': 'Total Due Payement for order no %s' % order.name,
+                'communication': 'Total Due Payment for order no %s' % order.name,
                 'company_id': order.company_id.id,
                 'invoice_ids': [(4, invoice.id)]
             }

@@ -157,7 +157,7 @@ class SaleOrder(models.Model):
             'amount': self.payment_id.amount,
             'journal_id': self.payment_id.journal_id.id,
             'payment_date': self.payment_id.payment_date,
-            'communication': 'Return Advance Payement to for order no %s' % self.name,
+            'communication': 'Return Advance Payment to for order no %s' % self.name,
             'company_id': self.company_id.id
         }
         return payment_return_vals
