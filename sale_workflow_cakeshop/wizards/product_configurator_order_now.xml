@@ -123,12 +123,12 @@
             <field name="name_for_message" position="replace">
                 <field name="name_for_message" invisible="1"/>
             </field>
-            <field name="ko_notes_ids" position="replace">
+            <!-- <field name="ko_notes_ids" position="replace">
                 <field name="ko_notes_ids" invisible="1"/>
-            </field>
-            <field name="ko_note" position="replace">
+            </field> -->
+            <!-- <field name="ko_note" position="replace">
                 <field name="ko_note" invisible="1"/>
-            </field>
+            </field> -->
             <label for="amount" position="replace"></label>
             <div name="advance_amount" position="replace">
                 <div class="oe_title" name="advance_amount" invisible="1">
