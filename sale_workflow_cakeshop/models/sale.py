@@ -209,6 +209,13 @@ class SaleOrder(models.Model):
                 wizard_model='sale.change.advance'
             )
         }
+    
+    # Cancel Kitchen Orders if SO is Cancelled
+    @api.multi
+    def action_cancel(self):
+        for ko in self.kitchen_order_ids:
+            ko.cancel_kitchen_order()
+        return super(SaleOrder, self).action_cancel()
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"

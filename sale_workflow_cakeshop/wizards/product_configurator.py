@@ -338,12 +338,14 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             self.order_id.action_confirm()
 
             # Changes in KO
-            ko_vals = self._prepare_kitchen_order()            
-            ko = self.order_id.kitchen_order_ids[0]            
-            ko.write({
-                'product_uom_qty': ko_vals.get('product_uom_qty'),
-                'ko_note': ko_vals.get('ko_note')
-            })
+            ko_vals = self._prepare_kitchen_order()
+            for ko in self.order_id.kitchen_order_ids:
+                ko.start_kitchen_order()
+                ko.write({
+                    'product_uom_qty': ko_vals.get('product_uom_qty'),
+                    'ko_note': ko_vals.get('ko_note')
+                })
+                break
 
 
             # Log the sale order details in the chatter

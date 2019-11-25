@@ -45,9 +45,9 @@ class KitchenOrder(models.Model):
     requested_date = fields.Datetime(
         related="saleorder_id.requested_date", string="Delivery Date", store=True)
     product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision(
-        'Product Unit of Measure'), readonly=1, required=True, default=1.0, track_visibility='always')
+        'Product Unit of Measure'), readonly=1, required=True, default=1.0, track_visibility='onchange')
     uom = fields.Many2one(related="product_id.uom_id", string='Unit of Measure', readonly=1,
-                          required=True, track_visibility='always')
+                          required=True, track_visibility='onchange')
 
     @api.model
     def create(self, vals):
