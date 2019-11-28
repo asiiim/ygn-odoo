@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.module.category" id="module_category_ygen_quick_sale">
+        <field name="name">Quick Sale (Ygen)</field>
+        <field name="description">Make quick sale of the products...</field>
+        <field name="sequence">15</field>
+    </record>
+
+    <record id="group_ygen_quick_sale_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="category_id" ref="module_category_ygen_quick_sale"/>
+    </record>
+
+    <record id="group_ygen_quick_sale_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="module_category_ygen_quick_sale"/>
+        <field name="implied_ids" eval="[(4, ref('group_ygen_quick_sale_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+    </record>
+
+    <data noupdate="1">
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id" eval="[(4,ref('ygen_quick_sale.group_ygen_quick_sale_user'))]"/>
+        </record>
+    </data>
+</odoo>

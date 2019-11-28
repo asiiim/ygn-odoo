@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_quick_sale_template_tree" model="ir.ui.view">
+            <field name="name">ygen.quick.sale.template.tree</field>
+            <field name="model">ygen.quick.sale.template</field>
+            <field name="arch" type="xml">
+                <tree string="Quick Sale Template" class="o_ygen_quick_sale_template">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="journal_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_quick_sale_template_form" model="ir.ui.view">
+            <field name="name">ygen.quick.sale.template.form</field>
+            <field name="model">ygen.quick.sale.template</field>
+            <field name="arch" type="xml">
+                <form string="Quick Sale Template" class="o_ygen_quick_sale_template">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="e.g Quick Sale Template..."/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="partner_id" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1, 'form_view_ref': 'ygen_partner_delivery_zone.view_partner_reduced_form'}" options="{&quot;always_reload&quot;: True, &quot;no_quick_create&quot;: True}"/>
+                            <field name="journal_id"/>
+                            <field name="stock_location_id"/>
+                        </group>
+                        <notebook>
+                            <page name="product_lines" string="Product Lines">
+                                <field name="product_line_ids" mode="tree">
+                                    <tree string="Product Lines" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="product_id" options="{&quot;always_reload&quot;: True, &quot;no_quick_create&quot;: True, &quot;no_create&quot;: True}"/>
+                                        <field name="sys_on_hand"/>
+                                        <field name="unit_price"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_quick_sale_template_search" model="ir.ui.view">
+            <field name="name">ygen.quick.sale.template.search</field>
+            <field name="model">ygen.quick.sale.template</field>
+            <field name="arch" type="xml">
+                <search string="Quick Sale Template">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_quick_sale_templates" model="ir.actions.act_window">
+            <field name="name">Quick Sales Templates</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ygen.quick.sale.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="view_quick_sale_template_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create a Quick Sale Template.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_quick_sale_template"
+                    name="Quick Sale Templates"
+                    action="action_quick_sale_templates"
+                    parent="main_menu_quick_sale"
+                    sequence="10"/>
+    </data>
+</odoo>
