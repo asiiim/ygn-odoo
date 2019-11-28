@@ -26,6 +26,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         domain="[('sale_ok', '=', True), ('is_custom', '=', True)]",
         required=True
     )
+    product_uom_id = fields.Many2one(related='product_id.uom_id', readonly=True)
     order_id = fields.Many2one(
         comodel_name='sale.order',
         # required=True,
