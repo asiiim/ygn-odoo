@@ -8,6 +8,7 @@
             <field name="amount_total" position="after">
                 <field name="amount_due"/>
                 <field name="delivery_validated" invisible="1"/>
+                <field name="has_ko" invisible="1"/>
             </field>
             <field name="state" position="after">
                 <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
@@ -29,16 +30,17 @@
             <button name='action_quotation_send' position="before">
                 <button name="validate_picking" class="btn-primary" string="Validate Delivery" type="object" 
                     attrs="{'invisible': [('delivery_validated', '=', True)]}" confirm="Are you sure you want to validate delivery?"/>
-                <button name="print_koso_report" string="Print SO/KO" type="object" class="btn-primary"/>
-                <button name="view_kitchen_order" string="View KO" type="object" class="btn-primary"/>
-                <button name="action_change_requested_date" class="btn-primary" string="Change Delivery Date" type="object" attrs="{'invisible': ['|',('invoice_count', &quot;&gt;&quot;, 0.0), ('delivery_validated', '=', True)]}"/>
-                <button name="action_edit_sale_order" class="btn-primary" string="Edit Order" type="object" attrs="{'invisible': ['|',('invoice_count', &quot;&gt;&quot;, 0.0), ('delivery_validated', '=', True)]}"/>
+                <button name="print_koso_report" string="Print SO/KO" type="object" class="btn-primary" attrs="{'invisible': [('has_ko', '=', False)]}"/>
+                <button name="view_kitchen_order" string="View KO" type="object" class="btn-primary" attrs="{'invisible': [('has_ko', '=', False)]}"/>
+                <button name="action_change_requested_date" class="btn-primary" string="Change Delivery Date" type="object" attrs="{'invisible': ['|', '|', ('invoice_count', &quot;&gt;&quot;, 0.0), ('delivery_validated', '=', True), ('has_ko', '=', False)]}"/>
+                <button name="action_edit_sale_order" class="btn-primary" string="Edit Order" type="object" attrs="{'invisible': ['|', '|', ('invoice_count', &quot;&gt;&quot;, 0.0), ('delivery_validated', '=', True), ('has_ko', '=', False)]}"/>
             </button>
             <field name="payment_term_id" position="after">
-                <field name="kitchen_sale_order_print_selection"/>
+                <field name="kitchen_sale_order_print_selection" attrs="{'invisible': [('has_ko', '=', False)]}"/>
             </field>
             <field name="amount_total" position="after">
                 <field name="delivery_validated" invisible="1"/>
+                <field name="has_ko" invisible="1"/>
                 <field name="is_advance" invisible="1"/>
                 <field name="advance_payment" readonly="1"/>
                 <field name="tender_amount" readonly="1" attrs="{'invisible': [('amount_due', '!=', 0.0)]}"/>

@@ -23,6 +23,16 @@ class SaleOrder(models.Model):
         string="Kitchen Orders",
         track_visibility='onchange'
     )
+    
+    # Check if SO has KO
+    has_ko = fields.Boolean(compute="_has_kitchen_orders", string="Has Kitchen Order(s)")
+    @api.depends('kitchen_order_ids')
+    def _has_kitchen_orders(self):
+        for order in self:
+            if len(order.kitchen_order_ids) > 0:
+                order.has_ko = True
+            else:
+                order.has_ko = False
 
     @api.depends('amount_total')
     def _compute_amount_due(self):
