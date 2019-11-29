@@ -17,7 +17,7 @@ class QuickSaleTemplate(models.Model):
     # Other Fields
     journal_id = fields.Many2one('account.journal', string='Payment Journal', domain=[('type', 'in', ('bank', 'cash'))], default=lambda self: self.env['account.journal'].search([('type', '=', 'cash')], limit=1), track_visibility='onchange')
     partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index=True, track_visibility='onchange')
-    quick_quick_sale_ids = fields.One2many('ygen.quick.sale', 'quick_sale_tmpl_id', string="Sale Template", track_visibility='onchange')
+    quick_sale_ids = fields.One2many('ygen.quick.sale', 'quick_sale_tmpl_id', string="Sale Template", track_visibility='onchange')
     product_line_ids = fields.One2many('quick.sale.product.template.line', 'quick_sale_tmpl_id', string="Product Lines", track_visibility='onchange')
 
     # Stock Default Location
@@ -40,7 +40,7 @@ class QuickSaleProductTemplateLine(models.Model):
     _order = "id"
 
     # Quick Sale Reference
-    name = fields.Char(string="Reference", required=True, copy=False, readonly=True, index=True, default=lambda self: _('New Quick Sale'), track_visibility='onchange')
+    name = fields.Char(string="Reference", required=True, copy=False, readonly=True, index=True, default=lambda self: _('New'), track_visibility='onchange')
 
     @api.model
     def create(self, vals):

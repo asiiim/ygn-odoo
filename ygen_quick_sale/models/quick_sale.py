@@ -85,15 +85,16 @@ class QuickSale(models.Model):
         if template:
             product_lines = [(5, 0, 0)]
             for line in template.product_line_ids:
-                data = {
-                    'quick_sale_id':self.id,
-                    'sequence': line.sequence,
-                    'product_id': line.product_id,
-                    'real_on_hand': 0.0,
-                    'sys_on_hand': line.sys_on_hand,
-                    'unit_price': line.unit_price
-                }
-                product_lines.append((0, 0, data))
+                if line.sys_on_hand > 0:
+                    data = {
+                        'quick_sale_id':self.id,
+                        'sequence': line.sequence,
+                        'product_id': line.product_id,
+                        'real_on_hand': 0.0,
+                        'sys_on_hand': line.sys_on_hand,
+                        'unit_price': line.unit_price
+                    }
+                    product_lines.append((0, 0, data))
             self.product_line_ids = product_lines
 
     def action_start(self):
