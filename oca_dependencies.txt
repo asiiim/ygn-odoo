@@ -4,3 +4,4 @@ account_fiscal_year <https://github.com/OCA/account-financial-tools>
 keychain <https://github.com/OCA/server-auth>
 product_configurator <https://github.com/pledra/odoo-product-configurator>
 partner_delivery_zone <https://github.com/OCA/delivery-carrier.git>
+sale_workflow <https://github.com/OCA/sale-workflow.git>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_quick_sale_tree" model="ir.ui.view">
+            <field name="name">ygen.quick.sale.tree</field>
+            <field name="model">ygen.quick.sale</field>
+            <field name="arch" type="xml">
+                <tree string="Quick Sale" class="o_ygen_quick_sale">
+                    <field name="name"/>
+                    <field name="order_id"/>
+                    <field name="partner_id"/>
+                    <field name="stock_location_id"/>
+                    <field name="date"/>
+                    <field name="journal_id"/>
+                    <field name="quick_sale_tmpl_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_quick_sale_form" model="ir.ui.view">
+            <field name="name">ygen.quick.sale.form</field>
+            <field name="model">ygen.quick.sale</field>
+            <field name="arch" type="xml">
+                <form string="Quick Sale" class="o_ygen_quick_sale">
+                    <header>
+                        <button name="action_start" states="draft" string="Start Sale" type="object" class="oe_highlight" groups="ygen_quick_sale.group_ygen_quick_sale_user"/>
+                        <button name="action_validate" states="start" string="Validate" type="object" class="oe_highlight" groups="ygen_quick_sale.group_ygen_quick_sale_user"/>
+                        <button name="action_cancel" states="start" string="Cancel" type="object" class="oe_highlight" groups="ygen_quick_sale.group_ygen_quick_sale_user"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,start,validate"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="company_id" invisible="1"/>
+                                <field name="quick_sale_tmpl_id" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{&quot;always_reload&quot;: True, &quot;no_quick_create&quot;: True}"/>
+                                <field name="order_id" readonly="1" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('state', '=', 'start')]}"/>
+                                <field name="partner_id" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1, 'form_view_ref': 'ygen_partner_delivery_zone.view_partner_reduced_form'}" options="{&quot;always_reload&quot;: True, &quot;no_quick_create&quot;: True}" required="True" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="journal_id" widget="selection" required="True" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
+                                <field name="stock_location_id"/>
+                            </group>
+                        </group>
+                        <notebook attrs="{'invisible': [('state', '=', 'draft')]}">
+                            <page name="product_lines" string="Product Lines">
+                                <field name="product_line_ids" mode="tree" attrs="{'readonly': [('state', '=', 'validate')]}">
+                                    <tree string="Product Lines" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="product_id" options="{&quot;always_reload&quot;: True, &quot;no_quick_create&quot;: True, &quot;no_create&quot;: True}"/>
+                                        <field name="sys_on_hand"/>
+                                        <field name="real_on_hand"/>
+                                        <field name="sold_qty"/>
+                                        <field name="unit_price"/>
+                                        <field name="amount"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                        <label for="price_total" />
+                                    </div>
+                                    <field name="price_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                                <div class="oe_clear"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_quick_sale_search" model="ir.ui.view">
+            <field name="name">ygen.quick.sale.search</field>
+            <field name="model">ygen.quick.sale</field>
+            <field name="arch" type="xml">
+                <search string="Quick Sale">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_quick_sales" model="ir.actions.act_window">
+            <field name="name">Quick Sales</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ygen.quick.sale</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="view_quick_sale_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create a Quick Sale.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="main_menu_quick_sale" 
+                    name="Quick Sale" 
+                    sequence="5"
+                    web_icon="ygen_quick_sale,static/src/img/default_image.png"
+                    groups="ygen_quick_sale.group_ygen_quick_sale_user"/>
+        <menuitem id="menu_quick_sale"
+                    name="Sales"
+                    action="action_quick_sales"
+                    parent="main_menu_quick_sale"
+                    sequence="5"/>
+    </data>
+</odoo>

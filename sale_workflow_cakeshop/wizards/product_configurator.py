@@ -26,6 +26,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         domain="[('sale_ok', '=', True), ('is_custom', '=', True)]",
         required=True
     )
+    product_uom_id = fields.Many2one(related='product_id.uom_id', readonly=True)
     order_id = fields.Many2one(
         comodel_name='sale.order',
         # required=True,
@@ -85,8 +86,6 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
 
         for line in self:
             addon_price = 0.0
-            discount = 0.0
-            gross_total = 0.0
 
             # check if it has unit price or manual price
             if line.manual_price:
@@ -103,17 +102,11 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
                 price += addon_price
                 price /= line.product_uom_qty
             
-            # take gross total before discount to convert fix discount to percentage
-            gross_total = price * line.product_uom_qty
-            
             # apply discount if provided
             if line.discount:
-                discount = line.discount
-            else:
-                if gross_total:
-                    discount = (line.fix_discount / gross_total) * 100
-            
-            price *= (1 - (discount or 0.0) / 100.0)
+                price *= (1 - (line.discount or 0.0) / 100.0)
+            elif line.fix_discount:
+                price -= line.fix_discount
 
             taxes = line.tax_id.compute_all(price, line.currency_id, line.product_uom_qty, product=line.product_id, partner=line.partner_id)
             
@@ -145,7 +138,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         ko_vals = {
             'product_id': self.product_id.id,
             'requested_date': self.requested_date,
-            # 'pricelist_id': self.partner_id.property_product_pricelist.id,
+            'ref_product_id': self.ref_product_id.id,
             'saleorder_id': self.order_id.id,
             'name_for_message': self.name_for_message or '',
             'ko_note': notes,
@@ -153,8 +146,6 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             'product_uom_qty': self.product_uom_qty,
             'company_id': self.company_id.id,
             'message_id': self.order_message_id.id
-            # 'user_id': self.user_id and self.user_id.id,
-            # 'team_id': self.team_id.id
         }
         return ko_vals
 
@@ -170,16 +161,10 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         """
         self.ensure_one()
         order_vals = {
-            # 'client_order_ref': self.client_order_ref or '',
             'partner_id': self.partner_id.id,
             'date_order': self.saleorder_date,
             'requested_date': self.requested_date,
-            # 'pricelist_id': self.partner_id.property_product_pricelist.id,
-            # 'note': self.name_for_message,
-            # 'payment_term_id': self.payment_term_id.id,
             'company_id': self.company_id.id,
-            # 'user_id': self.user_id and self.user_id.id,
-            # 'team_id': self.team_id.id
             'kitchen_sale_order_print_selection': self.kitchen_sale_order_print_selection
         }
         return order_vals
@@ -204,7 +189,6 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             'payment_date': self.payment_date,
             'communication': 'Advance Payment for order no %s' % self.order_id.name,
             'company_id': self.company_id.id,
-            # 'user_id': self.user_id and self.user_id.id,
         }
         return payment_vals
 
@@ -217,7 +201,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         orderline_desc = product.name or ""
         addon_price = 0.0
         discount = 0.0
-        gross_total = 0.0
+        fix_discount = 0.0
         addon_details = ""
 
         if self.product_addon_lines:
@@ -237,10 +221,8 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         # apply discount if provided
         if self.discount:
             discount = self.discount
-        else:
-            gross_total = self.price_unit * self.product_uom_qty
-            if gross_total:
-                discount = (self.fix_discount / gross_total) * 100
+        elif self.fix_discount:
+            fix_discount = self.fix_discount
         
         return {
             'product_id': product_id,
@@ -249,7 +231,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             'product_uom_qty': self.product_uom_qty,
             'product_uom': product.uom_id.id,
             'discount': discount,
-            # 'tax_id': self.tax_id,
+            'discount_fixed': fix_discount,
             'uom_name': product.uom_id.name,
             'addon_details': addon_details
         }
@@ -301,8 +283,18 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             msg = "<b>Order Details</b><br/>"
             msg += "<li>Product: " + str(orderline_vals.get('name')) + "<br/>"
             msg += "<li>Qty: " + str(orderline_vals.get('product_uom_qty')) + " " + str(orderline_vals.get('uom_name')) + "<br/>"
-            msg += "<br/><b>Addons Details</b><br/>"
-            msg += str(orderline_vals.get('addon_details'))
+            
+            if self.product_addon_lines:
+                msg += "<br/><b>Addons Details</b><br/>"
+                msg += str(orderline_vals.get('addon_details'))
+
+            if self.discount:
+                msg += "<br/><b>Discount</b><br/>"
+                msg += "<li>" + str(self.discount) + "%"
+            elif self.fix_discount:
+                msg += "<br/><b>Fix Discount</b><br/>"
+                msg += "<li>" + str(self.fix_discount) + "/-"
+            
             self.order_id.message_post(body=msg)
 
             # Show sale order form view
@@ -354,7 +346,18 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             msg += "<li>Product: " + str(orderline_vals.get('name')) + "<br/>"
             msg += "<li>Qty: " + str(orderline_vals.get('product_uom_qty')) + " " + str(orderline_vals.get('uom_name')) + "<br/>"
             msg += "<br/><b>Addons Details</b><br/>"
-            msg += str(orderline_vals.get('addon_details'))
+            
+            if self.product_addon_lines:
+                msg += "<br/><b>Addons Details</b><br/>"
+                msg += str(orderline_vals.get('addon_details'))
+
+            if self.discount:
+                msg += "<br/><b>Discount</b><br/>"
+                msg += "<li>" + str(self.discount) + "%"
+            elif self.fix_discount:
+                msg += "<br/><b>Fix Discount</b><br/>"
+                msg += "<li>" + str(self.fix_discount) + "/-"
+            
             self.order_id.message_post(body=msg)
 
     # To Trigger order details wizard view 
@@ -418,11 +421,29 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         msg += "<li>Product: " + str(orderline_vals.get('name')) + "<br/>"
         msg += "<li>Qty: " + str(orderline_vals.get('product_uom_qty')) + " " + str(orderline_vals.get('uom_name')) + "<br/>"
         msg += "<br/><b>Addons Details</b><br/>"
-        msg += str(orderline_vals.get('addon_details'))
+        
+        if self.product_addon_lines:
+            msg += "<br/><b>Addons Details</b><br/>"
+            msg += str(orderline_vals.get('addon_details'))
+
+        if self.discount:
+            msg += "<br/><b>Discount</b><br/>"
+            msg += "<li>" + str(self.discount) + "%"
+        elif self.fix_discount:
+            msg += "<br/><b>Fix Discount</b><br/>"
+            msg += "<li>" + str(self.fix_discount) + "/-"
+        
         self.order_id.message_post(body=msg)
 
         # Ask to print the order/kitchen order
         return self.view_order_description()
+
+    # Provide Reference Product
+    ref_product_id = fields.Many2one(
+        comodel_name='product.product',
+        string='Reference Product',
+        domain="[('sale_ok', '=', True), ('is_custom', '=', False), ('is_addon', '=', False)]"
+    )
 
 class ProductAddonsLine(models.TransientModel):
     _name = "product.addons.line"

@@ -21,20 +21,6 @@ class Message(models.Model):
     ]
 
     @api.model
-    def default_get(self, default_fields):
-        default_name = self._context.get('default_name')
-        default_code = self._context.get('default_code')
-        if default_name and not default_code:
-            try:
-                default_code = default_name
-            except ValueError:
-                pass
-            if default_code:
-                default_name = False
-        contextual_self = self.with_context(default_name=default_name, default_code=default_code)
-        return super(Message, contextual_self).default_get(default_fields)
-
-    @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
         args = args or []
         domain = []

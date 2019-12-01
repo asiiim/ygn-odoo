@@ -20,7 +20,7 @@ good for processing one product at a time.
     # price
     'price': 1500.00,
     'currency': 'EUR',
-    'depends': ['sale', 'stock', 'account_payment', 'kitchen_order', 'kitchen_order_note', 'ygen_partner_delivery_zone'],
+    'depends': ['sale', 'stock', 'account_payment', 'kitchen_order', 'kitchen_order_note', 'ygen_partner_delivery_zone', 'sale_fixed_discount'],
     'data': [
         'views/sale_views.xml',
         'views/product_views.xml',
