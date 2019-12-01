@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('o_kanban_image')]" position="inside">
                 <div class="mt-3">
-                    <button class="btn btn-alpha" name="action_zoom_product" type="object">
+                    <button class="btn" style="font-size:22px;" name="action_zoom_product" type="object">
                         <i class="fa fa-search-plus" aria-hidden="true"></i>
                     </button>
                 </div>
