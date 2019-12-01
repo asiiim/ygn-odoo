@@ -77,7 +77,7 @@
         </record>
 
         <menuitem id="menu_quick_sale_template"
-                    name="Quick Sale Templates"
+                    name="Templates"
                     action="action_quick_sale_templates"
                     parent="main_menu_quick_sale"
                     sequence="10"/>

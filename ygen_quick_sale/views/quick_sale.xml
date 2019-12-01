@@ -112,7 +112,7 @@
                     web_icon="ygen_quick_sale,static/src/img/default_image.png"
                     groups="ygen_quick_sale.group_ygen_quick_sale_user"/>
         <menuitem id="menu_quick_sale"
-                    name="Quick Sales"
+                    name="Sales"
                     action="action_quick_sales"
                     parent="main_menu_quick_sale"
                     sequence="5"/>
