@@ -161,7 +161,7 @@ class KitchenOrder(models.Model):
     # Reference Product
     ref_product_id = fields.Many2one(
         comodel_name='product.product',
-        string='Product',
+        string='Reference Product',
         domain="[('sale_ok', '=', True), ('is_custom', '=', False), ('is_addon', '=', False)]",
         track_visibility='onchange'
     )
