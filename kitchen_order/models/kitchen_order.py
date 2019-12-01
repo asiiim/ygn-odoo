@@ -157,3 +157,12 @@ class KitchenOrder(models.Model):
 
     # Link Invoice(s) With Kitchen Order
     invoice_ids = fields.Many2many(related="saleorder_id.invoice_ids", string='Invoice Ref.')
+
+    # Reference Product
+    ref_product_id = fields.Many2one(
+        comodel_name='product.product',
+        string='Product',
+        domain="[('sale_ok', '=', True), ('is_custom', '=', False), ('is_addon', '=', False)]",
+        track_visibility='onchange'
+    )
+    ref_image = fields.Binary(related='ref_product_id.image', string='Reference Image', attachment=True, track_visibility='onchange')

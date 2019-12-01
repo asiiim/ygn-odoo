@@ -146,7 +146,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         ko_vals = {
             'product_id': self.product_id.id,
             'requested_date': self.requested_date,
-            # 'pricelist_id': self.partner_id.property_product_pricelist.id,
+            'ref_product_id': self.ref_product_id.id,
             'saleorder_id': self.order_id.id,
             'name_for_message': self.name_for_message or '',
             'ko_note': notes,
@@ -154,8 +154,6 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             'product_uom_qty': self.product_uom_qty,
             'company_id': self.company_id.id,
             'message_id': self.order_message_id.id
-            # 'user_id': self.user_id and self.user_id.id,
-            # 'team_id': self.team_id.id
         }
         return ko_vals
 
@@ -424,6 +422,13 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
 
         # Ask to print the order/kitchen order
         return self.view_order_description()
+
+    # Provide Reference Product
+    ref_product_id = fields.Many2one(
+        comodel_name='product.product',
+        string='Reference Product',
+        domain="[('sale_ok', '=', True), ('is_custom', '=', False), ('is_addon', '=', False)]"
+    )
 
 class ProductAddonsLine(models.TransientModel):
     _name = "product.addons.line"
