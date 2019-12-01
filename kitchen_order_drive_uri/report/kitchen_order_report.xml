@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Kitchen Order Detail Template -->
+        <template id="report_kitchen_order_document" inherit_id="kitchen_order.report_kitchen_order_document" name="Kitchen Order Drive File Images Report">
+            <xpath expr="//div[@id='images-ref']" position="inside">
+                <t t-foreach="doc.drive_file_ids" t-as="file">
+                    <div class="col-xs-6">
+                        <div>
+                            <img style="max-width:100%; height:auto;" t-attf-src="https://drive.google.com/uc?export=view&amp;id={{ file.res_id }}"/>
+                        </div>
+                    </div>
+                </t>
+            </xpath>
+        </template>
+        <!-- Extend Kitchen Order List Report -->
+        <template id="report_kitchen_order_list" inherit_id="kitchen_order.report_kitchen_order_list" name="Kitchen Order List Drive File Images Report">
+            <xpath expr="//div[@id='images-ref']" position="inside">
+                <t t-foreach="doc.drive_file_ids" t-as="file">
+                    <div class="col-xs-6">
+                        <img style="max-width:100%; height:auto;" t-attf-src="https://drive.google.com/uc?export=view&amp;id={{ file.res_id }}"/>
+                    </div>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>
