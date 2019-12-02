@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_kitchen_order_drive_file_form" model="ir.ui.view">
+        <field name="name">Kitchen Order Drive File Form</field>
+        <field name="model">kitchen.order</field>
+        <field name="inherit_id" ref="kitchen_order.view_kitchen_order_form"/>
+        <field name="arch" type="xml">
+            <sheet position="inside">
+                <notebook>
+                    <page name="drive_files" string="Reference Files">
+                        <field name="drive_file_ids" widget="many2many" options="{'not_delete': True}">
+                            <kanban quick_create="false" create="true" delete="true">
+                                <field name="id"/>
+                                <field name="name"/>
+                                <field name="res_url"/>
+                                <field name="res_id"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div class="oe_kanban_global_click" style="max-width: 256px">
+                                            <div class="o_kanban_record_top">
+                                                <img t-attf-src="https://drive.google.com/uc?export=view&amp;id={{ record.res_id.value }}" height="80" width="80" class="oe_avatar oe_kanban_avatar_smallbox mb0"/>
+                                                <div class="o_kanban_record_headings ml8">
+                                                    <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                                    <br/>
+                                                    <!-- <a class="text-danger" style="font-size:22px;" target="_blank" t-att-href="record.res_url.value">
+                                                        <i class="fa fa-search-plus" style="padding:10px;" aria-hidden="true"/>
+                                                    </a> -->
+                                                    <button class="btn" style="font-size:22px; width:50%;" name="action_zoom_image" type="object">
+                                                        <i class="fa fa-search-plus" aria-hidden="true"/>
+                                                    </button>
+                                                </div>
+                                                <a t-if="! read_only_mode" type="delete" class="text-danger" style="font-size:18px;">
+                                                    <i class="fa fa-times"/>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
+                    </page>
+                </notebook>
+            </sheet>
+        </field>
+    </record>
+
+    <record id="view_kitchen_order_drive_file_tree" model="ir.ui.view">
+        <field name="name">Kitchen Order Drive File Tree</field>
+        <field name="model">kitchen.order</field>
+        <field name="inherit_id" ref="kitchen_order.view_kitchen_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="invoice_ids" position="after">
+                <field name="drive_file_ids" string="Reference File"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- <record model="ir.ui.view" id="view_kitchen_order_drive_file_kanban">
+        <field name="name">Kitchen Order Drive File Kanban</field>
+        <field name="model">kitchen.order</field>
+        <field name="inherit_id" ref="kitchen_order.view_kitchen_order_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates" position="before">
+                <field name="drive_file_ids"/>
+            </xpath>
+            <span position="replace">
+                <t t-if="record.drive_file_ids.raw_value">
+                    <button class="btn" style="font-size:22px; width:50%;" name="action_zoom_image" type="object">
+                        <i class="fa fa-search-plus" aria-hidden="true"/>
+                    </button>
+                </t>
+            </span>
+        </field>
+    </record> -->
+</odoo>

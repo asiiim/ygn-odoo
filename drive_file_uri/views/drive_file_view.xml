@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="drive_file_zoom_view" model="ir.ui.view">
+        <field name="name">Drive File zoom view</field>
+        <field name="model">drive.file</field>
+        <field name="arch" type="xml">
+            <kanban quick_create="false" create="false" delete="false" import="false">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="res_url"/>
+                <field name="res_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div style="max-width: 576px; width:100%; margin: 0px auto;">
+                            <div class="o_kanban_record_top">
+                                <img t-attf-src="https://drive.google.com/uc?export=view&amp;id={{ record.res_id.value }}" width="100%" height="auto" class="mb0"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="drive_file_form_view" model="ir.ui.view">
+        <field name="name">drive.file.form</field>
+        <field name="model">drive.file</field>
+        <field name="arch" type="xml">
+            <form string="Google Drive File">
+                <sheet>
+                    <group>
+                        <field name="res_url" required="1" widget="url"/>
+                        <field name="name" readonly="1"/>
+                        <field name="res_id" readonly="1"/>
+                    </group>
+                    <group>
+                        <button class="btn" style="font-size:22px; width:50%;" name="action_zoom_image" type="object">
+                            <i class="fa fa-search-plus" aria-hidden="true"/>
+                        </button>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="drive_file_tree_view" model="ir.ui.view">
+        <field name="name">drive.file.tree</field>
+        <field name="model">drive.file</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="res_url"/>
+                <field name="res_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="drive_file_search_view">
+        <field name="name">drive.file.search</field>
+        <field name="model">drive.file</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="res_url"/>
+                <field name="name"/>
+                <field name="res_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="drive_file_kanban_view" model="ir.ui.view">
+        <field name="name">drive.file.kanban</field>
+        <field name="model">drive.file</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="id"/>
+                <field name="name"/>
+                <field name="res_url"/>
+                <field name="res_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_image">
+                                <img t-attf-src="https://drive.google.com/uc?export=view&amp;id={{ record.res_id.value }}"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                    <small t-if="record.res_id.value">[<field name="res_id"/>]</small>
+                                </strong>
+                                <div name="tags"/>
+                                <button class="btn" style="font-size:22px; width:50%;" name="action_zoom_image" type="object">
+                                    <i class="fa fa-search-plus" aria-hidden="true"/>
+                                </button>
+                                <div name="tags"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="drive_file_action" model="ir.actions.act_window">
+        <field name="name">Google Drive File</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">drive.file</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="drive_file_kanban_view"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to define a drive file.
+            </p>
+        </field>
+    </record>
+    <menuitem name="Google Drive" id="menu_drive_root" sequence="40"
+        groups="stock.group_stock_user"
+        web_icon="drive_file_uri,static/description/icon.png"/>
+    <menuitem id="menu_drive_file" name="Drive File" action="drive_file_action" parent="menu_drive_root" sequence="5" />
+</odoo>

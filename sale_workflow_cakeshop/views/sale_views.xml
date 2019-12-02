@@ -37,6 +37,7 @@
             </button>
             <field name="payment_term_id" position="after">
                 <field name="kitchen_sale_order_print_selection" attrs="{'invisible': [('has_ko', '=', False)]}"/>
+                <field name="payment_id" invisible="1"/>
             </field>
             <field name="amount_total" position="after">
                 <field name="delivery_validated" invisible="1"/>
