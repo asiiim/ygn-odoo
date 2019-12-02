@@ -337,11 +337,18 @@ class SaleOrder(models.Model):
             )
         }
     
-    # Cancel Kitchen Orders if SO is Cancelled
+    # Cancel Kitchen Orders, Delivery and Advance if SO is Cancelled
     @api.multi
     def action_cancel(self):
+        # Cancel Kitchen Orders
         for ko in self.kitchen_order_ids:
             ko.cancel_kitchen_order()
+        
+        # Cancel Delivery
+        stock_picking = self.env['stock.picking'].search([('origin', '=', self.name), ('state', '!=', 'cancel')], limit=1)
+        if stock_picking.state not in ["done", "cancel"]:
+            stock_picking.action_cancel()
+        self.write({'delivery_validated': False})
         return super(SaleOrder, self).action_cancel()
 
     # Change customer
