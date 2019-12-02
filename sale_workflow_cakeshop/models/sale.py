@@ -368,6 +368,17 @@ class SaleOrder(models.Model):
                 wizard_model='sale.change.customer'
             ),
         }
+    
+    # Unlink delivery if so is deleted
+    @api.multi
+    def unlink(self):
+        for order in self:
+            if order.is_advance:
+                raise UserError(_('You must cancel the advance payment first.'))
+            stock_pickings = self.env['stock.picking'].search([('origin', '=', order.name), ('state', '=', 'cancel')])
+            for pick in stock_pickings:
+                pick.unlink()
+        return super(SaleOrder, self).unlink()
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
