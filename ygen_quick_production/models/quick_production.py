@@ -50,7 +50,7 @@ class QuickProduction(models.Model):
             raise UserError(_('You must define a warehouse for the company: %s.') % (company_user.name))
     
 
-    location_id = fields.Many2one('stock.location', string='Location', required=True, track_visibility='onchange', domain="[('usage', '=', 'internal')]", default=_default_location_id)
+    location_id = fields.Many2one('stock.location', string='Location', required=True, track_visibility='onchange', domain="[('usage', '=', 'internal'), ('company_id', '=', company_id)]", default=_default_location_id)
 
     date = fields.Datetime(string='Order Date', required=True, copy=False, default=fields.Datetime.now, track_visibility='onchange')
     quick_prod_tmpl_id = fields.Many2one('ygen.quick.production.template', string="Production Template", track_visibility='onchange')
@@ -101,6 +101,7 @@ class QuickProduction(models.Model):
             }
             rec.write(vals)
             if not self.product_line_ids:
+                rec.quick_prod_tmpl_id.refresh_on_hand()
                 rec.get_template_product_lines(rec.quick_prod_tmpl_id)
         return True
     

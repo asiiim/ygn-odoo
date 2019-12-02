@@ -19,6 +19,9 @@
             <field name="arch" type="xml">
                 <form string="Quick Sale Template" class="o_ygen_quick_sale_template">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="refresh_on_hand" string="Refresh On Hand" type="object" class="oe_stat_button" icon="fa-refresh"/>
+                        </div>
                         <div class="oe_title">
                             <h1>
                                 <field name="name" placeholder="e.g Quick Sale Template..."/>
