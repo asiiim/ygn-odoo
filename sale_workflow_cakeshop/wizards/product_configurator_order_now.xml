@@ -6,13 +6,8 @@
         <field name="model">product.configurator.ordernow.ko</field>
         <field name="arch" type="xml">
             <form string="Order Configurator">
-                <!-- <header>
-                    
-                </header> -->
                 <sheet>
-                    <!-- <field attrs="{'invisible': [('product_img', '=', False)]}" name="product_img" readonly="1" nolabel="1" widget="image"/> -->
                     <group colspan="2">
-                        <!-- <group name='static_form' colspan="2" states='select'> -->
                         <group name='static_form'>
                             <notebook>
                                 <page name="general" string="General">
@@ -127,12 +122,6 @@
             <field name="name_for_message" position="replace">
                 <field name="name_for_message" invisible="1"/>
             </field>
-            <!-- <field name="ko_notes_ids" position="replace">
-                <field name="ko_notes_ids" invisible="1"/>
-            </field> -->
-            <!-- <field name="ko_note" position="replace">
-                <field name="ko_note" invisible="1"/>
-            </field> -->
             <label for="amount" position="replace"></label>
             <div name="advance_amount" position="replace">
                 <div class="oe_title" name="advance_amount" invisible="1">

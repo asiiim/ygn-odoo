@@ -45,6 +45,24 @@ class ProductTemplate(models.Model):
             if len(product.attribute_line_ids) > 0:
                 product.has_attr = True
 
+    # Reference for order now
+    @api.multi
+    def action_reference_order(self):
+        order_configurator_view_id = self.env.ref('sale_workflow_cakeshop.product_configurator_ordernow_ko_form').id
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.configurator.ordernow.ko',
+            'name': "Order Configurator",
+            'view_mode': 'form',
+            'view_id': order_configurator_view_id,
+            'target': 'new',
+            'context': dict(
+                self.env.context,
+                default_ref_product_id=self.id,
+                wizard_model='product.configurator.ordernow.ko'
+            ),
+        }
+
 class ProductProduct(models.Model):
     _inherit = "product.product"
 

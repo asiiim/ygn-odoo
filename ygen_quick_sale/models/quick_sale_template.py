@@ -20,6 +20,12 @@ class QuickSaleTemplate(models.Model):
     quick_sale_ids = fields.One2many('ygen.quick.sale', 'quick_sale_tmpl_id', string="Sale Template", track_visibility='onchange')
     product_line_ids = fields.One2many('quick.sale.product.template.line', 'quick_sale_tmpl_id', string="Product Lines", track_visibility='onchange')
 
+     # Refresh System Qty
+    @api.multi
+    def refresh_on_hand(self):
+        for line in self.product_line_ids:
+            line.refresh_sys_on_hand()
+
     # Stock Default Location
     @api.model
     def _default_location_id(self):
@@ -72,3 +78,8 @@ class QuickSaleProductTemplateLine(models.Model):
             for quant in line.product_id.stock_quant_ids:
                 if line.stock_location_id == quant.location_id:
                     line.sys_on_hand = quant.quantity
+
+    @api.multi
+    def refresh_sys_on_hand(self):
+        for rec in self:
+            rec._get_sys_on_hand()

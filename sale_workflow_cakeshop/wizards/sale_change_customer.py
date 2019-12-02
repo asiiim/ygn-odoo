@@ -20,4 +20,9 @@ class SaleChangeCustomer(models.TransientModel):
 
         so_obj = self.env['sale.order']
         so = so_obj.browse(self._context.get('active_id'))
-        so.write({'partner_id': self.partner_id.id})
+        if so.invoice_status == 'to invoice':
+            so.write({'partner_id': self.partner_id.id})
+
+            stock_picking = self.env['stock.picking'].search([('origin', '=', so.name), ('state', '!=', 'cancel')], limit=1)
+            if stock_picking.state not in ["done", "cancel"]:
+                stock_picking.write({'partner_id': self.partner_id.id})

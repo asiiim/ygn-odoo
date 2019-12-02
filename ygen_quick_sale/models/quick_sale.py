@@ -68,6 +68,7 @@ class QuickSale(models.Model):
             return
         
         template = self.quick_sale_tmpl_id.with_context(lang=self.partner_id.lang)
+        template.refresh_on_hand()
         self.journal_id = template.journal_id
         self.partner_id = template.partner_id
         self.get_template_product_lines(template)
@@ -105,6 +106,7 @@ class QuickSale(models.Model):
             }
             sale.write(vals)
             if not self.product_line_ids:
+                sale.quick_sale_tmpl_id.refresh_on_hand()
                 sale.get_template_product_lines(sale.quick_sale_tmpl_id)
         return True
     
@@ -272,4 +274,4 @@ class QuickSaleProductLine(models.Model):
                 line.sold_qty = line.sys_on_hand - line.real_on_hand
 
             if line.sys_on_hand <= 0:
-                line.sold_qty = 0
+                raise UserError(_("You have selected the product(s) whose system on hand is less or equal to zero\nPlease remove that product(s)."))
