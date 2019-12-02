@@ -348,7 +348,7 @@ class SaleOrder(models.Model):
         stock_picking = self.env['stock.picking'].search([('origin', '=', self.name), ('state', '!=', 'cancel')], limit=1)
         if stock_picking.state not in ["done", "cancel"]:
             stock_picking.action_cancel()
-        self.write({'delivery_validated': False})
+        self.write({'delivery_validated': True})
         return super(SaleOrder, self).action_cancel()
 
     # Change customer

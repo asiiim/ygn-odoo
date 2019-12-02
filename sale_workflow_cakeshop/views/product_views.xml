@@ -32,6 +32,11 @@
                         <span>Order Now</span>
                     </button>
                 </div>
+                <div class="mt-3" attrs="{'invisible': ['|', '|', ('is_addon', '=', True), ('is_custom', '=', True)]}">
+                    <button style="position:absolute;right:5px;bottom:5px;" class="pull-right btn btn-primary text-right" name="action_reference_order" type="object">
+                        <span>Reference</span>
+                    </button>
+                </div>
             </xpath>
         </field>
     </record>
