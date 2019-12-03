@@ -5,6 +5,10 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import Warning, ValidationError, UserError
 
+import logging
+
+_logger = logging.getLogger(__name__)
+
 class QuickSaleTemplate(models.Model):
     _name = 'ygen.quick.sale.template'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
@@ -76,8 +80,14 @@ class QuickSaleProductTemplateLine(models.Model):
     def _get_sys_on_hand(self):
         for line in self:
             for quant in line.product_id.stock_quant_ids:
+                _logger.warning('Selected Location:: ' + str(line.stock_location_id.name))
+                _logger.warning('Quant Location:: ' + str(quant.location_id.name))
+                _logger.warning('Quant Qty:: ' + str(quant.quantity))
+                _logger.warning('Quant Reserved Qty:: ' + str(quant.reserved_quantity))
                 if line.stock_location_id == quant.location_id:
                     line.sys_on_hand = quant.quantity
+                else:
+                    line.sys_on_hand = 0
 
     @api.multi
     def refresh_sys_on_hand(self):

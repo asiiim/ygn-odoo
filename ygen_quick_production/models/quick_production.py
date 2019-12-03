@@ -249,6 +249,8 @@ class QuickSaleProductLine(models.Model):
         for quant in self.product_id.stock_quant_ids:
             if self.location_id == quant.location_id:
                 qty = quant.quantity
+            else:
+                qty = 0
                 
         self.update({'sys_on_hand': qty})
 

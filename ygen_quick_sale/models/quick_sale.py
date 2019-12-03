@@ -243,6 +243,8 @@ class QuickSaleProductLine(models.Model):
         for quant in self.product_id.stock_quant_ids:
             if self.stock_location_id == quant.location_id:
                 qty = quant.quantity
+            else:
+                qty = 0
                 
         self.update({
             'unit_price': self.product_id.list_price,
