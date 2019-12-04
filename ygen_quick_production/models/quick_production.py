@@ -84,16 +84,15 @@ class QuickProduction(models.Model):
         if template:
             product_lines = [(5, 0, 0)]
             for line in template.product_line_ids:
-                if line.sys_on_hand <= 0:
-                    data = {
-                        'quick_production_id':self.id,
-                        'sequence': line.sequence,
-                        'product_id': line.product_id,
-                        'to_produce': 0.0,
-                        'sys_on_hand': line.sys_on_hand,
-                        'bom_id': line.bom_id
-                    }
-                    product_lines.append((0, 0, data))
+                data = {
+                    'quick_production_id':self.id,
+                    'sequence': line.sequence,
+                    'product_id': line.product_id,
+                    'to_produce': 0.0,
+                    'sys_on_hand': line.sys_on_hand,
+                    'bom_id': line.bom_id
+                }
+                product_lines.append((0, 0, data))
             self.product_line_ids = product_lines
 
     def action_start(self):
