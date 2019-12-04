@@ -6,53 +6,53 @@
         <field name="inherit_id" ref="sale.view_sale_advance_payment_inv"/>
             <field name="arch" type="xml">
                 <xpath expr="//group" position="replace">
-                    <group colspan="2">
-                        <group>
-                            <field name="count" invisible="[('count','=',1)]" readonly="True"/>
-                            <field name="advance_payment_method" class="oe_inline" widget="radio"
-                                attrs="{'invisible': [('count','&gt;',1)]}"/>
-                            <field name="product_id"
-                                context="{'search_default_services': 1, 'default_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline"
-                                invisible="1"/>
-                            <label for="amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}"/>
-                            <div attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}">
-                                <field name="amount"
-                                    attrs="{'required': [('advance_payment_method', 'in', ('fixed','percentage'))]}" class="oe_inline" widget="monetary"/>
-                                <label string="%%"
-                                    attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}" class="oe_inline"/>
-                            </div>
-                            <field name="deposit_account_id" class="oe_inline"
-                                attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}" groups="account.group_account_manager"/>
-                            <field name="deposit_taxes_id" class="oe_inline" widget="many2many_tags"
-                                domain="[('type_tax_use','=','sale')]"
-                                attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}"/>
-                        </group>
-                        <group>
-                            <label for="total_due_amount" string="Amount Due"/>
-                            <div class="oe_title">
-                                <h2 style="color: red;">
-                                    <strong><field name="total_due_amount"/></strong>
-                                </h2>
-                            </div>
-                            <field name="journal_id" required="1"/>
-                            <label for="tender_amount" string="Tender"/>
-                            <div class="oe_title">
-                                <h1>
-                                    <field name="tender_amount" invisible="1"/>
-                                    <field name="tender_amount_char" default_focus="1" placeholder="0.0"/>
-                                </h1>
-                            </div>
-                            <label for="change_amount" string="Change"/>
-                            <div class="oe_title">
-                                <h2 style="color: blue;">
-                                    <field name="change_amount"/>
-                                </h2>
-                            </div>
-                            <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
-                            <button name="pay_bill" string="Pay Bill" type="object" class="btn btn-primary"/>
-                        </group>
+                    <group>
+                        <field name="count" invisible="[('count','=',1)]" readonly="True"/>
+                        <field name="advance_payment_method" class="oe_inline" widget="radio" invisible="1"/>
+                        <field name="product_id"
+                            context="{'search_default_services': 1, 'default_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline"
+                            invisible="1"/>
+                        <label for="amount" invisible="1"/>
+                        <div invisible="1">
+                            <field name="amount"
+                                attrs="{'required': [('advance_payment_method', 'in', ('fixed','percentage'))]}" class="oe_inline" widget="monetary" invisible="1"/>
+                            <label string="%%"
+                                invisible="1" class="oe_inline"/>
+                        </div>
+                        <field name="deposit_account_id" class="oe_inline"
+                            invisible="1" groups="account.group_account_manager"/>
+                        <field name="deposit_taxes_id" class="oe_inline" widget="many2many_tags"
+                            domain="[('type_tax_use','=','sale')]"
+                            invisible="1"/>
+
+                        <label for="total_due_amount" string="Amount Due"/>
+                        <div class="oe_title">
+                            <h2 style="color: red;">
+                                <strong><field name="total_due_amount"/></strong>
+                            </h2>
+                        </div>
+                        <field name="journal_id" required="1"/>
+                        <label for="tender_amount" string="Tender"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="tender_amount" invisible="1"/>
+                                <field name="tender_amount_char" default_focus="1" placeholder="0.0"/>
+                            </h1>
+                        </div>
+                        <label for="change_amount" string="Change"/>
+                        <div class="oe_title">
+                            <h2 style="color: blue;">
+                                <field name="change_amount"/>
+                            </h2>
+                        </div>
+                        <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                     </group>
                 </xpath>
+                <xpath expr='//footer' poition="inside">
+                    <button name="pay_bill" string="Pay Bill" type="object" class="btn btn-primary"/>
+                </xpath>
+                <button name="create_invoices" position="replace"></button>
+                <button name="create_invoices" position="replace"></button>
             </field>
     </record>
 </odoo>
