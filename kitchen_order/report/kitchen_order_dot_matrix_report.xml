@@ -121,6 +121,19 @@
                                     <p t-field="o.message"/>
                                 </div>
                             </div>
+                            <div class="row mt8 m8" id="images-ref">
+                                <div class="col-xs-6" t-if="o.image">
+                                    <div>
+                                        <img style="max-width:100%; height:auto;" t-if="o.image" t-att-src="'data:image/png;base64,%s' % to_text(o.image)"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6" t-if="o.ref_image">
+                                    <div>
+                                        <img style="max-width:100%; height:auto;" t-if="o.ref_image" t-att-src="'data:image/png;base64,%s' % to_text(o.ref_image)"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="oe_structure"/>
                         </div>
                     </div>
                 </div>

@@ -23,5 +23,15 @@
                 </t>
             </xpath>
         </template>
+        <!-- Extend Kitchen Order Dot Matrix Report -->
+        <template id="report_kitchen_order_document_dotmatrix" inherit_id="kitchen_order.report_kitchen_order_document_dotmatrix" name="Kitchen Order Dot Matrix Drive File Images Report">
+            <xpath expr="//div[@id='images-ref']" position="inside">
+                <t t-foreach="o.drive_file_ids" t-as="file">
+                    <div class="col-xs-6">
+                        <img style="max-width:100%; height:auto;" t-attf-src="https://drive.google.com/uc?export=view&amp;id={{ file.res_id }}"/>
+                    </div>
+                </t>
+            </xpath>
+        </template>
     </data>
 </odoo>
