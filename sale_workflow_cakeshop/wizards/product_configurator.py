@@ -365,19 +365,18 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     # To Trigger order details wizard view 
     @api.multi
     def view_order_description(self):
-        sale_order_view_id = self.env.ref('sale_workflow_cakeshop.product_configurator_order_details_form').id
+        ko_id = []
+        
+        for ko in self.order_id.kitchen_order_ids:
+            ko_id.append(ko.id)
+        
         return {
+            'name': _('Kitchen Order'),
+            'res_model': 'kitchen.order',
+            'res_id': ko_id[0],
+            'views': [(self.env.ref('sale_workflow_cakeshop.kitchen_order_form_inherit').id, 'form')],
             'type': 'ir.actions.act_window',
-            'res_model': 'product.order.desc',
-            'name': "Order Description",
-            'view_mode': 'form',
-            'view_id': sale_order_view_id,
-            'target': 'new',
-            'context': dict(
-                self.env.context,
-                default_so_id=self.order_id.id,
-                wizard_model='product.order.desc'
-            )
+            'target':'new'
         }
     
     @api.multi
