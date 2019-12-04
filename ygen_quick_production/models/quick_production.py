@@ -50,7 +50,9 @@ class QuickProduction(models.Model):
             raise UserError(_('You must define a warehouse for the company: %s.') % (company_user.name))
     
 
-    location_id = fields.Many2one('stock.location', string='Location', required=True, track_visibility='onchange', domain="[('usage', '=', 'internal'), ('company_id', '=', company_id)]", default=_default_location_id)
+    location_id = fields.Many2one('stock.location', string='Finish Location', required=True, track_visibility='onchange', domain="[('usage', '=', 'internal'), ('company_id', '=', company_id)]", default=_default_location_id)
+    raw_location_id = fields.Many2one('stock.location', string='Source Location', required=True, track_visibility='onchange', domain="[('usage', '=', 'internal'), ('company_id', '=', company_id)]", default=_default_location_id)
+
 
     date = fields.Datetime(string='Order Date', required=True, copy=False, default=fields.Datetime.now, track_visibility='onchange')
     quick_prod_tmpl_id = fields.Many2one('ygen.quick.production.template', string="Production Template", track_visibility='onchange')
@@ -66,6 +68,7 @@ class QuickProduction(models.Model):
         template = self.quick_prod_tmpl_id
         template.refresh_on_hand()
         self.location_id = template.location_id
+        self.raw_location_id = template.raw_location_id
         self.get_template_product_lines(template)
 
     # Start sale
@@ -132,10 +135,9 @@ class QuickProduction(models.Model):
     def _prepare_mo(self, product, qty, bom_id):
         self.ensure_one()
         mo_vals = {
-            'location_src_id': self.location_id.id,
+            'location_src_id': self.raw_location_id.id,
             'location_dest_id': self.location_id.id,
             'date_planned_start': self.date,
-            # 'company_id': self.company_id.id,
             'product_id': product.id,
             'product_uom_id': product.uom_id.id,
             'product_qty': qty,

@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
                 <tree string="Quick Production Template" class="o_ygen_quick_production_template">
                     <field name="name"/>
+                    <field name="raw_location_id"/>
                     <field name="location_id"/>
                 </tree>
             </field>
@@ -27,6 +28,8 @@
                             </h1>
                         </div>
                         <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="raw_location_id" options="{&quot;always_reload&quot;: True, &quot;no_create&quot;: True}"/>
                             <field name="location_id" options="{&quot;always_reload&quot;: True, &quot;no_create&quot;: True}"/>
                         </group>
                         <notebook>
