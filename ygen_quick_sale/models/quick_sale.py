@@ -265,15 +265,16 @@ class QuickSaleProductLine(models.Model):
     @api.depends('product_id', 'real_on_hand')
     def _get_sold_qty(self):
         for line in self:
-            if (line.sys_on_hand > 0) and (line.real_on_hand > line.sys_on_hand):
-                raise UserError(_("Quantity seems greater than in the system."))
-            if (line.sys_on_hand > 0) and (line.real_on_hand < 0):
-                raise UserError(_("Quantity should not be negative."))
-            
-            if line.real_on_hand == 0:
-                line.sold_qty = line.sys_on_hand
-            else:
-                line.sold_qty = line.sys_on_hand - line.real_on_hand
+            if line.product_id:
+                if (line.sys_on_hand > 0) and (line.real_on_hand > line.sys_on_hand):
+                    raise UserError(_("Quantity seems greater than in the system."))
+                if (line.sys_on_hand > 0) and (line.real_on_hand < 0):
+                    raise UserError(_("Quantity should not be negative."))
+                
+                if line.real_on_hand == 0:
+                    line.sold_qty = line.sys_on_hand
+                else:
+                    line.sold_qty = line.sys_on_hand - line.real_on_hand
 
-            if line.sys_on_hand <= 0:
-                raise UserError(_("You have selected the product(s) whose system on hand is less or equal to zero\nPlease remove that product(s)."))
+                if line.sys_on_hand <= 0:
+                    raise UserError(_("You have selected the product(s) whose system on hand is less or equal to zero\nPlease remove that product(s)."))
