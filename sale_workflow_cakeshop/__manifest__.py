@@ -27,7 +27,7 @@ good for processing one product at a time.
         'views/account_invoice.xml',
         'views/account_payment.xml',
         'views/res_company.xml',
-        'views/res_config_settings.xml',
+        # 'views/res_config_settings.xml',
         'views/kitchen_order.xml',
         'wizards/product_configurator_order_now.xml',
         'wizards/sale_make_invoice_advance_views.xml',
