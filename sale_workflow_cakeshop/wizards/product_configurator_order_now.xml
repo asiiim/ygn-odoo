@@ -16,6 +16,7 @@
                                         <field name="product_id" options="{'no_create': True, 'no_create_edit': True}"/>
                                         <field name="product_tmpl_id" attrs="{'readonly': [('product_id', '!=', False)]}" options="{'no_create': True}" invisible="1"/>
                                         <label for="product_uom_qty" string="Qty"/>
+                                        <field name="product_uom_id" invisible="1"/>
                                         <div class="o_row">
                                             <h3>
                                                 <strong>
