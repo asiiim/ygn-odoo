@@ -108,7 +108,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             if line.discount:
                 price *= (1 - (line.discount or 0.0) / 100.0)
             elif line.fix_discount:
-                price -= line.fix_discount
+                price -= (line.fix_discount / line.product_uom_qty)
 
             taxes = line.tax_id.compute_all(price, line.currency_id, line.product_uom_qty, product=line.product_id, partner=line.partner_id)
             
@@ -224,7 +224,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         if self.discount:
             discount = self.discount
         elif self.fix_discount:
-            fix_discount = self.fix_discount
+            fix_discount = self.fix_discount / self.product_uom_qty
         
         return {
             'product_id': product_id,
