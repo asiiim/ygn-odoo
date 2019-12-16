@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_production_form_view_inherit" model="ir.ui.view">
+        <field name="name">Inherit MRP Production Form View</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="replace">
+                <label for="product_id"/>
+                <div class="o_row">
+                    <field name="product_id" attrs="{'readonly': [('has_moves', '=', True)]}" domain="[('bom_ids', '!=', False), ('bom_ids.active', '=', True), ('bom_ids.type', '=', 'normal')]"/>
+                    <button type="action"
+                        name="%(mrp_product_variant_cost.action_update_product_cost)d"
+                        string="Update Cost" class="btn-primary" attrs="{'invisible': [('product_id', '=', False)]}"/>
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>
