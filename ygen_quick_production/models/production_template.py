@@ -73,6 +73,7 @@ class QuickSaleProductTemplateLine(models.Model):
             for quant in line.product_id.stock_quant_ids:
                 if line.location_id == quant.location_id:
                     line.sys_on_hand = quant.quantity
+                    break
                 else:
                     line.sys_on_hand = 0
 
