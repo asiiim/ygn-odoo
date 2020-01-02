@@ -18,7 +18,7 @@ class ResPartner(models.Model):
             except ValueError:
                 pass
             if default_mobile:
-                default_name = False
+                default_name = default_mobile
         contextual_self = self.with_context(default_name=default_name, default_mobile=default_mobile)
         return super(ResPartner, contextual_self).default_get(default_fields)
 
