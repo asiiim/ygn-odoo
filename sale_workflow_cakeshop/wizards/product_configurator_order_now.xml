@@ -47,7 +47,7 @@
                             <field name="partner_id" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1, 'form_view_ref': 'ygen_partner_delivery_zone.view_partner_reduced_form'}" options="{&quot;always_reload&quot;: True, &quot;no_quick_create&quot;: True}" required="True"/>
                             <field name="saleorder_date"/>
                             <field name="requested_date" string="Delivery Date"/>
-                            <field name="kitchen_sale_order_print_selection"/>
+                            <field name="kitchen_sale_order_print_selection" invisible="1"/>
                         </group>
                         <group>
                             <field name="journal_id" widget="selection" required="True"/>
@@ -76,7 +76,7 @@
                                     <strong><field name="amount" widget="monetary"/></strong>
                                 </h2>
                             </div>
-                            <field name="tax_id" widget="many2many_tags" readonly="1"/>
+                            <field name="tax_id" widget="many2many_tags" readonly="1" invisible="1"/>
                             <label for="price_total" string="Total"/>
                             <div class="oe_title">
                                 <h2 style="color:blue;">
