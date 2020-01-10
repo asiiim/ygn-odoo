@@ -118,10 +118,6 @@ class SaleOrder(models.Model):
                     tax_ids = so.fiscal_position_id.map_tax(tax)
                 else:
                     tax_ids = tax
-
-                # Check amount
-                if so.amount_due <= 0.00:
-                    raise UserError(_('The value of the payment amount must be positive.'))
                 
                 # Create Invoice
                 invoice = inv_obj.create({
