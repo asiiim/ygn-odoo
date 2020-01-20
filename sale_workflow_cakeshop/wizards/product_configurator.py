@@ -172,13 +172,25 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         return order_vals
 
     @api.multi
-    def _prepare_payment(self):
+    def _prepare_payment(self, so_amount):
         """
         Prepare the dict of values to create the new payment for a advance payment. This method may be
         overridden to implement custom invoice generation (making sure to call super() to establish
         a clean extension chain).
         """
         self.ensure_one()
+
+        # There might be case the total order amount may be greater than that in sale order total due to 
+        # tax or fixed discount (for example: if total = 2100, and sale order total = 2099.99). In this
+        # case if the advance amount is paid equal to total in wizard order, there might become the issue of
+        # being negative due amount (for example: if sale order total = 2099.99, advance = 2100, then due = -0.01)
+        # Below is fix for above case.
+        adv_amt = 0.0
+        if self.price_total == self.amount:
+            adv_amt = so_amount
+        else:
+            adv_amt = self.amount
+
         payment_methods = self.journal_id.inbound_payment_method_ids
         payment_method_id = payment_methods and payment_methods[0] or False
         payment_vals = {
@@ -186,7 +198,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             'payment_type': 'inbound',
             'partner_type': 'customer',
             'partner_id': self.partner_id.id,
-            'amount': self.amount,
+            'amount': adv_amt,
             'journal_id': self.journal_id.id,
             'payment_date': self.payment_date,
             'communication': 'Advance Payment for order no %s' % self.order_id.name,
@@ -264,7 +276,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             # Attach sale order line
             line_vals = self._get_order_line_vals(self.product_id.id)
             self.order_id.write({'order_line': [(0, 0, line_vals)]})
-            
+
             # Create Kitchen Order
             KitchenOrder = self.env['kitchen.order']
             KitchenOrder.create(self._prepare_kitchen_order())
@@ -272,7 +284,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             # Create Payment if any
             if self.amount:
                 Payment = self.env['account.payment']
-                payment = Payment.create(self._prepare_payment())
+                payment = Payment.create(self._prepare_payment(sale_order.amount_total))
                 payment.post()
                 self.payment_id = payment
                 sale_order.payment_id = payment
@@ -411,7 +423,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         # Create Payment if any
         if self.amount:
             Payment = self.env['account.payment']
-            payment = Payment.create(self._prepare_payment())
+            payment = Payment.create(sale_order.amount_total)
             payment.post()
             self.payment_id = payment
             sale_order.payment_id = payment
