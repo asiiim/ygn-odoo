@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_sign_validate_view" model="ir.ui.view">
+        <field name="name">stock.sign.validate.view</field>
+        <field name="model">stock.picking</field>
+        <field name="arch" type="xml">
+            <form string="Sign and Validate Delivery">
+                <group>
+                    <field name="signature" widget="signature" width="700" height="700"/>
+                </group>
+                <footer>
+                    <button name="sign" string="Sign" type="object" class="btn btn-primary"/>
+                    <button name="sign_validate" string="Sign &amp; Validate" type="object" class="btn btn-primary"/>
+                    <button string="Close" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="view_picking_form_inherit" model="ir.ui.view">
+        <field name="name">ygen.picking.form.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <button name='button_validate' position="after">
+                <button name="button_sign_validate" class="btn-primary" string="Sign" type="object" attrs="{'invisible': [('show_validate', '=', False)]}"/>
+            </button>
+            <field name="origin" position="after">
+                <label for="user_id"/>
+                <div class="o_row">
+                    <field name="user_id" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                    <field name="is_scheduled" invisible="1"/>
+                    <button name="schedule_delivery_activity" class="btn-primary" string="Notify" type="object" attrs="{'invisible': ['|', ('is_scheduled', '=', True), ('user_id', '=', False)]}"/>
+                </div>
+            </field>
+            <field name="note" position="before">
+                <field name="is_sign_validate" invisible="1"/>
+                <field name="signature" widget="signature" width="600" height="800" attrs="{'readonly': [('show_validate', '=', False)]}"/>
+            </field>
+        </field>
+    </record>
+    <record id="view_picking_search_inherit" model="ir.ui.view">
+        <field name="name">ygen.picking.search.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <filter name="activities_my" position="after">
+                <field name="user_id"/>
+                <filter string="My Deliveries" name="deliveries_my" domain="[('user_id', '=', uid)]"/>
+            </filter>
+        </field>
+    </record>
+</odoo>
