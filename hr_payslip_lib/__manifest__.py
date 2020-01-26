@@ -24,6 +24,10 @@
 
     # always loaded
     'data': [
-        'views/hr_payslip.xml'
+        'data/report_paperformat.xml',
+        'views/hr_payroll_structure.xml',
+        'views/hr_payslip.xml',
+        'report/payslip_report.xml',
+        'report/payslip_bank_letter_report.xml'
     ],
 }

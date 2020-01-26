@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Payslip Template -->
+        <template id="report_ygen_payslip" name="Payslip Details">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.basic_layout">
+                        <div class="page" style="font-size:11px;">
+                            <h4 class="text-center"><b>PAY SLIP</b></h4>
+                            <t t-if="o.payslip_run_id">
+                            <div class="text-right">
+                                <b><span style="font-size: 14px;" t-field="o.payslip_run_id.name"/></b>
+                            </div>
+                            </t>
+                            <t t-else="">
+                            <div class="text-right">
+                                <b><span style="font-size: 14px;" t-field="o.name"/></b>
+                            </div>
+                            </t>
+                            <table class="table table-condensed table-bordered">
+                                <tr>
+                                    <td><strong>Name</strong></td>
+                                    <td><span t-field="o.employee_id"/></td>
+                                    <td><strong>Designation</strong></td>
+                                    <td><span t-field="o.employee_id.job_id"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Email</strong></td>
+                                    <td><span t-field="o.employee_id.work_email"/></td>
+                                    <td><strong>Citizenship / Identification No.</strong></td>
+                                    <td><span t-field="o.employee_id.identification_id"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Reference</strong></td>
+                                    <td><span t-field="o.number"/></td>
+                                    <td><strong>Bank Account</strong></td>
+                                    <td><span t-field="o.employee_id.bank_account_id"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Date From</strong></td>
+                                    <td><span t-field="o.date_from"/></td>
+                                    <td><strong>Date To</strong></td>
+                                    <td><span t-field="o.date_to"/></td>
+                                </tr>
+                            </table>
+
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th style="background-color:#000; color:#fff;" class="text-center" width="15%">Code</th>
+                                        <th style="background-color:#000; color:#fff;" class="text-center" width="35%">Name</th>
+                                        <th style="background-color:#000; color:#fff;" class="text-center" width="20%">Amount (In Rs.)</th>
+                                        <th style="background-color:#000; color:#fff;" class="text-center" width="10%">Rate (%)</th>
+                                        <th style="background-color:#000; color:#fff;" class="text-center" width="20%">Total (In Rs.)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip)" t-as="line">
+                                        <t t-if="line.code=='GROSS' or line.code=='NET'">
+                                        <td style="background-color:#000; color:#fff;"><span t-field="line.code"/></td>
+                                        <td style="background-color:#000; color:#fff;"><span t-field="line.name"/></td>
+                                        <td style="background-color:#000; color:#fff;"><span t-field="line.amount"/></td>
+                                        <td style="background-color:#000; color:#fff;" class="text-right"><span t-esc="line.rate"/></td>
+                                        <td style="background-color:#000; color:#fff;" class="text-right"><span t-esc="line.total"/></td>
+                                        </t>
+                                        <t t-else="">
+                                        <td><span t-field="line.code"/></td>
+                                        <td><span t-field="line.name"/></td>
+                                        <td><span t-field="line.amount"/></td>
+                                        <td class="text-right"><span t-esc="line.rate"/></td>
+                                        <td class="text-right"><span t-esc="line.total"/></td>
+                                        </t>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <div class="container">
+                            <div class="row">
+                                <div class="text-left col-xs-12">
+                                <div style="border-bottom:1px solid #000;">
+                                    <strong>Remarks: </strong>
+                                </div>
+                                </div>
+                            </div>
+                            <br/><br/><br/><br/><br/>
+                            <div class="row">
+                                <div class="text-left col-xs-6">
+                                <div>
+                                    <strong>Received by:</strong> <span style="border-top:1px solid #000; padding:4px 20px;"><strong t-field="o.employee_id"/></span>
+                                </div>
+                                </div>
+                                <div class="text-right col-xs-6"><span style="border-top:1px solid #000; padding:4px 20px;"><strong>Authorized signature</strong></span></div>
+                            </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <report id="action_report_ygen_payslip" string="Payslip Report" model="hr.payslip" report_type="qweb-pdf"  file="hr_payslip_lib.report_ygen_payslip" name="hr_payslip_lib.report_ygen_payslip" print_report_name="('Payslip of %s on %s' % (object.employee_id.name, object.create_date))"/>
+    </data>
+</odoo>
