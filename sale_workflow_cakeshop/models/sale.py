@@ -18,7 +18,7 @@ class SaleOrder(models.Model):
         readonly=True
     )
     advance_payment = fields.Monetary(related="payment_id.amount", string="Advance", store=True, track_visibility='always')
-    amount_due = fields.Monetary(compute='_compute_amount_due', string='Amount Due', readonly=True, track_visibility='always')
+    amount_due = fields.Monetary(compute='_compute_amount_due', string='Amount Due', store=True, readonly=True, track_visibility='always')
     kitchen_order_ids = fields.One2many(
         comodel_name='kitchen.order',
         inverse_name='saleorder_id',
@@ -36,7 +36,7 @@ class SaleOrder(models.Model):
             else:
                 order.has_ko = False
 
-    @api.depends('amount_total')
+    @api.depends('amount_total', 'total_return_adv', 'payment_id')
     def _compute_amount_due(self):
         """
         Compute the amount due of the SO.
@@ -45,7 +45,7 @@ class SaleOrder(models.Model):
             if not line.invoice_ids:
                 # Check if the payment linked has already been matched 
                 # and set the amount_due accordingly
-                line.amount_due = line.amount_total - (line.payment_id.amount if line.payment_id.state == 'posted' and not line.payment_id.move_reconciled else 0)
+                line.amount_due = line.amount_total + line.total_return_adv - (line.payment_id.amount if line.payment_id.state == 'posted' and not line.payment_id.move_reconciled else 0)
             else:
                 for invoice in line.invoice_ids:
                     line.amount_due = invoice.residual
@@ -57,10 +57,15 @@ class SaleOrder(models.Model):
     @api.multi
     def validate_picking(self):
         for so in self:
-            stock_picking = self.env['stock.picking'].search([('origin', '=', so.name), ('state', '!=', 'cancel')], limit=1)
-            if stock_picking.state not in ["done", "cancel"]:
-                stock_picking.button_validate()
-            so.write({'delivery_validated': True})
+            stock_pickings = self.env['stock.picking'].search([('origin', '=', so.name), ('state', '!=', 'cancel')])
+            if not stock_pickings:
+                raise UserError(_('No such deliveries to validate.'))
+            else:
+                for stock_picking in stock_pickings:
+                    if stock_picking.state not in ["done", "cancel"]:
+                        stock_picking.button_validate()
+                    so.write({'delivery_validated': True})
+                    break
 
     # Tender and Change
     tender_amount = fields.Monetary(string='Tender', track_visibility='always', default=0.0)
@@ -266,7 +271,7 @@ class SaleOrder(models.Model):
                 self.is_advance = False
     
     @api.multi
-    def _prepare_return_payment(self):
+    def _prepare_return_payment(self, amount, communication):
         """
         Prepare the dict of values to create the return payment for a paid advance.
         """
@@ -278,43 +283,50 @@ class SaleOrder(models.Model):
             'payment_type': 'outbound',
             'partner_type': 'customer',
             'partner_id': self.partner_id.id,
-            'amount': self.payment_id.amount,
+            'amount': amount,
             'journal_id': self.payment_id.journal_id.id,
             'payment_date': self.payment_id.payment_date,
-            'communication': 'Return Advance Payment to for order no %s' % self.name,
-            'company_id': self.company_id.id
+            'communication': communication,
+            'company_id': self.company_id.id,
+            'sale_id': self.id
         }
         return payment_return_vals
 
     @api.multi
     def cancel_advance_payment(self):
         # Create return Payment if any
-        if self.payment_id:
-            Payment = self.env['account.payment']
-            payment = Payment.create(self._prepare_return_payment())
-            payment.post()
-            # Open payment matching screen
-            self.payment_id = None
-            return payment.open_payment_matching_screen()
+        if self.is_adv_return:
+            raise UserError(_('You cannot edit the payment since you have returned the excess advance amount.'))
+        else:
+            if self.payment_id:
+                Payment = self.env['account.payment']
+                communication = 'Return Advance Payment to for order no %s' % self.name
+                payment = Payment.create(self._prepare_return_payment(self.payment_id.amount, communication))
+                payment.post()
+                # Open payment matching screen
+                self.payment_id = None
+                return payment.open_payment_matching_screen()
                 
 
     @api.multi
     def edit_advance_payment(self):
-        
-        sale_change_advance_view_id = self.env.ref('sale_workflow_cakeshop.sale_change_advance_form').id
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'sale.change.advance',
-            'name': "Change Advance Amount",
-            'view_mode': 'form',
-            'view_id': sale_change_advance_view_id,
-            'target': 'new',
-            'context': dict(
-                self.env.context,
-                default_so_id=self.id,
-                wizard_model='sale.change.advance'
-            )
-        }
+        if self.is_adv_return:
+            raise UserError(_('You cannot edit the payment since you have returned the excess advance amount.'))
+        else:
+            sale_change_advance_view_id = self.env.ref('sale_workflow_cakeshop.sale_change_advance_form').id
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'sale.change.advance',
+                'name': "Change Advance Amount",
+                'view_mode': 'form',
+                'view_id': sale_change_advance_view_id,
+                'target': 'new',
+                'context': dict(
+                    self.env.context,
+                    default_so_id=self.id,
+                    wizard_model='sale.change.advance'
+                )
+            }
 
     @api.multi
     def add_advance_payment(self): 
@@ -333,6 +345,37 @@ class SaleOrder(models.Model):
                 wizard_model='sale.change.advance'
             )
         }
+
+    # Return the advance payment if amount due is less than zero
+    is_adv_return = fields.Boolean("Excess Advance Return?", default=False)
+    return_adv_payment_ids = fields.One2many('account.payment', 'sale_id', string="Return Payments")
+    total_return_adv = fields.Monetary(compute='_compute_total_return_adv', string='Advance Returned', store=True, readonly=True, track_visibility='always')
+    @api.multi
+    def return_excess_advance_payment(self):
+        if self.amount_due < 0:
+            if self.state != 'sale':
+                raise UserError(_('You must confirm the sale first.'))
+            else:
+                Payment = self.env['account.payment']
+                communication = 'Return Excess Advance Payment to for order no %s' % self.name
+                amount = abs(self.amount_due)
+                payment = Payment.create(self._prepare_return_payment(amount, communication))
+                payment.post()
+                self.write({
+                    'is_adv_return': True
+                })
+                # Open payment matching screen
+                return payment.open_payment_matching_screen()
+
+    @api.depends('is_adv_return', 'return_adv_payment_ids')
+    def _compute_total_return_adv(self):
+        """
+        Compute the total returned advance payments of the SO.
+        """
+        for so in self:
+            if so.is_adv_return:
+                for ret_adv in so.return_adv_payment_ids:
+                    so.total_return_adv += ret_adv.amount
     
     # Cancel Kitchen Orders, Delivery and Advance if SO is Cancelled
     @api.multi
@@ -345,7 +388,6 @@ class SaleOrder(models.Model):
         stock_picking = self.env['stock.picking'].search([('origin', '=', self.name), ('state', '!=', 'cancel')], limit=1)
         if stock_picking.state not in ["done", "cancel"]:
             stock_picking.action_cancel()
-        self.write({'delivery_validated': True})
         return super(SaleOrder, self).action_cancel()
 
     # Change customer
