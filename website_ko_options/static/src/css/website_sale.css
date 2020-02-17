@@ -1,0 +1,13 @@
+.js_ko {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.btn-default:hover {
+    background-color: #969696;
+}
+
+.input-group[class*="col-"] {
+    padding-left: 5px;
+    padding-right: 5px;
+}

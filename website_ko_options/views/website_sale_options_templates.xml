@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop Product Options">
+  <xpath expr="." position="inside">
+      <script type="text/javascript" src="/web/static/src/js/fields/field_utils.js"></script>
+      <script type="text/javascript" src="/website_ko_options/static/src/js/utils.js"></script>
+      <script type="text/javascript" src="/website_ko_options/static/src/js/datetime_picker.js"></script>
+      <script type="text/javascript" src="/website_ko_options/static/src/js/website_sale.js"></script>
+      <link rel='stylesheet' href='/website_ko_options/static/src/less/datepicker.less'/>
+      <link rel='stylesheet' href='/website_ko_options/static/src/css/website_sale.css'/>
+  </xpath>
+</template>
+
+<template id="ko_modal" inherit_id="website_sale_options.modal">
+  <xpath expr="//table" position="after">
+    <div class="form-group">
+      <div class="row ml0 mr0 mb8">
+        <div class="col-md-6 js_ko">
+          <label class="control-label">Message</label>
+        </div>
+        <div class='col-md-6 input-group js_ko'>
+          <input type='text' class="js_ko_message form-control" name="ko_message" placeholder="eg. Happy birthday sathi!" />
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-edit"></span>
+          </span>
+        </div>
+      </div>
+      <div class="row ml0 mr0 mb8">
+        <div class="col-md-6 js_ko">
+          <label class="control-label">Kitchen Notes</label>
+        </div>
+        <div class='col-md-6 input-group js_ko'>
+          <input type='text' class="js_ko_message form-control" name="ko_note" placeholder="eg. Angry bird drawing!" />
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-cutlery"></span>
+          </span>
+        </div>
+      </div>
+      <div class="row ml0 mr0 mb8">
+        <div class="col-md-6 js_ko">
+          <label class="control-label">Delivery Date</label>
+        </div>
+        <div class="o_website_datepicker" data-name="delivery_date" data-type="datetime">
+          <input type="text"
+            class="o_website_datepicker_input o_input"
+            id="datepicker-13"/>
+        </div>
+        <!-- <div class='col-md-6 input-group date js_ko' id='datetimepicker1'>
+          <input type='text' class="js_ko_delivery_date form-control" name="delivery_date" />
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+          </span>
+        </div> -->
+      </div>
+    </div>
+  </xpath>
+  <!-- <xpath expr="//tbody" position="inside">
+    <tr class="js_ko">
+      <td class='td-ko_message_label' colspan="2">
+        <span><label for="ko_message">Message</label></span>
+      </td>
+      <td class='td-ko_message' colspan="2">
+        <textarea name="ko_message" class="js_ko_message form-control message" rows="3" cols="40" placeholder="eg. Happy birthday sathi!"></textarea>
+      </td>
+    </tr>
+    <tr class="js_ko">
+      <td class='td-ko_notes_label' colspan="2">
+        <span><label for="ko_notes">Kitchen Notes</label></span>
+      </td>
+      <td class='td-ko_notes' colspan="2">
+        <textarea name="ko_notes" class="js_ko_notes form-control notes" rows="3" cols="40" placeholder="g. Angry bird drawing!"></textarea>
+      </td>
+    </tr>
+    <tr class="js_ko">
+      <td class='td-delivery_date_label' colspan="2">
+        <span><label for="delivery_date">Delivery Date</label></span>
+      </td>
+      <td class='td-ko_message' colspan="2">
+        <div class='input-group date' id='datetimepicker1'>
+          <input type='text' class="js_ko_delivery_date form-control" name="delivery_date" />
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+          </span>
+        </div>
+      </td>
+    </tr>
+  </xpath> -->
+</template>
+
+</odoo>
