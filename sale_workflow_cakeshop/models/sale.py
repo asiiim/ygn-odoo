@@ -15,7 +15,8 @@ class SaleOrder(models.Model):
     payment_id = fields.Many2one(
         comodel_name='account.payment',
         # required=True,
-        readonly=True
+        readonly=True,
+        copy=False
     )
     advance_payment = fields.Monetary(related="payment_id.amount", string="Advance", store=True, track_visibility='always')
     amount_due = fields.Monetary(compute='_compute_amount_due', string='Amount Due', store=True, readonly=True, track_visibility='always')
@@ -237,6 +238,9 @@ class SaleOrder(models.Model):
             ),
         }
 
+    # Provide Reference Product
+    ref_product_id = fields.Many2one(comodel_name='product.product', string='Reference Product', domain="[('sale_ok', '=', True), ('is_custom', '=', False), ('is_addon', '=', False)]")
+
     # Edit sale order
     @api.multi
     def action_edit_sale_order(self):
@@ -255,6 +259,7 @@ class SaleOrder(models.Model):
                 default_partner_id = self.partner_id.id,
                 default_requested_date = self.requested_date,
                 default_saleorder_date = self.date_order,
+                default_ref_product_id = self.ref_product_id.id,
                 wizard_model='product.configurator.ordernow.ko',
             ),
         }
@@ -418,6 +423,38 @@ class SaleOrder(models.Model):
             for pick in stock_pickings:
                 pick.unlink()
         return super(SaleOrder, self).unlink()
+
+    # Make sale order
+    @api.multi
+    def action_make_order(self):
+        order_make_view_id = self.env.ref('sale_workflow_cakeshop.make_order_form').id
+        ref_product_id = ""
+        qty = 0
+
+        # Taking first orderline detail as the reference product, qty and unit of measure
+        for line in self.order_line:
+            ref_product_id = line.product_id.id
+            qty = line.product_uom_qty
+            break
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.configurator.ordernow.ko',
+            'name': "Make Sale Order",
+            'view_mode': 'form',
+            'view_id': order_make_view_id,
+            'target': 'new',
+            'context': dict(
+                self.env.context,
+                default_order_id=self.id,
+                default_partner_id = self.partner_id.id,
+                default_requested_date = self.requested_date,
+                default_saleorder_date = self.date_order,
+                default_ref_product_id = ref_product_id,
+                default_product_uom_qty = qty,
+                wizard_model = 'product.configurator.ordernow.ko'
+            )
+        }
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"

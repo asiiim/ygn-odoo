@@ -93,15 +93,14 @@
             </form>
         </field>
     </record>
+
+    <!-- Edit Order -->
     <record id="product_configurator_ordernow_ko_product_edit_form" model="ir.ui.view">
         <field name="name">product.configurator.ordernow.ko.product.edit</field>
         <field name="model">product.configurator.ordernow.ko</field>
         <field name="mode">primary</field>
         <field name="inherit_id" ref="sale_workflow_cakeshop.product_configurator_ordernow_ko_form"/>
         <field name="arch" type="xml">
-            <field name="product_id" position="replace">
-                <field name="product_id" options="{&quot;always_reload&quot;: True, &quot;no_quick_create&quot;: True, &quot;no_create&quot;: True}"/>
-            </field>
             <button name="action_order_config_done" position="replace">
                 <button type="object" name="action_order_config_done" class="oe_highlight" string="Done"/>
             </button>
@@ -128,6 +127,26 @@
                     </h2>
                 </div>
             </div>
+            <button name="action_new_order_config_done" position="replace"></button>
+        </field>
+    </record>
+
+    <!-- Make Order -->
+    <record id="make_order_form" model="ir.ui.view">
+        <field name="name">make.order.form</field>
+        <field name="model">product.configurator.ordernow.ko</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="sale_workflow_cakeshop.product_configurator_ordernow_ko_form"/>
+        <field name="arch" type="xml">
+            <button name="action_order_config_done" position="replace">
+                <button type="object" name="action_order_config_done" class="oe_highlight" string="Done"/>
+            </button>
+            <field name="partner_id" position="replace">
+                <field name="partner_id" readonly="1"/>
+            </field>
+            <field name="saleorder_date" position="replace">
+                <field name="saleorder_date" readonly="1"/>
+            </field>
             <button name="action_new_order_config_done" position="replace"></button>
         </field>
     </record>

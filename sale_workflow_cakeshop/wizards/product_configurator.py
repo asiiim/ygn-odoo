@@ -310,6 +310,10 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
                 msg += "<li>" + str(self.fix_discount) + "/-"
             
             self.order_id.message_post(body=msg)
+            
+            # Set reference product in sale order if provided
+            if self.ref_product_id:
+                self.order_id.write({'ref_product_id': self.ref_product_id.id})
 
             # Show sale order form view
             return {
@@ -320,15 +324,18 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
                 'type': 'ir.actions.act_window'
             }
         else:
-            # Cancel the existing stock delivery
-            stock_picking = self.env['stock.picking']
-            stock_picking.search([('origin', '=', self.order_id.name)], limit=1).action_cancel()
+            # Check if the sale order is not a quotation
+            if self.order_id.state not in ["draft", "sent"]:
+                
+                # Cancel the existing stock delivery
+                stock_picking = self.env['stock.picking']
+                stock_picking.search([('origin', '=', self.order_id.name)], limit=1).action_cancel()
 
-            # Cancel the sale order
-            self.order_id.action_cancel()
+                # Cancel the sale order
+                self.order_id.action_cancel()
 
-            # Set the sale order to quotation
-            self.order_id.action_draft()
+                # Set the sale order to quotation
+                self.order_id.action_draft()
 
             # Place new vals for the sale order
             self.order_id.write(self._prepare_order())
@@ -336,7 +343,9 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             # Replace sale order line with new product
             line_vals = self._get_order_line_vals(self.product_id.id)
             for orderline in self.order_id.order_line:
-                if orderline.product_id.is_custom:
+                if self.ref_product_id.is_custom:
+                    raise UserError(_("The product you are trying to reference might be a custom product !\n Try selecting available reference product."))
+                else:
                     self.order_id.write({'order_line': [(1, orderline.id, line_vals)]})
                     break
             
@@ -345,13 +354,27 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
 
             # Changes in KO
             ko_vals = self._prepare_kitchen_order()
-            for ko in self.order_id.kitchen_order_ids:
-                ko.start_kitchen_order()
-                ko.write({
-                    'product_uom_qty': ko_vals.get('product_uom_qty'),
-                    'ko_note': ko_vals.get('ko_note')
-                })
-                break
+            if self.order_id.kitchen_order_ids:
+                for ko in self.order_id.kitchen_order_ids:
+                    ko.start_kitchen_order()
+                    ko.write({
+                        'product_uom_qty': ko_vals.get('product_uom_qty'),
+                        'ko_note': ko_vals.get('ko_note'),
+                        'ref_product_id': self.ref_product_id.id
+                    })
+                    break 
+            else:
+                # Create Kitchen Order
+                KitchenOrder = self.env['kitchen.order']
+                KitchenOrder.create(self._prepare_kitchen_order())
+            
+            # Create Payment if the order is in draft and has entered advance
+            if self.amount:
+                Payment = self.env['account.payment']
+                payment = Payment.create(self._prepare_payment(self.order_id.amount_total))
+                payment.post()
+                self.payment_id = payment
+                self.order_id.payment_id = payment
 
 
             # Log the sale order details in the chatter
@@ -373,6 +396,10 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
                 msg += "<li>" + str(self.fix_discount) + "/-"
             
             self.order_id.message_post(body=msg)
+        
+            # Set reference product in sale order if provided
+            if self.ref_product_id:
+                self.order_id.write({'ref_product_id': self.ref_product_id.id})
 
     # To Trigger order details wizard view 
     @api.multi
@@ -415,6 +442,10 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         # Attach sale order line
         line_vals = self._get_order_line_vals(self.product_id.id)
         self.order_id.write({'order_line': [(0, 0, line_vals)]})
+        
+        # Set reference product in sale order if provided
+        if self.ref_product_id:
+            self.order_id.write({'ref_product_id': self.ref_product_id.id})
         
         # Create Kitchen Order
         KitchenOrder = self.env['kitchen.order']
