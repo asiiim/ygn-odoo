@@ -13,11 +13,13 @@ class Picking(models.Model):
 
     user_id = fields.Many2one('res.users', string='Delivery Person', index=True, track_visibility='onchange')
     signature = fields.Binary('Delivery Signature', copy=False)
-    is_sign_validate = fields.Boolean('Is Signed & Validated', default=False)
-    is_scheduled = fields.Boolean('Is Scheduled?', default=False)
+    sign_validated = fields.Boolean('Is Signed & Validated', default=False)
+    scheduled = fields.Boolean('Is Scheduled?', default=False)
 
+    @api.multi
     # Schedule activity for the assigned user
     def schedule_delivery_activity(self):
+        self.ensure_one()
         mail_act_obj = self.env['mail.activity']
 
         msg = "<b>Delivery Order Details</b><br/>"
@@ -40,12 +42,13 @@ class Picking(models.Model):
             'note': msg
         }
         mail = mail_act_obj.create(mail_vals)
-        self.write({'is_scheduled': True})
+        self.write({'scheduled': True})
         return mail
 
     # Override validate method
     @api.multi
     def button_validate(self):
+        self.ensure_one()
         if self.state in ["confirmed", "assigned"]:
             for moveline in self.move_lines:
                 if moveline.product_uom_qty:
@@ -56,6 +59,7 @@ class Picking(models.Model):
     @api.multi
     def button_sign_validate(self):
         """Return action to sign and validate the delivery"""
+        self.ensure_one()
         stock_sign_validate_view_id = self.env.ref('ygen_stock_sign_validate_delivery.stock_sign_validate_view').id
 
         return {
@@ -67,12 +71,16 @@ class Picking(models.Model):
             'target': 'new'
         }
     
+    @api.multi
     def sign(self):
+        self.ensure_one()
         stock_pick_obj = self.env['stock.picking']
         stkpk = stock_pick_obj.browse(self._context.get('active_id'))
         stkpk.write({'signature': self.signature})
 
+    @api.multi
     def sign_validate(self):
+        self.ensure_one()
         stock_pick_obj = self.env['stock.picking']
         stkpk = stock_pick_obj.browse(self._context.get('active_id'))
 
@@ -81,5 +89,5 @@ class Picking(models.Model):
         
         stkpk.write({
             'signature': self.signature,
-            'is_sign_validate': True
+            'sign_validated': True
         })
