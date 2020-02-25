@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form -->
+    <record id="view_picking_form_inherit" model="ir.ui.view">
+        <field name="name">ygen.picking.form.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <field name="scheduled_date" position="replace">
+                <field name="scheduled_date" attrs="{'readonly': ['|', ('id', '=', False), ('state', '=', 'done')], 'required': [('id', '!=', False)]}"/>
+                <field name="date_done" string="Delivered Date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+            </field>
+            <field name="location_id" position="after">
+                <field name="delivery_delay" widget="float_time" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                <field name="delivery_process_time" widget="float_time" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Tree -->
+    <record id="stock_vpicktree_inherit" model="ir.ui.view">
+        <field name="name">stock.vpicktree.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="state" invisible="1"/>
+                <field name="delivery_delay" widget="float_time" sum="Total Deliveries Delayed Time" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                <field name="delivery_process_time" widget="float_time" sum="Total Process Time" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Search -->
+    <record id="stock_view_picking_internal_search_inherit" model="ir.ui.view">
+        <field name="name">Stock Picking Search View Inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <field name="group_id" position="after">
+                <field name="state" invisible="1"/>
+                <field name="delivery_delay" widget="float_time" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                <field name="delivery_process_time" widget="float_time" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                <separator />
+                <filter name="delayed_deliveries" string="Delayed Deliveries" domain="[('delivery_delay','&gt;', 0.0)]" help="Deliveries done after the scheduled date."/>
+                <filter name="ontime_prior_deliveries" string="Ontime/Prior Deliveries" domain="[('delivery_delay','=', 0.0)]" help="Deliveries done prior or at the scheduled date."/>
+                <separator />
+            </field>
+        </field>
+    </record>
+</odoo>
