@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template xml:space="preserve">
+    <t t-name="PresenceIndicator">
+        <div id="oe_partner_geolocation_status" class="fa fa-user">
+        </div>
+    </t>
+
+    <t t-name="PartnerGeolocationGeolocateMode">
+        <div class="o_partner_geolocation_geolocate_mode_container o_app_switcher_background">
+            <div class="o_partner_geolocation_geolocate_mode">
+                <h1>Welcome to <t t-esc="widget.company_name"/></h1>
+                <img t-attf-src="{{widget.company_image_url}}" alt="Company Logo"/>
+                <h2>Scan partner's badge</h2>
+                <h4>or</h4>
+                <button class="o_partner_geolocation_button_partners btn btn-primary btn-lg">Select Partner</button>
+            </div>
+            <div class="o_partner_geolocation_location"></div>
+        </div>
+    </t>
+
+    <t t-name="PartnerGeolocationGeolocateConfirm">
+        <div class="o_partner_geolocation_geolocate_mode_container o_app_switcher_background">
+            <div class="o_partner_geolocation_geolocate_mode">
+                <t t-if="widget.partner_id">
+                    <h1><t t-esc="widget.partner_name"/></h1>
+                    <h3>
+                        <t t-if="widget.partner_street">
+                            <t t-esc="widget.partner_street"/><t t-if="widget.partner_city">, </t>
+                        </t>
+                        <t t-if="widget.partner_city">
+                            <t t-esc="widget.partner_city"/>
+                        </t>
+                        <t t-if="widget.partner_mobile">
+                            <br/>
+                            <t t-esc="widget.partner_mobile"/>
+                        </t>
+                    </h3>
+                    <h2>Geolocate</h2>
+                    <a class="fa fa-map-marker btn-primary o_partner_geolocation_geolocate_icon"/>
+                </t>
+                <t t-if="!widget.partner_id">
+                    Error: could not find corresponding partner.<br/>Please return to the main menu.
+                </t>
+                <div class="oe_geolocation_geolocate">
+                </div>
+                <div class="o_partner_geolocation_back_button btn btn-danger fa fa-times"/>
+            </div>
+            <div class="o_partner_geolocation_location"></div>
+        </div>
+    </t>
+
+    <t t-name="PartnerGeolocationLocationMessage">
+        <div class="o_partner_geolocation_message_container o_app_switcher_background">
+            <div class="o_partner_geolocation_message">  
+                <t t-if="widget.partner">
+                    <t t-if="widget.partner.partner_latitude and widget.partner.partner_longitude">
+                        <h1 class="o_partner_geolocation_validation">
+                            Latitude: <t t-esc="widget.partner.partner_latitude"/>
+                        </h1>
+                        <h1 class="o_partner_geolocation_validation">
+                            Latitude: <t t-esc="widget.partner.partner_longitude"/>
+                        </h1>
+                        <br/>
+                        <h2 class="o_partner_geolocation_message_message">
+                            <t t-esc="widget.partner_name"/>
+                        </h2>
+                        <h3 class="o_partner_geolocation_random_message"></h3>
+                        <h2 class="o_partner_geolocation_warning_message"></h2>
+
+                    </t>
+                </t>
+                <t t-if="!widget.partner">
+                    Invalid request, please return to the main menu.<br/>
+                </t>
+                <button class="o_partner_geolocation_button_dismiss btn btn-primary btn-sm">ok</button>
+            </div>
+        </div>
+    </t>
+</template>

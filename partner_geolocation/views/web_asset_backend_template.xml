@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="partner_geolocation assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/partner_geolocation/static/src/js/partner_kanban_view_handler.js"></script>
+            <script type="text/javascript" src="/partner_geolocation/static/src/js/location_message.js"></script>
+            <script type="text/javascript" src="/partner_geolocation/static/src/js/geolocate_mode.js"></script>
+            <script type="text/javascript" src="/partner_geolocation/static/src/js/geolocate_confirm.js"></script>
+            <link rel="stylesheet" href="/partner_geolocation/static/src/less/partner_geolocation.less"/>
+        </xpath>
+    </template>
+
+    <!-- <template id="qunit_suite" name="hr attendance tests" inherit_id="web.qunit_suite">
+        <xpath expr="//script[contains(@src, '/web/static/tests/views/kanban_tests.js')]" position="after">
+            <script type="text/javascript" src="/parnter_geolocation/static/tests/partner_geolocation_tests.js"></script>
+        </xpath>
+    </template> -->
+</odoo>
