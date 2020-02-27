@@ -25,7 +25,7 @@ class Picking(models.Model):
     def button_validate(self):
         self.ensure_one()
         # Call super to get done date
-        validate = super(Picking, self).button_validate()
+        super(Picking, self).button_validate()
 
         # Calculate delivery delay and delivery process time
         date_done = fields.Datetime.from_string(self.date_done)
@@ -39,12 +39,8 @@ class Picking(models.Model):
         delv_processed_hrs = 0.0
 
         # Get float values of the time intervals into hrs and minutes
-        if delv_delay.days >= 0:
-            delv_delay_hrs = delv_delay.seconds / 3600
-        else:
-            delv_delay_hrs = 0.0
-
-        delv_processed_hrs = delv_processed.seconds / 3600
+        delv_delay_hrs = delv_delay.total_seconds() / 3600
+        delv_processed_hrs = delv_processed.total_seconds() / 3600
 
         # Write Delivery Date, Delay and Process time
         self.write({
@@ -52,4 +48,4 @@ class Picking(models.Model):
             'delivery_process_time': delv_processed_hrs
         })
 
-        return validate
+        return

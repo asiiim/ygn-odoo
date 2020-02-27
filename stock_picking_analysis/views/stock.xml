@@ -6,8 +6,7 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
-            <field name="scheduled_date" position="replace">
-                <field name="scheduled_date" attrs="{'readonly': ['|', ('id', '=', False), ('state', '=', 'done')], 'required': [('id', '!=', False)]}"/>
+            <field name="scheduled_date" position="after">
                 <field name="date_done" string="Delivered Date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
             </field>
             <field name="location_id" position="after">
@@ -24,9 +23,8 @@
         <field name="inherit_id" ref="stock.vpicktree"/>
         <field name="arch" type="xml">
             <field name="state" position="before">
-                <field name="state" invisible="1"/>
-                <field name="delivery_delay" widget="float_time" sum="Total Deliveries Delayed Time" attrs="{'invisible': [('state', '!=', 'done')]}"/>
-                <field name="delivery_process_time" widget="float_time" sum="Total Process Time" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                <field name="delivery_delay" widget="float_time" sum="Total Deliveries Delayed Time"/>
+                <field name="delivery_process_time" widget="float_time" sum="Total Process Time"/>
             </field>
         </field>
     </record>
@@ -39,11 +37,11 @@
         <field name="arch" type="xml">
             <field name="group_id" position="after">
                 <field name="state" invisible="1"/>
-                <field name="delivery_delay" widget="float_time" attrs="{'invisible': [('state', '!=', 'done')]}"/>
-                <field name="delivery_process_time" widget="float_time" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                <field name="delivery_delay" widget="float_time"/>
+                <field name="delivery_process_time" widget="float_time"/>
                 <separator />
                 <filter name="delayed_deliveries" string="Delayed Deliveries" domain="[('delivery_delay','&gt;', 0.0)]" help="Deliveries done after the scheduled date."/>
-                <filter name="ontime_prior_deliveries" string="Ontime/Prior Deliveries" domain="[('delivery_delay','=', 0.0)]" help="Deliveries done prior or at the scheduled date."/>
+                <filter name="ontime_prior_deliveries" string="Ontime/Prior Deliveries" domain="[('delivery_delay','&lt;=', 0.0)]" help="Deliveries done prior or at the scheduled date."/>
                 <separator />
             </field>
         </field>

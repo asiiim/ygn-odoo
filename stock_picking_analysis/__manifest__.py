@@ -17,6 +17,7 @@ Analaysis regarding stock picking from company to customer such as delivery late
     'data': [
         'views/stock.xml'
     ],
-    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
+    'price': 50.00,
+    'currency': 'EUR',
 }
