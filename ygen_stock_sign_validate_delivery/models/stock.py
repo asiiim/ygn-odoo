@@ -54,6 +54,7 @@ class Picking(models.Model):
                 if moveline.product_uom_qty:
                     moveline.quantity_done = moveline.product_uom_qty
             super(Picking, self).button_validate()
+        return
 
     # Sign and Validate Delivery
     @api.multi
