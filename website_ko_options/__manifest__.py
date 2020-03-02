@@ -2,7 +2,7 @@
 # Part of Ygen. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'eCommerce Optional Products',
+    'name': 'eCommerce Kitchen Order Options',
     'category': 'Website',
     'version': '11.0.1.0.0',
     'author': 'Ygen Software Pvt. Ltd.',
@@ -17,6 +17,6 @@ Add message and notes for kitchen order in eCommerce
     'data': [
         'views/website_sale_options_templates.xml',
     ],
-    'qweb': ['static/src/xml/*.xml'],
+    'qweb': ['static/src/xml/*.xml',],
     'installable': True,
 }

@@ -10,8 +10,8 @@ odoo.define('website_ko_options.datepicker', function(require) {
     var _t = core._t;
 
     var DateWidget = Widget.extend({
-        template: "website_ko_options.datepicker",
-        xmlDependencies: ['/website_ko_options/static/src/xml/base.xml'],
+        template: 'website_ko_options.datepickerjs',
+        xmlDependencies: ['/website_ko_options/static/src/xml/ko_base.xml'],
         type_of_date: "date",
         events: {
             'dp.change': 'changeDatetime',
@@ -21,10 +21,10 @@ odoo.define('website_ko_options.datepicker', function(require) {
         /**
          * @override
          */
-        init: function(parent, options) {
+        init: function(parent, field_options, options) {
             this._super.apply(this, arguments);
 
-            this.name = parent.name;
+            this.name = field_options.name;
             this.options = _.defaults(options || {}, {
                 format: this.type_of_date === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat(),
                 minDate: moment({ y: 1900 }),
@@ -57,7 +57,6 @@ odoo.define('website_ko_options.datepicker', function(require) {
             console.log(this.picker);
             this.$tz = this.$('input.o_timezone');
             this._setReadonly(false);
-            $("#datepicker-13").datepicker();
         },
         /**
          * @override
@@ -91,7 +90,10 @@ odoo.define('website_ko_options.datepicker', function(require) {
                     // The condition is strangely written; this is because the
                     // values can be false/undefined
                     var value = this.getValue();
-                    this.$tz.val(value && value.add(-new Date().getTimezoneOffset(value), 'minutes'));
+                    console.log(value.format(this.options.format));
+                    console.log(new Date().getTimezoneOffset(value));
+                    this.$tz.val(value && value.add(new Date().getTimezoneOffset(value), 'minutes').format(this.options.format));
+                    console.log(this.$tz.val());
                     // this.trigger("datetime_changed");
                 }
             }
