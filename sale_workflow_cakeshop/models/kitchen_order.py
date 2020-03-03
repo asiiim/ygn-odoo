@@ -15,6 +15,7 @@ class KitchenOrder(models.Model):
     # Order again
     @api.multi
     def new_order(self):
+        self.ensure_one()
         new_order_configurator_view_id = self.env.ref('sale_workflow_cakeshop.product_configurator_ordernow_ko_form').id
         return {
             'type': 'ir.actions.act_window',
@@ -32,6 +33,7 @@ class KitchenOrder(models.Model):
     # Order again
     @api.multi
     def view_order(self):
+        self.ensure_one()
         sale_order_form_ref_id = self.env.ref('sale.view_order_form').id
         return {
             'name': _('Sale Order'),

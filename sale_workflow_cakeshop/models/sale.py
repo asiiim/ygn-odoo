@@ -58,15 +58,15 @@ class SaleOrder(models.Model):
     @api.multi
     def validate_picking(self):
         for so in self:
-            stock_pickings = self.env['stock.picking'].search([('origin', '=', so.name), ('state', '!=', 'cancel')])
-            if not stock_pickings:
-                raise UserError(_('No such deliveries to validate.'))
-            else:
+            stock_pickings = so.mapped('picking_ids').filtered(lambda r: r.state != 'cancel')
+            # stock_pickings = self.env['stock.picking'].search([('origin', '=', so.name), ('state', '!=', 'cancel')])
+            if stock_pickings:
                 for stock_picking in stock_pickings:
                     if stock_picking.state not in ["done", "cancel"]:
                         stock_picking.button_validate()
                     so.write({'delivery_validated': True})
-                    break
+            else:
+                raise UserError(_('No such deliveries to validate.'))
 
     # Tender and Change
     tender_amount = fields.Monetary(string='Tender', track_visibility='always', default=0.0)
@@ -188,6 +188,8 @@ class SaleOrder(models.Model):
     def action_invoice_create(self, grouped=False, final=False):
         invoice_ids_arr = super(SaleOrder, self).action_invoice_create(grouped, final)
         invoice_ids = self.env['account.invoice'].browse(invoice_ids_arr)
+        #todo: this extension works if there is only one invoice to create.
+        # What about user selects more thatn one orders to create invoice?
         for inv in invoice_ids:
             inv.write({
                 'tender_amount': self.tender_amount,
@@ -201,29 +203,36 @@ class SaleOrder(models.Model):
     # Print SO or KO
     @api.multi
     def print_koso_report(self):
+        self.ensure_one()
         return self.env.ref('sale_workflow_cakeshop.action_report_sale_or_kitchen_order').report_action(self)
 
     # View related kitchen orders of the sale order
     @api.multi
     def view_kitchen_order(self):
-        ko_id = []
-        
-        for ko in self.kitchen_order_ids:
-            ko_id.append(ko.id)
-        
-        return {
+        self.ensure_one()
+        # return list view action if there are more than one KOs, or 
+        # return form view if there is only one ko else return tree view
+        action = {
             'name': _('Kitchen Order'),
             'res_model': 'kitchen.order',
-            'res_id': ko_id[0],
-            'views': [(self.env.ref('kitchen_order.view_kitchen_order_form').id, 'form')],
+            'views': [(self.env.ref('kitchen_order.view_kitchen_order_tree').id, 'tree')],
             'type': 'ir.actions.act_window',
             'target':'new'
         }
+
+        kitchen_orders = self.mapped('kitchen_order_ids')
+        if len(kitchen_orders) > 1:
+            action['domain'] = [('id', 'in', kitchen_orders.ids)]
+        elif kitchen_orders:
+            action['views'] = [(self.env.ref('kitchen_order.view_kitchen_order_form').id, 'form')]
+            action['res_id'] = kitchen_orders.id
+        return action
 
     # Change requested date
     @api.multi
     def action_change_requested_date(self):
         """Return action to change the requested date"""
+        self.ensure_one()
         sale_requested_date_view_id = self.env.ref('sale_workflow_cakeshop.sale_change_requested_date_form').id
         return {
             'type': 'ir.actions.act_window',
@@ -244,6 +253,7 @@ class SaleOrder(models.Model):
     # Edit sale order
     @api.multi
     def action_edit_sale_order(self):
+        self.ensure_one()
         order_configurator_view_id = self.env.ref('sale_workflow_cakeshop.product_configurator_ordernow_ko_product_edit_form').id
 
         return {
@@ -299,6 +309,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def cancel_advance_payment(self):
+        self.ensure_one()
         # Create return Payment if any
         if self.is_adv_return:
             raise UserError(_('You cannot edit the payment since you have returned the excess advance amount.'))
@@ -315,6 +326,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def edit_advance_payment(self):
+        self.ensure_one()
         if self.is_adv_return:
             raise UserError(_('You cannot edit the payment since you have returned the excess advance amount.'))
         else:
@@ -335,6 +347,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def add_advance_payment(self): 
+        self.ensure_one()
         sale_change_advance_view_id = self.env.ref('sale_workflow_cakeshop.sale_change_advance_form').id
         return {
             'type': 'ir.actions.act_window',
@@ -355,11 +368,13 @@ class SaleOrder(models.Model):
     is_adv_return = fields.Boolean("Excess Advance Return?", default=False)
     return_adv_payment_ids = fields.One2many('account.payment', 'sale_id', string="Return Payments")
     total_return_adv = fields.Monetary(compute='_compute_total_return_adv', string='Advance Returned', store=True, readonly=True, track_visibility='always')
+    
     @api.multi
     def return_excess_advance_payment(self):
+        self.ensure_one()
         if self.amount_due < 0:
             if self.state != 'sale':
-                raise UserError(_('You must confirm the sale first.'))
+                raise UserError(_('You must confirm the sale order first.'))
             else:
                 Payment = self.env['account.payment']
                 communication = 'Return Excess Advance Payment to for order no %s' % self.name
@@ -385,20 +400,22 @@ class SaleOrder(models.Model):
     # Cancel Kitchen Orders, Delivery and Advance if SO is Cancelled
     @api.multi
     def action_cancel(self):
+        kitchen_orders = self.mapped('kitchen_order_ids')
         # Cancel Kitchen Orders
-        for ko in self.kitchen_order_ids:
-            ko.cancel_kitchen_order()
+        kitchen_orders.cancel_kitchen_order()
         
         # Cancel Delivery
-        stock_picking = self.env['stock.picking'].search([('origin', '=', self.name), ('state', '!=', 'cancel')], limit=1)
-        if stock_picking.state not in ["done", "cancel"]:
-            stock_picking.action_cancel()
+        # self.mapped('picking_ids').action_cancel()
+        # stock_picking = self.env['stock.picking'].search([('origin', '=', self.name), ('state', '!=', 'cancel')], limit=1)
+        # if stock_picking.state not in ["done", "cancel"]:
+        #     stock_picking.action_cancel()
         return super(SaleOrder, self).action_cancel()
 
     # Change customer
     @api.multi
     def action_change_customer(self):
         """Return action to change the customer"""
+        self.ensure_one()
         sale_customer_view_id = self.env.ref('sale_workflow_cakeshop.sale_change_partner_form').id
         return {
             'type': 'ir.actions.act_window',
@@ -419,14 +436,17 @@ class SaleOrder(models.Model):
         for order in self:
             if order.is_advance:
                 raise UserError(_('You must cancel the advance payment first.'))
-            stock_pickings = self.env['stock.picking'].search([('origin', '=', order.name), ('state', '=', 'cancel')])
-            for pick in stock_pickings:
-                pick.unlink()
+            stock_pickings = order.mapped('picking_ids').filtered(lambda r: r.state == 'cancel')
+            stock_pickings.unlink()
+            # self.env['stock.picking'].search([('origin', '=', order.name), ('state', '=', 'cancel')])
+            # for pick in stock_pickings:
+            #     pick.unlink()
         return super(SaleOrder, self).unlink()
 
     # Make sale order
     @api.multi
     def action_make_order(self):
+        self.ensure_one()
         order_make_view_id = self.env.ref('sale_workflow_cakeshop.make_order_form').id
         ref_product_id = ""
         qty = 0
