@@ -19,4 +19,6 @@ Add message and notes for kitchen order in eCommerce
     ],
     'qweb': ['static/src/xml/*.xml',],
     'installable': True,
+    'price': 150.00,
+    'currency': 'EUR',
 }
