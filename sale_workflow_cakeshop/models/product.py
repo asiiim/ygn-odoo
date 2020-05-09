@@ -48,6 +48,7 @@ class ProductTemplate(models.Model):
     # Reference for order now
     @api.multi
     def action_reference_order(self):
+        self.ensure_one()
         order_configurator_view_id = self.env.ref('sale_workflow_cakeshop.product_configurator_ordernow_ko_form').id
         return {
             'type': 'ir.actions.act_window',

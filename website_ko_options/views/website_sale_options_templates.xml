@@ -41,17 +41,8 @@
         <div class="col-md-6 js_ko">
           <label class="control-label">Delivery Date</label>
         </div>
-        <div class="o_website_datepicker" data-name="delivery_date" data-type="datetime">
-          <input type="text"
-            class="o_website_datepicker_input o_input"
-            id="datepicker-13"/>
+        <div class="col-md-6 js_ko o_website_field" data-name="delivery_date" data-type="datetime">
         </div>
-        <!-- <div class='col-md-6 input-group date js_ko' id='datetimepicker1'>
-          <input type='text' class="js_ko_delivery_date form-control" name="delivery_date" />
-          <span class="input-group-addon">
-            <span class="glyphicon glyphicon-calendar"></span>
-          </span>
-        </div> -->
       </div>
     </div>
   </xpath>
@@ -88,4 +79,49 @@
   </xpath> -->
 </template>
 
+<template id="cart" inherit_id="website_sale.cart">
+  <xpath expr="//div[hasclass('oe_website_sale')]/div[1]" position="before">
+    <div class="row">
+      <div class="col-md-12">
+        <p style="color: #795548; font-size: 16px; font-style: italic;">Please scroll your product horizontally to change your cart!!!</p>
+      </div>
+    </div>
+  </xpath>
+  <xpath expr="//div[hasclass('clearfix')]" position="before">
+    <div class="mb8 mt8">
+      <p style="color: #795548; font-size: 16px; font-style: italic;"><strong>Delivery Date:</strong> <span t-field="website_sale_order.requested_date" t-options='{"format": "MM/dd/yyyy h:mm a"}'/></p>
+      <p style="color: #795548; font-size: 16px; font-style: italic;"><strong>Message:</strong> <span t-esc="website_sale_order.ko_message"/></p>
+      <p style="color: #795548; font-size: 16px; font-style: italic;"><strong>KO Note:</strong> <span t-esc="website_sale_order.ko_note"/></p>
+    </div>
+  </xpath>
+</template>
+<template id="payment" inherit_id="website_sale.payment">
+  <xpath expr="//div[hasclass('clearfix')]" position="before">
+    <div class="col-md-12 mb8 mt8">
+      <p style="color: #795548; font-size: 16px; font-style: italic;"><strong>Delivery Date:</strong> <span t-field="website_sale_order.requested_date" t-options='{"format": "MM/dd/yyyy h:mm a"}'/></p>
+      <p style="color: #795548; font-size: 16px; font-style: italic;"><strong>Message:</strong> <span t-esc="website_sale_order.ko_message"/></p>
+      <p style="color: #795548; font-size: 16px; font-style: italic;"><strong>KO Note:</strong> <span t-esc="website_sale_order.ko_note"/></p>
+    </div>
+  </xpath>
+</template>
+<template id="confirmation" inherit_id="website_sale.confirmation">
+  <xpath expr="//div[hasclass('clearfix')]" position="before">
+    <div class="col-md-12 mb8 mt8">
+      <p style="color: #795548; font-size: 16px; font-style: italic;"><strong>Delivery Date:</strong> <span t-field="order.requested_date" t-options='{"format": "MM/dd/yyyy h:mm a"}'/></p>
+      <p style="color: #795548; font-size: 16px; font-style: italic;"><strong>Message:</strong> <span t-esc="order.ko_message"/></p>
+      <p style="color: #795548; font-size: 16px; font-style: italic;"><strong>KO Note:</strong> <span t-esc="order.ko_note"/></p>
+    </div>
+  </xpath>
+</template>
+<template id="portal_order_page" inherit_id="sale.portal_order_page">
+  <xpath expr="//hr[2]" position="before">
+    <div class="row">
+      <div class="col-md-12 mb8 mt8">
+        <p style="color: #795548; font-size: 16px; font-style: italic;"><strong>Delivery Date:</strong> <span t-field="order.requested_date" t-options='{"format": "MM/dd/yyyy h:mm a"}'/></p>
+        <p style="color: #795548; font-size: 16px; font-style: italic;"><strong>Message:</strong> <span t-esc="order.ko_message"/></p>
+        <p style="color: #795548; font-size: 16px; font-style: italic;"><strong>KO Note:</strong> <span t-esc="order.ko_note"/></p>
+      </div>
+    </div>
+  </xpath>
+</template>
 </odoo>

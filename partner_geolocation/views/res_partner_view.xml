@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_partner_geolocation" model="ir.ui.view">
+        <field name="name">geolocate.button.res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_inline oe_stat_button"
+                    name="action_open_geolocate_widget" type="object" string="Geolocate"
+                    icon="fa-map-marker"/>
+            </xpath>
+        </field>
+    </record>
+    <!-- partner kanban view specifically for partner_geolocation (to geolocate) -->
+    <record id="res_partners_view_kanban" model="ir.ui.view">
+        <field name="name">res.partner.kanban</field>
+        <field name="model">res.partner</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <kanban class="o_res_partner_geolocation_kanban" create="false">
+                <field name="id"/>
+                <field name="color"/>
+                <field name="display_name"/>
+                <field name="title"/>
+                <field name="email"/>
+                <field name="parent_id"/>
+                <field name="is_company"/>
+                <field name="function"/>
+                <field name="phone"/>
+                <field name="street"/>
+                <field name="street2"/>
+                <field name="zip"/>
+                <field name="city"/>
+                <field name="country_id"/>
+                <field name="mobile"/>
+                <field name="state_id"/>
+                <field name="category_id"/>
+                <field name="image_small"/>
+                <field name="type"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_res_partner_kanban">
+                            <div class="o_kanban_image">
+                                <t t-if="record.image_small.raw_value">
+                                    <img t-att-src="kanban_image('res.partner', 'image_small', record.id.raw_value)"/>
+                                </t>
+                                <t t-if="!record.image_small.raw_value">
+                                    <t t-if="record.type.raw_value === 'delivery'">
+                                        <img t-att-src="_s + &quot;/base/static/src/img/truck.png&quot;" class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                    </t>
+                                    <t t-if="record.type.raw_value === 'invoice'">
+                                        <img t-att-src="_s + &quot;/base/static/src/img/money.png&quot;" class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                        </t>
+                                    <t t-if="record.type.raw_value != 'invoice' &amp;&amp; record.type.raw_value != 'delivery'">
+                                        <t t-if="record.is_company.raw_value === true">
+                                            <img t-att-src="_s + &quot;/base/static/src/img/company_image.png&quot;"/>
+                                        </t>
+                                        <t t-if="record.is_company.raw_value === false">
+                                            <img t-att-src="_s + &quot;/base/static/src/img/avatar.png&quot;"/>
+                                        </t>
+                                    </t>
+                                </t>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title oe_partner_heading"><field name="display_name"/></strong>
+                                <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
+                                <ul>
+                                    <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
+                                    <li t-if="!record.parent_id.raw_value and record.function.raw_value"><field name="function"/></li>
+                                    <li t-if="record.parent_id.raw_value and record.function.raw_value"><field name="function"/> at <field name="parent_id"/></li>
+                                    <li t-if="record.city.raw_value and !record.country_id.raw_value"><field name="city"/></li>
+                                    <li t-if="!record.city.raw_value and record.country_id.raw_value"><field name="country_id"/></li>
+                                    <li t-if="record.city.raw_value and record.country_id.raw_value"><field name="city"/>, <field name="country_id"/></li>
+                                    <li t-if="record.email.raw_value" class="o_text_overflow"><field name="email"/></li>
+                                    <li t-if="record.mobile.raw_value" class="o_text_overflow"><field name="mobile"/></li>
+                                </ul>
+                                <div class="oe_kanban_partner_links"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="res_partner_geolocation_action_kanban" model="ir.actions.act_window">
+        <field name="name">Partners</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="res_partners_view_kanban"/>
+        <field name="help" type="html">
+            <p>
+                Create a few partners to be able to select a partner here and geolocate its location.
+            </p>
+            <p>
+                To create partners go to the Contacts menu.
+            </p>
+        </field>
+    </record>
+
+    <record id="partner_geolocation_action_geolocate_mode" model="ir.actions.client">
+        <field name="name">Partner Geolocation</field>
+        <field name="tag">partner_geolocation_geolocate_mode</field>
+        <field name="target">main</field>
+    </record>
+    
+    <record id="partner_geolocation_action_location_message" model="ir.actions.client">
+        <field name="name">Message</field>
+        <field name="tag">partner_geolocation_location_message</field>
+    </record>
+
+    <menuitem id="menu_partner_geolocation_root" name="Geolocate" sequence="90" web_icon="partner_geolocation,static/description/icon.png"/>
+
+    <menuitem id="menu_partner_geolocation_geolocate" name="Geolocate Mode" parent="menu_partner_geolocation_root" sequence="20" action="partner_geolocation_action_geolocate_mode"/>
+</odoo>

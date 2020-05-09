@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website_ko_options.datepickerjs">
+        <div class="o_website_datepicker">
+            <input type="text"
+                class="o_website_datepicker_input o_input"
+                t-att-name="widget.name"/>
+            <span class="o_website_datepicker_button"/>
+            <input type="hidden" class="o_timezone" t-attf-name="{{ widget.name }}_tz"/>
+        </div>
+    </t>
+</templates>

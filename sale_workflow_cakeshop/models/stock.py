@@ -12,10 +12,9 @@ class Picking(models.Model):
 
     @api.multi
     def button_validate(self):
-        _logger.warning(self.state)
+        self.ensure_one()
         if self.state in ["confirmed", "assigned"]:
             for moveline in self.move_lines:
-                _logger.warning(moveline)
                 if moveline.product_uom_qty:
                     moveline.quantity_done = moveline.product_uom_qty
-            super(Picking, self).button_validate()
+        super(Picking, self).button_validate()
