@@ -39,34 +39,8 @@ class SMSSingle(models.Model):
                 rec.receiver = rec.partner_id.mobile
 
     @api.multi
-    def _request_sms_credit(self):
-        for record in self:
-            try:
-                result = requests.post(
-                    record.env['ir.config_parameter'].sudo().get_param('ygen_sms_url') + 'credit', 
-                    data={
-                        'auth_token': record.env['ir.config_parameter'].sudo().get_param('ygen_sms_token')}).json()
-            except Exception as e:
-                raise UserError(_(
-                    'Cannot contact SMS servers. \nPlease make sure that your Internet connection is up and running (%s).') % e)
-            if result:
-                if result['response_code'] == 202:
-                    record.write({
-                        'remaining_credits': result['available_credit']
-                    })
-                else:
-                    raise UserError(_('An Error Occured'))
-            else:
-                raise UserError(_("An Error Occured"))
-
-
-    @api.multi
     def send_sms(self):
         for record in self:
-            credit = 0
-            record._request_sms_credit()
-            prev_credit = int(record.remaining_credits)
-
             try:
                 result = requests.post(
                     record.env['ir.config_parameter'].sudo().get_param('ygen_sms_url') + 'send', 
@@ -79,14 +53,15 @@ class SMSSingle(models.Model):
                 raise UserError(_(
                     'Cannot contact SMS servers. \nPlease make sure that your Internet connection is up and running (%s).') % e)
             if result:
-                if result['response_code'] in [200, 201] and result['count']:
-                    record._request_sms_credit()
-                    credit = prev_credit - int(record.remaining_credits)
+                if not result['error']:
+                    credit = 0
+                    for data in result['data']['valid']:
+                        credit += data['credit']
                     record.write({
                         'is_sent': True,
                         'sms_credits_consumed': credit
                     })
                 else:
-                    raise UserError(_('An Error Occured: '+ str(result['response'])))
+                    raise UserError(_('An Error Occured: '+ str(result['error'])))
             else:
                 raise UserError(_("An Error Occured"))

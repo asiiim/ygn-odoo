@@ -34,7 +34,7 @@ class SMSMultiple(models.Model):
     total_partners_count = fields.Integer(string="Total Partners Count", default=0, track_visibility='onchange', copy=False)
     failed_partners_count = fields.Integer(string="Failed Partners Count", default=0, track_visibility='onchange', copy=False)
     credits_consumed_count = fields.Integer(string="Credits Consumed in SMS", default=0, track_visibility='onchange', copy=False)
-    is_button_pressed = fields.Boolean(string="Press 'Send SMS' Button", track_visibility='onchange', copy=False)
+    is_button_pressed = fields.Boolean(string="Press 'Send SMS' Button", track_visibility='onchange', copy=False, default=False)
     is_sent = fields.Boolean(string="Sent?", track_visibility='onchange', copy=False)
     remaining_credits = fields.Char('Remaining Credit')
 
@@ -74,32 +74,8 @@ class SMSMultiple(models.Model):
                 })
 
     @api.multi
-    def _request_sms_credit(self):
-        for record in self:
-            try:
-                result = requests.post(
-                    record.env['ir.config_parameter'].sudo().get_param('ygen_sms_url') + 'credit', 
-                    data={'auth_token': record.env['ir.config_parameter'].sudo().get_param('ygen_sms_token')}).json()
-            except Exception as e:
-                raise UserError(_(
-                    'Cannot contact SMS servers. \nPlease make sure that your Internet connection is up and running (%s).') % e)
-            if result:
-                if result['response_code'] == 202:
-                    record.write({
-                        'remaining_credits': result['available_credit']
-                    })
-                else:
-                    raise UserError(_('An Error Occured'))
-            else:
-                raise UserError(_("An Error Occured"))
-
-    @api.multi
     def send_sms(self):
         for record in self:
-            credit = 0
-            record._request_sms_credit()
-            prev_credit = int(record.remaining_credits)
-
             if not record.is_button_pressed:
                 record._compute_receivers()
                 try:
@@ -114,15 +90,15 @@ class SMSMultiple(models.Model):
                     raise UserError(_(
                         'Cannot contact SMS servers. \nPlease make sure that your Internet connection is up and running (%s).') % e)
                 if result:
-                    if result['response_code'] in [200, 201] and result['count']:
-                        record._request_sms_credit()
-                        credit = prev_credit - int(record.remaining_credits)
+                    if not result['error']:
+                        credit = 0
+                        for data in result['data']['valid']:
+                            credit += data['credit']
                         record.write({
-                            'is_button_pressed': True,
                             'is_sent': True,
-                            'credits_consumed_count': credit,
+                            'credits_consumed_count': credit
                         })
                     else:
-                        raise UserError(_('An Error Occured: '+ str(result['response'])))
+                        raise UserError(_('An Error Occured: '+ str(result['error'])))
                 else:
                     raise UserError(_("An Error Occured"))

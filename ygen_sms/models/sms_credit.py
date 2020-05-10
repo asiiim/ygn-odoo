@@ -18,9 +18,9 @@ class SMSCredit(models.Model):
     def request_credit(self):
         for record in self:
             try:
-                _logger.warning(record.env['ir.config_parameter'].sudo().get_param('ygen_sms_url') + 'credit')
+                _logger.warning(record.env['ir.config_parameter'].sudo().get_param('ygen_sms_credit_url'))
                 result = requests.post(
-                    record.env['ir.config_parameter'].sudo().get_param('ygen_sms_url') + 'credit', 
+                    record.env['ir.config_parameter'].sudo().get_param('ygen_sms_credit_url'), 
                     data={
                         'auth_token': record.env['ir.config_parameter'].sudo().get_param('ygen_sms_token')}
                     ).json()
