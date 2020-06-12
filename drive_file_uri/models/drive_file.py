@@ -34,7 +34,7 @@ class DriveFile(models.Model):
                     # eg https://drive.google.com/file/d/1PyCCNaXKtFdRSm0M1eEFaiSfrU_REwhW/view?usp=sharing
                     temp_res1 = r.res_url.split("https://drive.google.com/file/d/",1)
                     if len(temp_res1) > 1 and temp_res1[0] == "" and "/view?usp=sharing" in temp_res1[1]:
-                        temp_res = temp_res[1].split("/view?usp=sharing",1)
+                        temp_res = temp_res1[1].split("/view?usp=sharing",1)
                         # reverse the items for consistency
                         temp_res.reverse()
                 elif "https://drive.google.com/open?id=" in r.res_url:
