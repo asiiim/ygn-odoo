@@ -11,24 +11,16 @@
                         <t t-if="not o or not 'company_id' in o">
                             <t t-set="company" t-value="res_company"> </t>
                         </t>
-                        <!-- <h3 style="text-decoration:underline;text-align:center;"><b>Lab Test Report</b></h3>
-                        <br/>
-                        <br/> -->
                         <table width="99%" style="border:1px solid black;">
                             <tr>
                                 <td style="padding:1px 10px" width="20%" class="td4">PATIENT NAME</td>
                                 <td style="height:30px"><b><span t-att-style="style" t-esc="{False: False, 'ms': 'Ms', 'mister': 'Mr', 'mrs': 'Mrs'}[o.lab_requestor.title]"/>. <span t-att-style="style" t-esc="o.lab_requestor.patient.name"/></b></td>
                                 <td style="padding:1px 10px" width="20%" class="td4">PATIENT ID</td>
                                 <td style="height:30px"><b><span t-att-style="style" t-esc="o.lab_requestor.name"/></b></td>
-                                <!--<td style="width:50px;height:25px"><span>Patient: </span><span t-att-style="style" t-esc="o.lab_requestor.patient.name"/></td>-->
-                                <!--<td style="width:50px;height:25px"><span>Age/Gender: </span><span t-att-style="style" t-esc="o.lab_requestor.age"/>/ <span t-att-style="style" t-esc="o.lab_requestor.gender"/></td>-->
-                                <!--<td style="width:50px;height:25px"><span>Test  : </span><span t-att-style="style" t-esc="o.test_request.lab_test"/></td>-->
-                                <!--<td style="width:50px;height:25px"><span>Date: </span><span t-att-style="style" t-esc="o.lab_requesting_date"/></td>-->
                             </tr>
                             <tr>
                                 <td style="padding:1px 10px" width="20%" class="td4">AGE</td>
                                 <td style="height:30px"><span t-att-style="style" t-esc="o.lab_requestor.x_patient_age"/> <span t-att-style="style" t-esc="{False: False, 'moth': 'Months', 'yrs': 'Years'}[o.lab_requestor.x_patient_age_type]"/></td>
-                                <!-- <td style="height:30px"><span t-att-style="style" t-esc="o.lab_requestor.x_patient_age"/> <span t-att-style="style" t-esc="{False: False, 'moth': 'Months', 'yrs': 'Years'}[o.lab_requestor.x_patient_age_type]"/></td> -->
                                 <td style="padding:1px 10px" width="30%" class="td4">SAMPLE ID</td>
                                 <td style="height:30px"><span t-att-style="style" t-esc="o.sample_id"/></td>
                             </tr>
@@ -53,7 +45,6 @@
                                         <span t-esc="l.name"/><t t-if="(l_size > 1) and (not l_last)">, </t>
                                     </t>
                                 </td>
-                                <!-- <td style="height:25px"><span t-att-style="style" t-esc="{False: False, 'fss': 'Fresh Sterile Stool','fsu': 'Fresh Sterile Urine','bd': 'Blood','sp': 'SERUM/PLASMA', 'serum': 'SERUM', 'edta': 'EDTA BLOOD', 'fss':'FRESH STERILE SAMPLE','fu':'FRESH URINE','fs': 'FRESH STOOL','wb': 'WHOLE BODY'}[o.specimen]"/></td> -->
                             </tr>
                             <tr style="border:1px solid black;">
                               <td width="20%" style="padding:5px 10px;height:25px"><b><span>TEST</span></b></td>

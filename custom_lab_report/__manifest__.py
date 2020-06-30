@@ -33,10 +33,6 @@
         'views/views.xml',
         'views/lab_request_views.xml',
         'views/lab_specimen_views.xml',
-        'views/templates.xml',
-    ],
-    # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
+        'views/lab_report_generate_templates.xml'
     ],
 }

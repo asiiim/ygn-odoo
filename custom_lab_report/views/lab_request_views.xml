@@ -18,7 +18,6 @@
                     </page>
                 </xpath>
                 <xpath expr="//field[@name='test_request']" position="before">
-                    <!-- <field name="specimen"/> -->
                     <field name="lab_request_specimen_ids" widget="many2many_tags"/>
                     <field name="sample_id"/>
                     <field name="patient_type"/>
@@ -60,12 +59,9 @@
             <field name="model">lab.patient</field>
             <field name="inherit_id" ref="medical_lab_management.view_lab_patient_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='dob']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
-                <xpath expr="//field[@name='age']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
+                <field name="age" position="after">
+                    <field name="mobile"/>
+                </field>
             </field>
         </record>
     </data>

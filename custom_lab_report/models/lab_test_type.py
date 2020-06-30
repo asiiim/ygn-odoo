@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 import logging
 import datetime
 from odoo.exceptions import UserError
@@ -48,9 +48,10 @@ class CustomLabTestAttribute(models.Model):
 class CustomLabPatient(models.Model):
     _inherit = 'lab.patient'
     
-    phone = fields.Char(string="Phone", required=False, default="9806708035")
+    phone = fields.Char(string="Phone", required=False)
     email = fields.Char(string="Email", required=False)
     dob = fields.Date(string='Date Of Birth', required=False)
+    mobile = fields.Char(string="Mobile", copy=False)
 
     @api.multi
     def compute_age(self):
@@ -59,7 +60,10 @@ class CustomLabPatient(models.Model):
                 dob = fields.Datetime.from_string(data.dob)
                 date = fields.Datetime.from_string(data.date)
                 delta = relativedelta(date, dob)
-                data.age = 0
+                data.age = str(delta.years) + ' years & ' + str(delta.months) + ' months'
+    @api.onchange('patient')
+    def detail_get_mobile(self):
+        self.mobile = self.patient.mobile
 
 class CustomLabAppointment(models.Model):
     _inherit = 'lab.appointment'

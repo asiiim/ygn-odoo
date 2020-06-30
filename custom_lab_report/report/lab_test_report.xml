@@ -4,25 +4,12 @@
         <template id="custom_report_patient_labtest" inherit_id="medical_lab_management.report_patient_labtest">
             <xpath expr="//div[@class='page']" position="replace">
                     <div class="page">
-                        <!-- <t t-if="o and 'company_id' in o">
-                            <t t-set="company" t-value="o.company_id"> </t>
-                        </t>
-                        <t t-if="not o or not 'company_id' in o">
-                            <t t-set="company" t-value="res_company"> </t>
-                        </t> -->
-                        <!-- <h3 style="text-decoration:underline;text-align:center;"><b>Lab Test Report</b></h3>
-                        <br/>
-                        <br/> -->
                         <table width="99%" style="border:1px solid black;">
                             <tr>
                                 <td style="padding:5px 10px" width="20%" class="td4">Patient Name</td>
                                 <td style="height:25px"><b><span t-att-style="style" t-esc="o.lab_requestor.patient.name"/></b></td>
                                 <td style="padding:5px 10px" width="25%" class="td4">Patient ID</td>
                                 <td style="height:25px"><b><span t-att-style="style" t-esc="o.lab_requestor.name"/></b></td>
-                                <!--<td style="width:50px;height:25px"><span>Patient: </span><span t-att-style="style" t-esc="o.lab_requestor.patient.name"/></td>-->
-                                <!--<td style="width:50px;height:25px"><span>Age/Gender: </span><span t-att-style="style" t-esc="o.lab_requestor.age"/>/ <span t-att-style="style" t-esc="o.lab_requestor.gender"/></td>-->
-                                <!--<td style="width:50px;height:25px"><span>Test  : </span><span t-att-style="style" t-esc="o.test_request.lab_test"/></td>-->
-                                <!--<td style="width:50px;height:25px"><span>Date: </span><span t-att-style="style" t-esc="o.lab_requesting_date"/></td>-->
                             </tr>
                             <tr>
                                 <td style="padding:5px 10px" width="20%" class="td4">Age</td>
