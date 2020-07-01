@@ -10,21 +10,17 @@ class CommissionInvoiceLine(models.Model):
 
     @api.depends('account_analytic_id','price_subtotal')
     def _compute_commission_total(self):
+        commission_mode = self.env['ir.config_parameter'].sudo().get_param('commission_mode')
         for record in self:
-            if record.account_analytic_id:
-                record.commission_subtotal = record.account_analytic_id.partner_id.commission * 0.01 * float(record.price_subtotal)
-            else:
-                record.commission_subtotal = 0.0
-
-class CommisionAccountAnalyticLine(models.Model):
-    _inherit ="account.analytic.line"
-
-    commission_subtotal = fields.Float(string='Commission Subtotal',compute="_compute_analytic_commission_total",store=True,track_visibility='always')
-
-    @api.depends('account_id','amount')
-    def _compute_analytic_commission_total(self):
-        for record in self:
-            if record.account_id:
-                record.commission_subtotal = record.account_id.partner_id.commission * 0.01 * float(record.amount)
+            commission_rate = record.account_analytic_id.partner_id.commission
+            if commission_rate:
+                if commission_mode == 'discount_deducted':
+                    if commission_rate > record.discount:
+                        deducted_commission_rate = commission_rate - record.discount
+                        record.commission_subtotal = deducted_commission_rate * 0.01 * float(record.price_subtotal)
+                    else:
+                        record.commission_total = 0.0
+                else:
+                    record.commission_subtotal = commission_rate * 0.01 * float(record.price_subtotal)
             else:
                 record.commission_subtotal = 0.0

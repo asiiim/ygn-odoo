@@ -11,7 +11,7 @@
                 </xpath>
             </field>
         </record>
-        <record id="view_account_analytic_form_inherit_form" model="ir.ui.view">
+        <!-- <record id="view_account_analytic_form_inherit_form" model="ir.ui.view">
             <field name="name">view.account.analytic.form.inherit.form</field>
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_line_form"/>
@@ -20,6 +20,6 @@
                         <field name="commission_subtotal" readonly="1"/>
                 </xpath>
             </field>
-        </record>
+        </record> -->
     </data>
 </odoo>
