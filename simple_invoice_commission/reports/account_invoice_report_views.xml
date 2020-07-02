@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_account_invoice_report_pivot_inherit_form" model="ir.ui.view">
+            <field name="name">Invoice Report Pivot Inherit View</field>
+            <field name="model">account.invoice.report</field>
+            <field name="inherit_id" ref="account.view_account_invoice_report_pivot"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='price_total']" position="before">
+                        <field name="commission_subtotal" type="measure"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="view_account_invoice_report_pivot_inherit_graph" model="ir.ui.view">
+            <field name="name">Invoice Report Pivot Inherit Graph View</field>
+            <field name="model">account.invoice.report</field>
+            <field name="inherit_id" ref="account.view_account_invoice_report_graph"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='price_total']" position="before">
+                        <field name="commission_subtotal" type="measure"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -22,6 +22,7 @@
     'data': [
         'views/res_partner_extend_views.xml',
         'views/account_invoice_extend_views.xml',
-        'views/res_config_settings.xml'
+        'views/res_config_settings.xml',
+        'reports/account_invoice_report_views.xml'
     ],
 }
