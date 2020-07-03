@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
+# Part of Ygen. See LICENSE file for full copyright and licensing details.
 {
-    'name': "custom_lab_report",
+    'name': "Ygen Lab Report",
 
     'summary': """
-        All the report extended of medical lab managment system""",
-
-    'description': """
-        This moudle extend the CybroAddons medical lab managment system and add custom view.
-    """,
+        Customized Lab Report""",
 
     'author': "Ygen Software Pvt.Ltd",
     'website': "https://www.ygen.io",
@@ -16,7 +13,7 @@
     # Check https://github.com/odoo/odoo/blob/11.0/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Report',
-    'version': '0.1',
+    'version': '11.0.1.0.1',
 
     # any module necessary for this one to work correctly
     'depends': ['base','medical_lab_management','signature_template'],
