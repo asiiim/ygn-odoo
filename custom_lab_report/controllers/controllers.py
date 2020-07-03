@@ -52,8 +52,6 @@ class CustomLabReport(http.Controller):
 
             error_msg = "\n".join(self._get_error_message(error)
                                 for error in res.get('error-codes', []))
-            # if error_msg:
-            #     values['error'] = error_msg
 
             if not res.get('success'):
                 values['error'] = error_msg
@@ -63,11 +61,14 @@ class CustomLabReport(http.Controller):
 
                 lab_request_ids = request.env['lab.request'].sudo().search([('app_id', '=', appn_id.id), ('lab_requestor', '=', patient_id.id)])    
                 if lab_request_ids:
-                    pdf, _ = request.env.ref('custom_lab_report.consolidated_print_lab_test_header').sudo().render_qweb_pdf(lab_request_ids.ids)
-                    pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
-                    return request.make_response(pdf, headers=pdfhttpheaders)
-
-                values['error'] = "Wrong Appointment ID/Mobile Number"
+                    if appn_id.state in ['completed', 'to_invoice', 'invoiced']:
+                        pdf, _ = request.env.ref('custom_lab_report.consolidated_print_lab_test_header').sudo().render_qweb_pdf(lab_request_ids.ids)
+                        pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
+                        return request.make_response(pdf, headers=pdfhttpheaders)
+                    else:
+                        values['error'] = "Report Not Published."
+                else:
+                    values['error'] = "Wrong Appointment ID/Mobile Number"
 
         response = request.render('custom_lab_report.generate_lab_report', values)
         response.headers['X-Frame-Options'] = 'DENY'
