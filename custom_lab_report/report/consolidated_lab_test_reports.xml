@@ -27,7 +27,8 @@
                             </tr>
                             <tr>
                                 <td style="padding:1px 10px" width="20%" class="td4">AGE</td>
-                                <td style="height:30px"><span t-att-style="style" t-esc="o.lab_requestor.x_patient_age"/> <span t-att-style="style" t-esc="{False: False, 'moth': 'Months', 'yrs': 'Years'}[o.lab_requestor.x_patient_age_type]"/></td>
+                                <!-- <td style="height:30px"><span t-att-style="style" t-esc="o.lab_requestor.x_patient_age"/> <span t-att-style="style" t-esc="{False: False, 'moth': 'Months', 'yrs': 'Years'}[o.lab_requestor.x_patient_age_type]"/></td> -->
+                                <td style="height:30px"><span t-att-style="style" t-esc="o.lab_requestor.age"/> </td>
                                 <td style="padding:1px 10px" width="30%" class="td4">SAMPLE ID</td>
                                 <td style="height:30px" width="20%"><span t-att-style="style" t-esc="o.sample_id"/></td>
                             </tr>
