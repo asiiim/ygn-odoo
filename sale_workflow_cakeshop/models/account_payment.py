@@ -13,9 +13,10 @@ class account_payment(models.Model):
     sale_id = fields.Many2one('sale.order', 'Ret. Adv SO')
     adv_sale_id = fields.Many2one('sale.order', 'Adv. SO')
 
-    @api.multi
+    @api.model
     def update_order_advance_payment(self):
-        for payment in self:
+        payments = self.env['account.payment'].search([])
+        for payment in payments:
             if not payment.sale_id or not payment.adv_sale_id:
                 wordset = payment.communication.split()
                 sale_id_ref = wordset[-1]
@@ -26,3 +27,5 @@ class account_payment(models.Model):
                 else:
                     payment.write({'adv_sale_id': sale_order.id})
                     sale_order.write({'is_adv': True})
+            else:
+                _logger.warning(payment.id)
