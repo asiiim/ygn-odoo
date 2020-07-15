@@ -29,6 +29,7 @@
             <field name="communication" position="after">
                 <field name="sale_id" invisible="1"/>
                 <field name="adv_sale_id" invisible="1"/>
+                <field name="is_migrated" invisible="1"/>
             </field>
         </field>
     </record>

@@ -13,19 +13,25 @@ class account_payment(models.Model):
     sale_id = fields.Many2one('sale.order', 'Ret. Adv SO')
     adv_sale_id = fields.Many2one('sale.order', 'Adv. SO')
 
+    is_migrated = fields.Boolean('Migrated', default=False, copy=False, track_visibility='onchange')
+
     @api.model
     def update_order_advance_payment(self):
-        payments = self.env['account.payment'].search([])
+        payments = self.env['account.payment'].search([('is_migrated', '=', False)], limit=300)
         for payment in payments:
-            if not payment.sale_id or not payment.adv_sale_id:
-                wordset = payment.communication.split()
-                sale_id_ref = wordset[-1]
-                sale_order = self.env['sale.order'].search([('name', '=', sale_id_ref)])
-                if 'Return' in wordset or 'return' in wordset:
-                    payment.write({'sale_id': sale_order.id})
-                    sale_order.write({'is_adv_return': True})
-                else:
-                    payment.write({'adv_sale_id': sale_order.id})
-                    sale_order.write({'is_adv': True})
+            _logger.warning(payment.id)
+            wordset = payment.communication.split()
+            sale_id_ref = wordset[-1]
+            sale_order = self.env['sale.order'].search([('name', '=', sale_id_ref)])
+            if 'Return' in wordset or 'return' in wordset:
+                payment.write({
+                    'sale_id': sale_order.id,
+                    'is_migrated': True
+                })
+                sale_order.write({'is_adv_return': True})
             else:
-                _logger.warning(payment.id)
+                payment.write({
+                    'adv_sale_id': sale_order.id,
+                    'is_migrated': True
+                })
+                sale_order.write({'is_adv': True})
