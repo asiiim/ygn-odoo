@@ -37,20 +37,14 @@ class SaleOrder(models.Model):
             else:
                 order.has_ko = False
 
-    @api.depends('amount_total', 'total_return_adv', 'payment_id')
+    @api.depends('amount_total', 'total_return_adv', 'payment_id', 'total_adv')
     def _compute_amount_due(self):
         """
         Compute the amount due of the SO.
         """
         for line in self:
             if not line.invoice_ids:
-                # Check if the payment linked has already been matched 
-                # and set the amount_due accordingly
-                line.amount_due = line.amount_total + line.total_return_adv - (line.payment_id.amount if line.payment_id.state == 'posted' and not line.payment_id.move_reconciled else 0)
-            else:
-                for invoice in line.invoice_ids:
-                    line.amount_due = invoice.residual
-                    break
+                line.amount_due = line.amount_total + line.total_return_adv - line.total_adv
 
     # Validate Stock Picking Operation
     delivery_validated = fields.Boolean('Delivery Validated?', default=False, readonly=True, copy=False)
@@ -156,9 +150,11 @@ class SaleOrder(models.Model):
                     raise UserError(_("Invoice could not be validated, you can review them before validation."))
                 
                 # Reconcile advance payment
-                if so.payment_id:
-                    credit_aml = so.payment_id.move_line_ids.filtered(lambda aml: aml.credit > 0)
-                    invoice.assign_outstanding_credit(credit_aml.id)
+                if so.is_adv:
+                    for adv in so.adv_payment_ids:
+                        if not adv.move_reconciled:
+                            credit_aml = adv.move_line_ids.filtered(lambda aml: aml.credit > 0)
+                            invoice.assign_outstanding_credit(credit_aml.id)
 
                 # Register the payment
                 journal_id = self.env['account.journal'].search([('type', '=', 'cash')], limit=1)
@@ -176,7 +172,8 @@ class SaleOrder(models.Model):
                         'payment_date': fields.Date.today(),
                         'communication': 'Total Due Payment for order no %s' % so.name,
                         'company_id': so.company_id.id,
-                        'invoice_ids': [(4, invoice.id)]
+                        'invoice_ids': [(4, invoice.id)],
+                        'adv_sale_id': so.id
                     }
 
                     payment_obj = self.env['account.payment']
@@ -308,58 +305,19 @@ class SaleOrder(models.Model):
         return payment_return_vals
 
     @api.multi
-    def cancel_advance_payment(self):
-        self.ensure_one()
-        # Create return Payment if any
-        if self.is_adv_return:
-            raise UserError(_('You cannot edit the payment since you have returned the excess advance amount.'))
-        else:
-            if self.payment_id:
-                Payment = self.env['account.payment']
-                communication = 'Return Advance Payment to for order no %s' % self.name
-                payment = Payment.create(self._prepare_return_payment(self.payment_id.amount, communication))
-                payment.post()
-                # Open payment matching screen
-                self.payment_id = None
-                return payment.open_payment_matching_screen()
-                
-
-    @api.multi
-    def edit_advance_payment(self):
-        self.ensure_one()
-        if self.is_adv_return:
-            raise UserError(_('You cannot edit the payment since you have returned the excess advance amount.'))
-        else:
-            sale_change_advance_view_id = self.env.ref('sale_workflow_cakeshop.sale_change_advance_form').id
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'sale.change.advance',
-                'name': "Change Advance Amount",
-                'view_mode': 'form',
-                'view_id': sale_change_advance_view_id,
-                'target': 'new',
-                'context': dict(
-                    self.env.context,
-                    default_so_id=self.id,
-                    wizard_model='sale.change.advance'
-                )
-            }
-
-    @api.multi
-    def add_advance_payment(self): 
+    def advance_payment_option(self): 
         self.ensure_one()
         sale_change_advance_view_id = self.env.ref('sale_workflow_cakeshop.sale_change_advance_form').id
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'sale.change.advance',
-            'name': "Add Advance Amount",
+            'name': "Advance Payment View",
             'view_mode': 'form',
             'view_id': sale_change_advance_view_id,
             'target': 'new',
             'context': dict(
                 self.env.context,
                 default_so_id=self.id,
-                default_add_advance = True,
                 wizard_model='sale.change.advance'
             )
         }
@@ -368,6 +326,31 @@ class SaleOrder(models.Model):
     is_adv_return = fields.Boolean("Excess Advance Return?", default=False)
     return_adv_payment_ids = fields.One2many('account.payment', 'sale_id', string="Return Payments")
     total_return_adv = fields.Monetary(compute='_compute_total_return_adv', string='Advance Returned', store=True, readonly=True, track_visibility='always')
+
+    @api.depends('is_adv_return', 'return_adv_payment_ids')
+    def _compute_total_return_adv(self):
+        """
+        Compute the total returned advance payments of the SO.
+        """
+        for so in self:
+            if so.is_adv_return:
+                for ret_adv in so.return_adv_payment_ids:
+                    so.total_return_adv += ret_adv.amount
+
+    # Add multiple advance payment
+    is_adv = fields.Boolean("Advance Received", default=False)
+    adv_payment_ids= fields.One2many('account.payment', 'adv_sale_id', string="Advance Payments")
+    total_adv = fields.Monetary(compute='_compute_total_adv', string='Total Advance', store=True, readonly=True, track_visibility='always')
+
+    @api.depends('is_adv', 'adv_payment_ids')
+    def _compute_total_adv(self):
+        """
+        Compute the total advance payments of the SO.
+        """
+        for so in self:
+            if so.is_adv:
+                for adv in so.adv_payment_ids:
+                    so.total_adv += adv.amount
     
     @api.multi
     def return_excess_advance_payment(self):
@@ -386,16 +369,6 @@ class SaleOrder(models.Model):
                 })
                 # Open payment matching screen
                 return payment.open_payment_matching_screen()
-
-    @api.depends('is_adv_return', 'return_adv_payment_ids')
-    def _compute_total_return_adv(self):
-        """
-        Compute the total returned advance payments of the SO.
-        """
-        for so in self:
-            if so.is_adv_return:
-                for ret_adv in so.return_adv_payment_ids:
-                    so.total_return_adv += ret_adv.amount
     
     # Cancel Kitchen Orders, Delivery and Advance if SO is Cancelled
     @api.multi

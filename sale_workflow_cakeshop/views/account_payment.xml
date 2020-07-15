@@ -21,6 +21,17 @@
             </field>
         </field>
     </record>
+    <record id="ygen_view_account_payment_form" model="ir.ui.view">
+        <field name="name">ygen.account.payment.form</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <field name="communication" position="after">
+                <field name="sale_id" invisible="1"/>
+                <field name="adv_sale_id" invisible="1"/>
+            </field>
+        </field>
+    </record>
     <record id="account.action_account_payments" model="ir.actions.act_window">
         <field name="name">Payments</field>
         <field name="res_model">account.payment</field>

@@ -76,10 +76,11 @@ class SaleAdvancePaymentInv(models.TransientModel):
             raise UserError(_("Invoice could not be validated, you can review them before validation."))
         
         # Reconcile advance payment
-        if order.payment_id:
-            
-            credit_aml = order.payment_id.move_line_ids.filtered(lambda aml: aml.credit > 0)
-            invoice.assign_outstanding_credit(credit_aml.id)
+        if order.is_adv:
+            for adv in order.adv_payment_ids:
+                if not adv.move_reconciled:
+                    credit_aml = adv.move_line_ids.filtered(lambda aml: aml.credit > 0)
+                    invoice.assign_outstanding_credit(credit_aml.id)
 
         # Register the payment
         if self.total_due_amount > 0.0:
@@ -96,7 +97,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'payment_date': self.payment_date,
                 'communication': 'Total Due Payment for order no %s' % order.name,
                 'company_id': order.company_id.id,
-                'invoice_ids': [(4, invoice.id)]
+                'invoice_ids': [(4, invoice.id)],
+                'adv_sale_id': order.id
             }
 
             payment_obj = self.env['account.payment']

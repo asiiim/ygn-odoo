@@ -4,22 +4,27 @@
         <field name="name">sale.change.advance.form</field>
         <field name="model">sale.change.advance</field>
         <field name="arch" type="xml">
-            <form string="Change Advance Amount">
+            <form string="Advance Payment View">
                 <group>
                     <field name="is_adv_sel" invisible="1"/>
+                    <field name="amount_due" invisible="1"/>
                     <field name="add_advance" readonly="1" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="so_id" readonly="1" invisible="1"/>
                     <field name="partner_id" readonly="1" invisible="1"/>
-                    <div attrs="{'invisible': [('add_advance', '=', False)]}">
-                        <p>Either use advance payment for linking already created payment by filling up Advance Payment field or create one.</p>
+                    <div>
+                        <p attrs="{'invisible': [('payment_mode', '=', 'add')]}">Please select advance amount to remove.</p>
+                        <p attrs="{'invisible': [('payment_mode', '=', 'rmv')]}">Please enter advance amount.</p>
                     </div>
-                    <field name="payment_id" options="{'no_create': True, 'no_open': True}" domain="[('partner_id','=',partner_id),('payment_type', '=', 'inbound'),('state','in',('sent','posted')), ('move_reconciled', '=', False)]" attrs="{'invisible': [('add_advance', '=', False)]}"/>
-                    <field name="adv_amount" attrs="{'invisible': [('is_adv_sel', '=', True)]}"/>
+                    <field name="payment_mode" widget="radio"/>
+                    <field name="cancel_payment_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('payment_mode', '=', 'add')]}" domain="[('partner_id','=',partner_id),('payment_type', '=', 'inbound'),('state','in',('sent','posted')), ('move_reconciled', '=', False), ('adv_sale_id', '=', so_id)]"/>
+                    <!-- <field name="payment_id" options="{'no_create': True, 'no_open': True}" domain="[('partner_id','=',partner_id),('payment_type', '=', 'inbound'),('state','in',('sent','posted')), ('move_reconciled', '=', False)]" attrs="{'invisible': [('add_advance', '=', False)]}"/> -->
+                    <field name="adv_amount" attrs="{'invisible': [('payment_mode', '=', 'rmv')]}"/>
                     <field name="journal_id" attrs="{'invisible': [('is_adv_sel', '=', True)]}"/>
                     <field name="payment_date" attrs="{'invisible': [('is_adv_sel', '=', True)]}"/>
                     <footer>
-                        <button name="change_advance" string="Confirm" type="object" class="btn btn-primary"/>
+                        <button name="add_advance_payment" string="Confirm" type="object" class="btn btn-primary" attrs="{'invisible': [('payment_mode', '=', 'rmv')]}" confirm="Are you sure you want to proceed?"/>
+                        <button name="remove_advance_payment" string="Confirm" type="object" class="btn btn-primary" attrs="{'invisible': [('payment_mode', '=', 'add')]}" confirm="Are you sure you want to proceed?"/>
                     </footer>
                 </group>
                 <group name="selected_adv_info" string="Advance Details" attrs="{'invisible': [('is_adv_sel', '=', False)]}">

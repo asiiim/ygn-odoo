@@ -285,9 +285,16 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             if self.amount:
                 Payment = self.env['account.payment']
                 payment = Payment.create(self._prepare_payment(sale_order.amount_total))
+                
+                # For the purpose of advance amount for respective sale order
+                payment.write({
+                    'adv_sale_id': sale_order.id
+                })
+                sale_order.is_adv = True
+
                 payment.post()
-                self.payment_id = payment
-                sale_order.payment_id = payment
+                # self.payment_id = payment
+                # sale_order.payment_id = payment
 
             # sale order form view reference
             sale_order_form_ref_id = self.env.ref('sale.view_order_form').id
@@ -372,9 +379,14 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             if self.amount:
                 Payment = self.env['account.payment']
                 payment = Payment.create(self._prepare_payment(self.order_id.amount_total))
+                # For the purpose of advance amount for respective sale order
+                payment.write({
+                    'adv_sale_id': sale_order.id
+                })
+                sale_order.is_adv = True
                 payment.post()
-                self.payment_id = payment
-                self.order_id.payment_id = payment
+                # self.payment_id = payment
+                # self.order_id.payment_id = payment
 
 
             # Log the sale order details in the chatter
@@ -455,9 +467,14 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         if self.amount:
             Payment = self.env['account.payment']
             payment = Payment.create(self._prepare_payment(sale_order.amount_total))
+            # For the purpose of advance amount for respective sale order
+            payment.write({
+                'adv_sale_id': sale_order.id
+            })
+            sale_order.is_adv = True
             payment.post()
-            self.payment_id = payment
-            sale_order.payment_id = payment
+            # self.payment_id = payment
+            # sale_order.payment_id = payment
 
         # Log the sale order details in the chatter
         orderline_vals = self._get_order_line_vals(self.product_id.id)
