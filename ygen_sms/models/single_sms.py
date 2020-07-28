@@ -62,6 +62,6 @@ class SMSSingle(models.Model):
                         'sms_credits_consumed': credit
                     })
                 else:
-                    raise UserError(_('An Error Occured: '+ str(result['error'])))
+                    raise UserError(_('An Error Occured: '+ str(result['message'])))
             else:
                 raise UserError(_("An Error Occured"))

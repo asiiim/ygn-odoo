@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+         <record id="config_ygen_sms_credit_url" model="ir.config_parameter">
+            <field name="key">ygen_sms_credit_url</field>
+            <field name="value">https://aakashsms.com/admin/public/sms/v1/credit</field>
+        </record>
+        <record id="config_ygen_sms_sender" model="ir.config_parameter">
+            <field name="key">ygen_sms_sender</field>
+            <field name="value">31001</field>
+        </record>
+        <record id="config_ygen_sms_url" model="ir.config_parameter">
+            <field name="key">ygen_sms_url</field>
+            <field name="value">https://aakashsms.com/admin/public/sms/v3/</field>
+        </record>
+    </data>
+</odoo>

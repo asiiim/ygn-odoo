@@ -29,10 +29,11 @@
         'security/ir.model.access.csv',
         'data/sms_credit.xml',
         'data/ir_sequence.xml',
+        'data/ir_config_parameter.xml',
         'views/single_sms_views.xml',
         'views/res_config_settings_views.xml',
         'views/messaging_list_views.xml',
         'views/multiple_sms_views.xml',
-        'views/sms_credit.xml',
+        'views/sms_credit.xml'
     ],
 }

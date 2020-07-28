@@ -7,10 +7,11 @@
             <field name="arch" type="xml">
                 <tree string="SMS Credit">
                     <field name="name"/>
+                    <button name="request_credit" string="Check" type="object" class="oe_stat_button"/>
                 </tree>
             </field>
         </record>
-        <record id="sms_credit_view_form" model="ir.ui.view">
+        <!-- <record id="sms_credit_view_form" model="ir.ui.view">
             <field name="name">ygen.sms.credit.form</field>
             <field name="model">ygen.sms.credit</field>
             <field name="arch" type="xml">
@@ -24,11 +25,11 @@
                     </sheet>
                 </form>
             </field>
-        </record>
+        </record> -->
         <record id="sms_credit_action_form" model="ir.actions.act_window">
             <field name="name">SMS Credit</field>
             <field name="res_model">ygen.sms.credit</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">Check SMS Credit.</p>
             </field>
