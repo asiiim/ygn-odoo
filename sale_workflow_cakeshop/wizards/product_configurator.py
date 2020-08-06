@@ -270,7 +270,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         if not self.order_id:
             SaleOrder = self.env['sale.order']
             sale_order = SaleOrder.create(self._prepare_order())
-            sale_order.action_confirm()
+            
             self.order_id = sale_order
 
             # Attach sale order line
@@ -295,6 +295,9 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
                 payment.post()
                 # self.payment_id = payment
                 # sale_order.payment_id = payment
+            
+            # Confirm the sale order
+            sale_order.action_confirm()
 
             # sale order form view reference
             sale_order_form_ref_id = self.env.ref('sale.view_order_form').id
@@ -355,9 +358,6 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
                 else:
                     self.order_id.write({'order_line': [(1, orderline.id, line_vals)]})
                     break
-            
-            # Confirm the sale order
-            self.order_id.action_confirm()
 
             # Changes in KO
             ko_vals = self._prepare_kitchen_order()
@@ -388,6 +388,8 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
                 # self.payment_id = payment
                 # self.order_id.payment_id = payment
 
+            # Confirm the sale order
+            self.order_id.action_confirm()
 
             # Log the sale order details in the chatter
             orderline_vals = self._get_order_line_vals(self.product_id.id)
@@ -448,7 +450,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
 
         SaleOrder = self.env['sale.order']
         sale_order = SaleOrder.create(self._prepare_order())
-        sale_order.action_confirm()
+        
         self.order_id = sale_order
 
         # Attach sale order line
@@ -475,6 +477,9 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             payment.post()
             # self.payment_id = payment
             # sale_order.payment_id = payment
+
+        #Confirm Sale Order
+        sale_order.action_confirm()
 
         # Log the sale order details in the chatter
         orderline_vals = self._get_order_line_vals(self.product_id.id)
