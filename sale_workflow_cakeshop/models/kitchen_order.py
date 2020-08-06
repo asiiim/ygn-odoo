@@ -42,3 +42,9 @@ class KitchenOrder(models.Model):
             'views': [(sale_order_form_ref_id, 'form')],
             'type': 'ir.actions.act_window'
         }
+
+    # Print SO or KO
+    @api.multi
+    def print_soko_report(self):
+        self.ensure_one()
+        return self.env.ref('sale_workflow_cakeshop.action_report_sale_or_kitchen_order').report_action(self.saleorder_id)

@@ -6,6 +6,9 @@
         <field name="mode">primary</field>
         <field name="inherit_id" ref="kitchen_order.view_kitchen_order_form"/>
         <field name="arch" type="xml">
+            <button name="print_kitchen_order" position="after">
+                <button name="print_soko_report" string="Print SO &amp; KO" type="object" class="btn-primary"/>
+            </button>
             <field name="saleorder_id" position="replace">
                 <label for="so_ref" string="Sale Order"/>
                 <div class="o_row">
