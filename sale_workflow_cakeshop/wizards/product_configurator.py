@@ -77,6 +77,13 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     # Product Addons Line
     product_addon_lines = fields.One2many('product.addons.line', 'product_config_soko', string="Addon Lines")
 
+    # Sales Channel In Wizard
+    @api.model
+    def _get_default_team(self):
+        return self.env['crm.team']._get_default_team_id()
+    
+    team_id = fields.Many2one('crm.team', 'Sales Channel', change_default=True, default=_get_default_team, oldname='section_id')
+
     # Compute unit price
     @api.depends('product_id', 'product_addon_lines')
     def _compute_price(self):
@@ -166,6 +173,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             'partner_id': self.partner_id.id,
             'date_order': self.saleorder_date,
             'requested_date': self.requested_date,
+            'team_id': self.team_id.id,
             'company_id': self.company_id.id,
             'kitchen_sale_order_print_selection': self.kitchen_sale_order_print_selection
         }
