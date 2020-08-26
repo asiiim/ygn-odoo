@@ -83,6 +83,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         return self.env['crm.team']._get_default_team_id()
     
     team_id = fields.Many2one('crm.team', 'Sales Channel', change_default=True, default=_get_default_team, oldname='section_id')
+    source_id = fields.Many2one('utm.source', 'Source')
 
     # Compute unit price
     @api.depends('product_id', 'product_addon_lines')
@@ -174,6 +175,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             'date_order': self.saleorder_date,
             'requested_date': self.requested_date,
             'team_id': self.team_id.id,
+            'source_id': self.source_id.id,
             'company_id': self.company_id.id,
             'kitchen_sale_order_print_selection': self.kitchen_sale_order_print_selection
         }

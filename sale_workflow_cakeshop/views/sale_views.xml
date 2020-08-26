@@ -10,14 +10,14 @@
                 <field name="delivery_validated" invisible="1"/>
                 <field name="has_ko" invisible="1"/>
             </field>
-            <field name="state" position="after">
-                <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
+            <field name="name" position="after">
+                <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Inv"
                     type="action" class="btn-primary"
                     attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}"/>
-                <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Inv"
                     type="action" context="{'default_advance_payment_method': 'percentage'}"
                     attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
-                <button name="validate_picking" class="btn-primary" string="Validate Delivery" type="object" 
+                <button name="validate_picking" class="btn-primary" string="Vld Dlv" type="object" 
                     attrs="{'invisible': [('delivery_validated', '=', True)]}" confirm="Are you sure you want to validate delivery?"/>
             </field>
         </field>
