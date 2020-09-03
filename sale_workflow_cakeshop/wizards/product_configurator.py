@@ -279,12 +279,17 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         # Check sale order from the context
         if not self.order_id:
             SaleOrder = self.env['sale.order']
-            sale_order = SaleOrder.create(self._prepare_order())
+            so = self._prepare_order()
+            # Set reference product in sale order if provided
+            if self.ref_product_id:
+                so['ref_product_id'] = self.ref_product_id.id
+            sale_order = SaleOrder.create(so)
             
             self.order_id = sale_order
 
             # Attach sale order line
             line_vals = self._get_order_line_vals(self.product_id.id)
+            
             self.order_id.write({'order_line': [(0, 0, line_vals)]})
 
             # Create Kitchen Order
@@ -294,12 +299,14 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             # Create Payment if any
             if self.amount:
                 Payment = self.env['account.payment']
-                payment = Payment.create(self._prepare_payment(sale_order.amount_total))
+                payment_dict = self._prepare_payment(sale_order.amount_total)
+                payment_dict["adv_sale_id"] = sale_order.id
+                payment = Payment.create(payment_dict)
                 
                 # For the purpose of advance amount for respective sale order
-                payment.write({
-                    'adv_sale_id': sale_order.id
-                })
+                # payment.write({
+                #     'adv_sale_id': sale_order.id
+                # })
                 sale_order.is_adv = True
 
                 payment.post()
@@ -313,7 +320,8 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             sale_order_form_ref_id = self.env.ref('sale.view_order_form').id
 
             # Log the sale order details in the chatter
-            orderline_vals = self._get_order_line_vals(self.product_id.id)
+            # orderline_vals = self._get_order_line_vals(self.product_id.id)
+            orderline_vals = line_vals
             msg = "<b>Order Details</b><br/>"
             msg += "<li>Product: " + str(orderline_vals.get('name')) + "<br/>"
             msg += "<li>Qty: " + str(orderline_vals.get('product_uom_qty')) + " " + str(orderline_vals.get('uom_name')) + "<br/>"
@@ -330,10 +338,6 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
                 msg += "<li>" + str(self.fix_discount) + "/-"
             
             self.order_id.message_post(body=msg)
-            
-            # Set reference product in sale order if provided
-            if self.ref_product_id:
-                self.order_id.write({'ref_product_id': self.ref_product_id.id})
 
             # Show sale order form view
             return {
