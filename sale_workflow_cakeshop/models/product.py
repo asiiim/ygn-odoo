@@ -25,8 +25,8 @@ class ProductTemplate(models.Model):
                 'target': 'new',
                 'context': dict(
                     self.env.context,
-                    default_product_tmpl_id=self.id,
-                    default_product_id=self.product_variant_id.id,
+                    default_prd_tmpl_id=self.id,
+                    default_prd_id=self.product_variant_id.id,
                     wizard_model='product.configurator.ordernow.ko',
                 ),
             }
@@ -34,9 +34,11 @@ class ProductTemplate(models.Model):
         # return self.create_config_wizard(model_name="product.configurator.ordernow")
 
     # This field is used to check if the product is addon
-    is_addon = fields.Boolean('Is Addon', default=False)
-    is_custom = fields.Boolean('Is Custom', default=False)
-    has_attr = fields.Boolean('Has Attribute', compute="_has_attribute")
+    is_addon = fields.Boolean('Is Addon', default=False, track_visibility='onchange')
+    
+    is_extra = fields.Boolean('Is Extra', default=False, track_visibility='onchange')
+    is_custom = fields.Boolean('Is Custom', default=False, track_visibility='onchange')
+    has_attr = fields.Boolean('Has Attribute', compute="_has_attribute", track_visibility='onchange')
 
     # set true if the product template has attributes
     @api.depends('attribute_line_ids')
@@ -45,7 +47,7 @@ class ProductTemplate(models.Model):
             if len(product.attribute_line_ids) > 0:
                 product.has_attr = True
 
-    # Reference for order now
+    # Reference for "order now"
     @api.multi
     def action_reference_order(self):
         self.ensure_one()
@@ -63,13 +65,3 @@ class ProductTemplate(models.Model):
                 wizard_model='product.configurator.ordernow.ko'
             ),
         }
-
-class ProductProduct(models.Model):
-    _inherit = "product.product"
-
-    # This field is used to check if the product is addon
-    is_addon = fields.Boolean(related="product_tmpl_id.is_addon")
-    is_custom = fields.Boolean(related="product_tmpl_id.is_custom")
-    has_attr = fields.Boolean('Has Attribute', related="product_tmpl_id.has_attr", store=True)
-    
-    # product_addon_line_ids = fields.One2many('product.addons.line', 'product_id', string='Addon Lines', copy=True, auto_join=True)

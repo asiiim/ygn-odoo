@@ -18,8 +18,8 @@ class SaleOrder(models.Model):
         readonly=True,
         copy=False
     )
-    advance_payment = fields.Monetary(related="payment_id.amount", string="Advance", store=True, track_visibility='always')
-    amount_due = fields.Monetary(compute='_compute_amount_due', string='Amount Due', store=True, readonly=True, track_visibility='always')
+    advance_payment = fields.Monetary(related="payment_id.amount", string="Advance", store=True, track_visibility='onchange')
+    amount_due = fields.Monetary(compute='_compute_amount_due', string='Amount Due', store=True, readonly=True, track_visibility='onchange')
     kitchen_order_ids = fields.One2many(
         comodel_name='kitchen.order',
         inverse_name='saleorder_id',
@@ -63,8 +63,8 @@ class SaleOrder(models.Model):
                 raise UserError(_('No such deliveries to validate.'))
 
     # Tender and Change
-    tender_amount = fields.Monetary(string='Tender', track_visibility='always', default=0.0)
-    change_amount = fields.Monetary(string='Change', track_visibility='always', default=0.0)
+    tender_amount = fields.Monetary(string='Tender', track_visibility='onchange', default=0.0)
+    change_amount = fields.Monetary(string='Change', track_visibility='onchange', default=0.0)
 
     # Return Invoice Line Vals
     def _get_line_vals(self, saleorder, invoice, account_id, tax_ids):
@@ -325,7 +325,7 @@ class SaleOrder(models.Model):
     # Return the advance payment if amount due is less than zero
     is_adv_return = fields.Boolean("Excess Advance Return?", default=False)
     return_adv_payment_ids = fields.One2many('account.payment', 'sale_id', string="Return Payments")
-    total_return_adv = fields.Monetary(compute='_compute_total_return_adv', string='Advance Returned', store=True, readonly=True, track_visibility='always')
+    total_return_adv = fields.Monetary(compute='_compute_total_return_adv', string='Advance Returned', store=True, readonly=True, track_visibility='onchange')
 
     @api.depends('is_adv_return', 'return_adv_payment_ids')
     def _compute_total_return_adv(self):
@@ -340,7 +340,7 @@ class SaleOrder(models.Model):
     # Add multiple advance payment
     is_adv = fields.Boolean("Advance Received", default=False)
     adv_payment_ids= fields.One2many('account.payment', 'adv_sale_id', string="Advance Payments")
-    total_adv = fields.Monetary(compute='_compute_total_adv', string='Total Advance', store=True, readonly=True, track_visibility='always')
+    total_adv = fields.Monetary(compute='_compute_total_adv', string='Total Advance', store=True, readonly=True, track_visibility='onchange')
 
     @api.depends('is_adv', 'adv_payment_ids')
     def _compute_total_adv(self):

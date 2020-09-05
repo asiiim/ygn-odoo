@@ -15,18 +15,18 @@ _logger = logging.getLogger(__name__)
 class ProductConfiguratorSaleOrderKO(models.TransientModel):
     _name = 'product.configurator.ordernow.ko'
 
-    product_tmpl_id = fields.Many2one(
+    prd_tmpl_id = fields.Many2one(
         comodel_name='product.template',
         domain=[('config_ok', '=', True)],
         string='Configurable Template'
     )
-    product_id = fields.Many2one(
+    prd_id = fields.Many2one(
         comodel_name='product.product',
         string='Product',
         domain="[('sale_ok', '=', True), ('is_custom', '=', True)]",
         required=True
     )
-    product_uom_id = fields.Many2one(related='product_id.uom_id', readonly=True)
+    product_uom_id = fields.Many2one(related='prd_id.uom_id', readonly=True)
     uom = fields.Char(related='product_uom_id.name', string='UOM')
     
     order_id = fields.Many2one(
@@ -65,7 +65,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
     fix_discount = fields.Float(string='Fixed Discount', default=0.0)
     
-    tax_id = fields.Many2many('account.tax', related="product_id.taxes_id",string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
+    tax_id = fields.Many2many('account.tax', related="prd_id.taxes_id",string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     price_total = fields.Monetary(compute='_compute_amount', string='Total', readonly=True)
 
     ko_notes_ids = fields.Many2many('kitchen.order.notes', 'sale_workflow_cakeshop_kitchen_order_notes_', string='KO Notes')
@@ -86,13 +86,17 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     source_id = fields.Many2one('utm.source', 'Source')
 
     # Compute unit price
-    @api.depends('product_id', 'product_addon_lines')
+    @api.depends('prd_id', 'product_addon_lines')
     def _compute_price(self):
-        self.price_unit = self.product_id.list_price
+        self.price_unit = self.prd_id.list_price
     
     # Compute total price
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'manual_price', 'product_addon_lines', 'fix_discount')
     def _compute_amount(self):
+
+        # Extra product price
+        extra_prd_price = 0.0
+        non_extra_price = 0.0
 
         for line in self:
             addon_price = 0.0
@@ -106,19 +110,31 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             # check if product addons are selected
             if line.product_addon_lines:
                 for addon in line.product_addon_lines:
+
+                    # Sum up extra product price
+                    if addon.is_extra:
+                        extra_prd_price += addon.amount
+                    
                     addon_price += addon.amount
 
                 price *= line.product_uom_qty
                 price += addon_price
                 price /= line.product_uom_qty
+
+            # Price without extra product
+            non_extra_price = price - extra_prd_price
             
             # apply discount if provided
             if line.discount:
-                price *= (1 - (line.discount or 0.0) / 100.0)
+                non_extra_price *= (1 - (line.discount or 0.0) / 100.0)
+
+                # Add extra prd price with discounted price
+                price = non_extra_price + extra_prd_price
+
             elif line.fix_discount:
                 price -= (line.fix_discount / line.product_uom_qty)
 
-            taxes = line.tax_id.compute_all(price, line.currency_id, line.product_uom_qty, product=line.product_id, partner=line.partner_id)
+            taxes = line.tax_id.compute_all(price, line.currency_id, line.product_uom_qty, product=line.prd_id, partner=line.partner_id)
             
             line.update({
                 'price_total': taxes['total_included']
@@ -140,13 +156,14 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         if self.product_addon_lines:
             notes += "\nAddons:\n"
             for addon in self.product_addon_lines:
-                notes += "- "
-                notes += addon.addon_id.name
-                notes += " x" + str(int(addon.quantity))
-                notes += "\n"
+                if addon.is_addon:
+                    notes += "- "
+                    notes += addon.addon_id.name
+                    notes += " x" + str(int(addon.quantity))
+                    notes += "\n"
 
         ko_vals = {
-            'product_id': self.product_id.id,
+            'product_id': self.prd_id.id,
             'requested_date': self.requested_date,
             'ref_product_id': self.ref_product_id.id,
             'saleorder_id': self.order_id.id,
@@ -216,11 +233,20 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         }
         return payment_vals
 
-    def _get_order_line_vals(self, product_id):
+    def _get_extra_product_vals(self, addon):
+        _logger.warning('Addon Parameter in the function ::: ' + str(addon.addon_id.name))
+        return {
+            'product_id': addon.addon_id.id,
+            'name': addon.addon_id.name,
+            'price_unit': addon.unit_price,
+            'product_uom_qty': addon.quantity,
+            'product_uom': addon.addon_id.uom_id.id,
+            'uom_name': addon.addon_id.uom_id.name
+        }
+    
+    def _get_order_line_vals(self, product):
         """Hook to allow custom line values to be put on the newly
         created or edited lines."""
-        product = self.env['product.product'].browse(product_id)
-        
         # Add addon description and price unit in orderline
         orderline_desc = product.name or ""
         addon_price = 0.0
@@ -230,12 +256,13 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
 
         if self.product_addon_lines:
             for addon in self.product_addon_lines:
-                orderline_desc += " | "
-                orderline_desc += addon.addon_id.name
-                
-                addon_price += addon.amount
-                
-                addon_details += "<li>" + str(addon.addon_id.name) + " x" + str(addon.quantity) + " @" + str(addon.unit_price) + " = " + str(addon.amount) + "/-<br/>"
+                if addon.is_addon:
+                    orderline_desc += " | "
+                    orderline_desc += addon.addon_id.name
+                    
+                    addon_price += addon.amount
+                    
+                    addon_details += "<li>" + str(addon.addon_id.name) + " x" + str(addon.quantity) + " @" + str(addon.unit_price) + " = " + str(addon.amount) + "/-<br/>"
                     
             self.price_unit *= self.product_uom_qty
             self.price_unit += addon_price
@@ -249,7 +276,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             fix_discount = self.fix_discount / self.product_uom_qty
         
         return {
-            'product_id': product_id,
+            'product_id': product.id,
             'name': orderline_desc,
             'price_unit': self.manual_price if self.manual_price else self.price_unit,
             'product_uom_qty': self.product_uom_qty,
@@ -269,8 +296,8 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             raise UserError(_("The Advance Amount exceeds the Total Amount.\nMake it equal to Total Amount !"))
 
         # Check if product template exists
-        if not self.product_tmpl_id:
-            self.product_tmpl_id = self.product_id.product_tmpl_id
+        if not self.prd_tmpl_id:
+            self.prd_tmpl_id = self.prd_id.product_tmpl_id
 
         # Check if manual price is less than the computed unit price
         if self.manual_price and self.manual_price < self.price_unit:
@@ -288,9 +315,19 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             self.order_id = sale_order
 
             # Attach sale order line
-            line_vals = self._get_order_line_vals(self.product_id.id)
+            order_lines = [(5, 0, 0)]
+            line_vals = self._get_order_line_vals(self.prd_id)
+            order_lines.append((0, 0, line_vals))
+
+            # Attach Extra Products if present in Addon Lines
+            if self.product_addon_lines:
+                for addon in self.product_addon_lines:
+                    if addon.is_extra:
+                        vals = self._get_extra_product_vals(addon)
+                        order_lines.append((0, 0, vals))
             
-            self.order_id.write({'order_line': [(0, 0, line_vals)]})
+            sale_order.order_line = order_lines
+            sale_order.order_line._compute_tax_id()
 
             # Create Kitchen Order
             KitchenOrder = self.env['kitchen.order']
@@ -303,32 +340,22 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
                 payment_dict["adv_sale_id"] = sale_order.id
                 payment = Payment.create(payment_dict)
                 
-                # For the purpose of advance amount for respective sale order
-                # payment.write({
-                #     'adv_sale_id': sale_order.id
-                # })
                 sale_order.is_adv = True
-
                 payment.post()
-                # self.payment_id = payment
-                # sale_order.payment_id = payment
-            
             # Confirm the sale order
             sale_order.action_confirm()
 
             # sale order form view reference
             sale_order_form_ref_id = self.env.ref('sale.view_order_form').id
-
-            # Log the sale order details in the chatter
-            # orderline_vals = self._get_order_line_vals(self.product_id.id)
-            orderline_vals = line_vals
-            msg = "<b>Order Details</b><br/>"
-            msg += "<li>Product: " + str(orderline_vals.get('name')) + "<br/>"
-            msg += "<li>Qty: " + str(orderline_vals.get('product_uom_qty')) + " " + str(orderline_vals.get('uom_name')) + "<br/>"
             
-            if self.product_addon_lines:
+            # Log Note
+            msg = "<b>Order Details</b><br/>"
+            msg += "<li>Product: " + str(line_vals.get('name')) + "<br/>"
+            msg += "<li>Qty: " + str(line_vals.get('product_uom_qty')) + " " + str(line_vals.get('uom_name')) + "<br/>"
+
+            if line_vals.get('addon_details'):
                 msg += "<br/><b>Addons Details</b><br/>"
-                msg += str(orderline_vals.get('addon_details'))
+                msg += str(line_vals.get('addon_details'))
 
             if self.discount:
                 msg += "<br/><b>Discount</b><br/>"
@@ -347,6 +374,8 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
                 'views': [(sale_order_form_ref_id, 'form')],
                 'type': 'ir.actions.act_window'
             }
+        
+        # Else part of this code is for editing the created sale order in the wizard.
         else:
             # Check if the sale order is not a quotation
             if self.order_id.state not in ["draft", "sent"]:
@@ -365,24 +394,36 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             self.order_id.write(self._prepare_order())
 
             # Replace sale order line with new product
-            line_vals = self._get_order_line_vals(self.product_id.id)
-            for orderline in self.order_id.order_line:
-                if self.ref_product_id.is_custom:
-                    raise UserError(_("The product you are trying to reference might be a custom product !\n Try selecting available reference product."))
-                else:
-                    self.order_id.write({'order_line': [(1, orderline.id, line_vals)]})
-                    break
+            # Empty set to callect orderline vals
+            order_lines = [(5, 0, 0)]
+
+            # Remove all orderlines from the sale order
+            self.order_id.order_line = [(5, 0, 0)]
+
+            line_vals = self._get_order_line_vals(self.prd_id)
+            order_lines.append((0, 0, line_vals))
+
+            # Attach Extra Products if present in Addon Lines
+            if self.product_addon_lines:
+                for addon in self.product_addon_lines:
+                    if addon.is_extra:
+                        vals = self._get_extra_product_vals(addon)
+                        order_lines.append((0, 0, vals))
+            
+            self.order_id.order_line = order_lines
+            self.order_id.order_line._compute_tax_id()
 
             # Changes in KO
             ko_vals = self._prepare_kitchen_order()
             if self.order_id.kitchen_order_ids:
                 for ko in self.order_id.kitchen_order_ids:
-                    ko.start_kitchen_order()
                     ko.write({
                         'product_uom_qty': ko_vals.get('product_uom_qty'),
                         'ko_note': ko_vals.get('ko_note'),
+                        'product_id': ko_vals.get('product_id'),
                         'ref_product_id': self.ref_product_id.id
                     })
+                    ko.start_kitchen_order()
                     break 
             else:
                 # Create Kitchen Order
@@ -406,15 +447,13 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             self.order_id.action_confirm()
 
             # Log the sale order details in the chatter
-            orderline_vals = self._get_order_line_vals(self.product_id.id)
             msg = "<b>Order Details</b><br/>"
-            msg += "<li>Product: " + str(orderline_vals.get('name')) + "<br/>"
-            msg += "<li>Qty: " + str(orderline_vals.get('product_uom_qty')) + " " + str(orderline_vals.get('uom_name')) + "<br/>"
-            msg += "<br/><b>Addons Details</b><br/>"
+            msg += "<li>Product: " + str(line_vals.get('name')) + "<br/>"
+            msg += "<li>Qty: " + str(line_vals.get('product_uom_qty')) + " " + str(line_vals.get('uom_name')) + "<br/>"
             
-            if self.product_addon_lines:
+            if line_vals.get('addon_details'):
                 msg += "<br/><b>Addons Details</b><br/>"
-                msg += str(orderline_vals.get('addon_details'))
+                msg += str(line_vals.get('addon_details'))
 
             if self.discount:
                 msg += "<br/><b>Discount</b><br/>"
@@ -455,8 +494,8 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             raise UserError(_("The Advance Amount exceeds the Total Amount.\nMake it equal to Total Amount !"))
 
         # Check if product template exists
-        if not self.product_tmpl_id:
-            self.product_tmpl_id = self.product_id.product_tmpl_id
+        if not self.prd_tmpl_id:
+            self.prd_tmpl_id = self.prd_id.product_tmpl_id
 
         # Check if manual price is less than the computed unit price
         if self.manual_price and self.manual_price < self.price_unit:
@@ -468,8 +507,19 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
         self.order_id = sale_order
 
         # Attach sale order line
-        line_vals = self._get_order_line_vals(self.product_id.id)
-        self.order_id.write({'order_line': [(0, 0, line_vals)]})
+        order_lines = [(5, 0, 0)]
+        line_vals = self._get_order_line_vals(self.prd_id)
+        order_lines.append((0, 0, line_vals))
+
+        # Attach Extra Products if present in Addon Lines
+        if self.product_addon_lines:
+            for addon in self.product_addon_lines:
+                if addon.is_extra:
+                    vals = self._get_extra_product_vals(addon)
+                    order_lines.append((0, 0, vals))
+        
+        sale_order.order_line = order_lines
+        sale_order.order_line._compute_tax_id()
         
         # Set reference product in sale order if provided
         if self.ref_product_id:
@@ -489,20 +539,17 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             })
             sale_order.is_adv = True
             payment.post()
-            # self.payment_id = payment
-            # sale_order.payment_id = payment
 
         #Confirm Sale Order
         sale_order.action_confirm()
 
         # Log the sale order details in the chatter
-        orderline_vals = self._get_order_line_vals(self.product_id.id)
+        orderline_vals = line_vals
         msg = "<b>Order Details</b><br/>"
         msg += "<li>Product: " + str(orderline_vals.get('name')) + "<br/>"
         msg += "<li>Qty: " + str(orderline_vals.get('product_uom_qty')) + " " + str(orderline_vals.get('uom_name')) + "<br/>"
-        msg += "<br/><b>Addons Details</b><br/>"
-        
-        if self.product_addon_lines:
+
+        if orderline_vals.get('addon_details'):
             msg += "<br/><b>Addons Details</b><br/>"
             msg += str(orderline_vals.get('addon_details'))
 
@@ -522,7 +569,7 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     ref_product_id = fields.Many2one(
         comodel_name='product.product',
         string='Reference Product',
-        domain="[('sale_ok', '=', True), ('is_custom', '=', False), ('is_addon', '=', False)]"
+        domain="[('sale_ok', '=', True), ('is_custom', '=', False), ('is_addon', '=', False), ('is_extra', '=', False)]"
     )
 
 class ProductAddonsLine(models.TransientModel):
@@ -532,7 +579,9 @@ class ProductAddonsLine(models.TransientModel):
     
     sequence = fields.Integer(string='Sequence', default=10)
     product_config_soko = fields.Many2one('product.configurator.ordernow.ko', string="Product Config SOKO")
-    addon_id = fields.Many2one('product.product', string="Addon", domain="[('is_addon', '=', True), ('sale_ok', '=', True)]", ondelete='restrict', required=True, oldname="product_id")
+    addon_id = fields.Many2one('product.product', string="Addon", domain="['|', ('is_addon', '=', True), ('is_extra', '=', True), ('sale_ok', '=', True)]", ondelete='restrict', required=True, oldname="product_id")
+    is_addon = fields.Boolean('Is Addon', related="addon_id.is_addon")
+    is_extra = fields.Boolean('Is Extra', related="addon_id.is_extra")
     quantity = fields.Float(string='Qty', default=1.0)
     uom_id = fields.Many2one(related="addon_id.uom_id", string="UOM")
     unit_price = fields.Float(string='Rate', required=True)
@@ -580,8 +629,8 @@ class ProductOrderDescription(models.TransientModel):
             'target': 'new',
             'context': dict(
                 self.env.context,
-                default_product_tmpl_id=None,
-                default_product_id=None,
+                default_prd_tmpl_id=None,
+                default_prd_id=None,
                 wizard_model='product.configurator.ordernow.ko',
             )
         }

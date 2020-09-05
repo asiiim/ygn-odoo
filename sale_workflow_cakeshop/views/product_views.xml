@@ -26,13 +26,14 @@
             <xpath expr="//div[hasclass('oe_kanban_details')]" position="after">
                 <field name="has_attr" invisible="1"/>
                 <field name="is_addon" invisible="1"/>
+                <field name="is_extra" invisible="1"/>
                 <field name="is_custom" invisible="1"/>
-                <div class="mt-3" attrs="{'invisible': ['|', '|', '|', ('has_attr', '=', True), ('is_addon', '=', True), ('is_custom', '=', False)]}">
+                <div class="mt-3" attrs="{'invisible': ['|', '|', '|', '|', ('has_attr', '=', True), ('is_addon', '=', True), ('is_custom', '=', False), ('is_extra', '=', True)]}">
                     <button style="position:absolute;right:5px;bottom:5px;" class="pull-right btn btn-primary text-right" name="action_order_now" type="object">
                         <span>Order Now</span>
                     </button>
                 </div>
-                <div class="mt-3" attrs="{'invisible': ['|', '|', ('is_addon', '=', True), ('is_custom', '=', True)]}">
+                <div class="mt-3" attrs="{'invisible': ['|', '|', '|', ('is_addon', '=', True), ('is_custom', '=', True), ('is_extra', '=', True)]}">
                     <button style="position:absolute;right:5px;bottom:5px;" class="pull-right btn btn-primary text-right" name="action_reference_order" type="object">
                         <span>Reference</span>
                     </button>
@@ -49,6 +50,10 @@
                 <div>
                     <field name="is_addon"/>
                     <label for="is_addon"/>
+                </div>
+                <div>
+                    <field name="is_extra"/>
+                    <label for="is_extra"/>
                 </div>
                 <div>
                     <field name="is_custom"/>
