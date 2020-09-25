@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_payment_inherit" model="ir.ui.view">
+        <field name="name">Inherit Simplified Invoice Sale Order Form View</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="payment_term_id" position="after">
+                <field name="payment_id" invisible="1"/>
+            </field>
+            <field name="amount_total" position="after">
+                <field name="tender_amount" readonly="1" attrs="{'invisible': [('tender_amount', '=', 0.0)]}"/>
+                <field name="change_amount" readonly="1" attrs="{'invisible': [('change_amount', '=', 0.0)]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>
