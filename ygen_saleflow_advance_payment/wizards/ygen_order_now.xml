@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ygen_ordernow_form_inherit_advance_payment" model="ir.ui.view">
+        <field name="name">Ygen Order Now Advance Payment Form Inherit</field>
+        <field name="model">ygen.order.now</field>
+        <field name="inherit_id" ref="ygen_sale_order_flow.ygen_order_now_form"/>
+        <field name="arch" type="xml">
+            <field name="tax_id" position="before">
+                <label for="advance_amount" name="adv_amt" string="Advance"/>
+                <div class="oe_title" name="advance_amount">
+                    <h2 style="color:red;">
+                        <strong><field name="advance_amount" widget="monetary"/></strong>
+                    </h2>
+                </div>
+            </field>
+        </field>
+    </record>
+    <record id="ygen_ordernow_edit_form_inherit_advance_payment" model="ir.ui.view">
+        <field name="name">Ygen Order Now Edit Advance Payment Form Inherit</field>
+        <field name="model">ygen.order.now</field>
+        <field name="inherit_id" ref="ygen_sale_order_flow.ygen_order_now_edit_form"/>
+        <field name="arch" type="xml">
+            <label for="advance_amount" position="replace"></label>
+            <div name="advance_amount" position="replace">
+                <div class="oe_title" name="advance_amount" invisible="1">
+                    <h2 style="color:red;">
+                        <strong><field name="advance_amount" widget="monetary" invisible="1"/></strong>
+                    </h2>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>
