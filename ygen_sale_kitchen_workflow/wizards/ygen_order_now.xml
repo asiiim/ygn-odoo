@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ygen_ordernow_form_inherit_sale_kitchen" model="ir.ui.view">
+        <field name="name">Ygen Order Now Sale Kitchen Form Inherit</field>
+        <field name="model">ygen.order.now</field>
+        <field name="inherit_id" ref="ygen_sale_order_flow.ygen_order_now_form"/>
+        <field name="arch" type="xml">
+            <field name="ref_product_id" position="after">
+                <field name="order_message_id" options="{&quot;no_quick_create&quot;: True}"/>
+                <field name="name_for_message" string="Name(in message)"/>
+                <field name="ko_notes_ids" widget="many2many_tags" options="{&quot;no_quick_create&quot;: True}"/>
+                <field name="ko_note" string="Other Notes"/>
+            </field>
+            <field name="requested_date" position="after">
+                <field name="kitchen_sale_order_print_selection" invisible="1"/>
+            </field>
+        </field>
+    </record>
+    <record id="ygen_ordernow_edit_form_inherit_sale_kitchen" model="ir.ui.view">
+        <field name="name">Ygen Order Now Edit Sale Kitchen Form Inherit</field>
+        <field name="model">ygen.order.now</field>
+        <field name="inherit_id" ref="ygen_sale_order_flow.ygen_order_now_edit_form"/>
+        <field name="arch" type="xml">
+            <field name="kitchen_sale_order_print_selection" position="replace">
+                <field name="kitchen_sale_order_print_selection" invisible="1"/>
+            </field>
+            <field name="order_message_id" position="replace">
+                <field name="order_message_id" invisible="1"/>
+            </field>
+            <field name="name_for_message" position="replace">
+                <field name="name_for_message" invisible="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

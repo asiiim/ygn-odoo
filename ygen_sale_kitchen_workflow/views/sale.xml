@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ygen_view_order_tree_inherit" model="ir.ui.view">
+        <field name="name">Ygen Sale Order Tree Inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="amount_total" position="replace"/>
+            <field name="name" position="replace">
+                <field name="name" string="Order Number" options='{"bg_color": "blueviolet: ko_status == False and delivery_status == False; orange: ko_status == True and delivery_status == False; green: ko_status == True and delivery_status == True;", "fg_color": "white"}'/>
+                <field name="ko_status" string="Ready" invisible="1"/>
+                <field name="delivery_status" string="Dispatch" invisible="1"/>
+                <field name="confirmation_date" string="Confirmation Date" invisible="1"/>
+                <field name="partner_id"/>
+                <field name="customer_street"/>
+                <field name="ko_message"/>
+                <field name="team_id"/>
+                <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
+                <field name="state" invisible="1"/>
+            </field>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-danger">ko_status == True and delivery_status == False and requested_date &lt; current_date</attribute>
+                <attribute name="decoration-bf">message_needaction==True</attribute>
+                <attribute name="decoration-muted">state=='cancel'</attribute>
+            </xpath>
+            <field name="confirmation_date" position="replace"/>
+            <field name="commitment_date" position="replace"/>
+        </field>
+    </record>
+    <record id="ygen_view_order_form_inherit" model="ir.ui.view">
+        <field name="name">Sale Order Form Inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <button name='action_quotation_send' position="before">
+                <field name="has_ko" invisible="1"/>
+                <button name="print_koso_report" string="Print SO/KO" type="object" class="btn-primary" attrs="{'invisible': [('has_ko', '=', False)]}"/>
+                <button name="view_kitchen_order" string="View KO" type="object" class="btn-primary" attrs="{'invisible': [('has_ko', '=', False)]}"/>
+                <button name="action_make_order" class="btn-primary" string="Make Order" type="object" attrs="{'invisible': [('state', '!=', 'draft'), ('state', '!=', 'sent')]}"/>
+            </button>
+
+            <field name="payment_term_id" position="after">
+                <field name="kitchen_sale_order_print_selection" attrs="{'invisible': [('has_ko', '=', False)]}"/>
+            </field>
+        </field>
+    </record>
+    <!-- Server Action -->
+    <record id="ir_actions_server_set_ko_ready" model="ir.actions.server">
+        <field name="name">KO Ready</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="state">code</field>
+        <field name="code">records.set_ko_ready()</field>
+    </record>
+    <record id="ir_actions_server_dispatch_so" model="ir.actions.server">
+        <field name="name">Dispatch SO</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="state">code</field>
+        <field name="code">records.dispatch_so()</field>
+    </record>
+</odoo>

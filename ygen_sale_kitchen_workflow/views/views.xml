@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="sale_kitchen_workflow_main_menu"
+        name="BakingSoft"
+        web_icon="ygen_sale_kitchen_workflow,static/description/icon.png"
+        sequence="0"/>
+    <menuitem id="sale_kitchen_workflow_catalogue_menu"
+        name="Catalogue"
+        parent="sale_kitchen_workflow_main_menu"
+        action="stock.product_template_action_product"
+        sequence="1"/>
+    <menuitem id="sale_kitchen_workflow_order_now_menu"
+        name="Make Order"
+        parent="sale_kitchen_workflow_main_menu"
+        action="ygen_sale_order_flow.action_order_now"
+        sequence="2"/>
+    <menuitem id="sale_kitchen_workflow_sale_order_menu"
+        name="Sale Orders"
+        parent="sale_kitchen_workflow_main_menu"
+        action="sale.action_orders"
+        sequence="3"/>
+    <menuitem id="sale_kitchen_workflow_kitchen_order_menu"
+        name="Kitchen Orders"
+        parent="sale_kitchen_workflow_main_menu"
+        action="kitchen_order.action_kitchen_orders"
+        sequence="4"/>
+    <menuitem id="sale_kitchen_workflow_invoices_menu"
+        name="Invoices"
+        parent="sale_kitchen_workflow_main_menu"
+        action="account.action_invoice_tree1"
+        sequence="5"/>
+    <menuitem id="sale_kitchen_workflow_customers_menu"
+        name="Customers"
+        parent="sale_kitchen_workflow_main_menu"
+        action="base.action_partner_form"
+        groups="sales_team.group_sale_manager"
+        sequence="6"/>
+</odoo>

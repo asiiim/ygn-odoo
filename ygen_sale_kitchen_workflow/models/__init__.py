@@ -1,0 +1,5 @@
+# -*- coding: utf-8 -*-
+# Part of Ygen. See LICENSE file for full copyright and licensing details.
+
+from . import kitchen_order
+from . import sale_order
