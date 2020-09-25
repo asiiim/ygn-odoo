@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- QWeb Reports -->
+        <report
+            id="ygen_order_ticket_dot_matrix"
+            model="sale.order"
+            string="Ygen Order Ticket Dot Matrix Design"
+            report_type="qweb-pdf"
+            name="ygen_order_print_dotmatrix.ygen_report_order_ticket_dotmatrix"
+            file="ygen_order_print_dotmatrix.ygen_report_order_ticket_dotmatrix"
+            attachment=""
+            print_report_name="('Order Ticket - %s' % (object.name))"/>
+        />
+    </data>
+</odoo>
