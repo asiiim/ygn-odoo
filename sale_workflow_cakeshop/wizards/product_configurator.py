@@ -96,16 +96,17 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
 
         # Extra product price
         extra_prd_price = 0.0
-        non_extra_price = 0.0
+        price = 0.0
+        unit_non_extra_price = 0.0
+        addon_price = 0.0
 
         for line in self:
-            addon_price = 0.0
 
             # check if it has unit price or manual price
             if line.manual_price:
-                price = line.manual_price
+                unit_non_extra_price = line.manual_price
             else:
-                price = line.price_unit
+                unit_non_extra_price = line.price_unit
 
             # check if product addons are selected
             if line.product_addon_lines:
@@ -115,29 +116,25 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
                     if addon.is_extra:
                         extra_prd_price += addon.amount
                     
-                    addon_price += addon.amount
+                    else:
+                        addon_price += addon.amount
 
+                price = unit_non_extra_price
                 price *= line.product_uom_qty
                 price += addon_price
-                price /= line.product_uom_qty
-
-            # Price without extra product
-            non_extra_price = price - extra_prd_price
+                unit_non_extra_price = price / line.product_uom_qty
             
             # apply discount if provided
             if line.discount:
-                non_extra_price *= (1 - (line.discount or 0.0) / 100.0)
-
-                # Add extra prd price with discounted price
-                price = non_extra_price + extra_prd_price
+                unit_non_extra_price *= (1 - (line.discount or 0.0) / 100.0)
 
             elif line.fix_discount:
-                price -= (line.fix_discount / line.product_uom_qty)
+                unit_non_extra_price -= (line.fix_discount / line.product_uom_qty)
 
-            taxes = line.tax_id.compute_all(price, line.currency_id, line.product_uom_qty, product=line.prd_id, partner=line.partner_id)
+            taxes = line.tax_id.compute_all(unit_non_extra_price, line.currency_id, line.product_uom_qty, product=line.prd_id, partner=line.partner_id)
             
             line.update({
-                'price_total': taxes['total_included']
+                'price_total': taxes['total_included'] + extra_prd_price
             })
 
     @api.multi
