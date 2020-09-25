@@ -8,7 +8,7 @@ class CommissionInvoiceLine(models.Model):
     _inherit ="account.invoice.line"
 
     commission_subtotal = fields.Float(string='Commission Subtotal', compute="_compute_commission_total", readonly=True, store=True,track_visibility='always')
-    commission= fields.Float(string='Commission')
+    commission = fields.Float(string='Commission')
 
     @api.depends('account_analytic_id','price_subtotal', 'commission')
     def _compute_commission_total(self):
