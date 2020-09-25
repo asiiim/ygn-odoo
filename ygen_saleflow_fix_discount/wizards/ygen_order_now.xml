@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ygen_ordernow_form_inherit_fix_discount" model="ir.ui.view">
+        <field name="name">Ygen Order Now Form Inherit Fix Discount</field>
+        <field name="model">ygen.order.now</field>
+        <field name="inherit_id" ref="ygen_sale_order_flow.ygen_order_now_form"/>
+        <field name="arch" type="xml">
+            <field name="discount" position="replace">
+                <field name="discount" attrs="{'invisible': [('fix_discount', '&gt;', 0)]}"/>
+                <field name="fix_discount" attrs="{'invisible': [('discount', '&gt;', 0)]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>
