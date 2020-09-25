@@ -81,6 +81,7 @@ class KitchenOrder(models.Model):
     def _compute_kanban_state(self):
         today = datetime.now().strftime('%Y-%m-%d')
         for order in self:
+            kanban_state = ""
             if order.requested_date:
                 order_req_date = fields.Datetime.from_string(
                     order.requested_date).strftime('%Y-%m-%d')
