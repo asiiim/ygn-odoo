@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="pharmagen_main_menu"
+        name="PharmaGen"
+        web_icon="pharmagen,static/description/icon.png"
+        sequence="0"/>
+    <menuitem id="pharmagen_sale_order_menu"
+        name="Sale Orders"
+        parent="pharmagen_main_menu"
+        action="sale.action_orders"
+        sequence="1"/>
+    <menuitem id="pharmagen_catalogue_menu"
+        name="Catalogue"
+        parent="pharmagen_main_menu"
+        action="stock.product_template_action_product"
+        sequence="2"/>
+    <menuitem id="pharmagen_invoices_menu"
+        name="Invoices"
+        parent="pharmagen_main_menu"
+        action="account.action_invoice_tree1"
+        sequence="3"/>
+    <menuitem id="pharmagen_customers_menu"
+        name="Customers"
+        parent="pharmagen_main_menu"
+        action="base.action_partner_form"
+        groups="sales_team.group_sale_manager"
+        sequence="4"/>
+</odoo>
