@@ -251,6 +251,17 @@ class SaleOrder(models.Model):
     @api.multi
     def action_edit_sale_order(self):
         self.ensure_one()
+
+        kitchen_orders = self.mapped('kitchen_order_ids')
+        ko_note = ""
+        base_product = None
+        qty = 0.0
+
+        if len(kitchen_orders) == 1:
+            ko_note = kitchen_orders.ko_note
+            base_product = kitchen_orders.product_id
+            qty = kitchen_orders.product_uom_qty
+        
         order_configurator_view_id = self.env.ref('sale_workflow_cakeshop.product_configurator_ordernow_ko_product_edit_form').id
 
         return {
@@ -267,6 +278,11 @@ class SaleOrder(models.Model):
                 default_requested_date = self.requested_date,
                 default_saleorder_date = self.date_order,
                 default_ref_product_id = self.ref_product_id.id,
+                default_source_id = self.source_id.id,
+                default_team_id = self.team_id.id,
+                default_ko_note = ko_note,
+                default_prd_id = base_product.id,
+                default_product_uom_qty = qty,
                 wizard_model='product.configurator.ordernow.ko',
             ),
         }
