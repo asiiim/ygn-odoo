@@ -102,7 +102,7 @@
                                     <p t-field="o.create_date" t-field-options="{&quot;format&quot;: &quot;MM/dd/y h:mm a&quot;}"/>
                                     
                                     <strong>DOD:</strong>
-                                    <p t-field="o.requested_date" t-field-options="{&quot;format&quot;: &quot;MM/dd/y h:mm a&quot;}"/>
+                                    <p t-field="o.finish_date" t-field-options="{&quot;format&quot;: &quot;MM/dd/y h:mm a&quot;}"/>
                                     
                                     
                                 </div>
