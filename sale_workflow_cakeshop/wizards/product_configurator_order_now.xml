@@ -16,8 +16,6 @@
                             <field name="prd_tmpl_id" attrs="{'readonly': [('prd_id', '!=', False)]}" options="{'no_create': True}" invisible="1"/>
                         </group>
                         <group>
-                            <field name="team_id" widget="selection" required="True"/>
-                            <field name="source_id" widget="selection" required="True"/>
                             <label for="product_uom_qty" string="Qty"/>
                             <div class="o_row">
                                 <h3>
@@ -28,6 +26,8 @@
                                     </strong>
                                 </h3>
                             </div>
+                            <field name="team_id" widget="selection" required="True"/>
+                            <field name="source_id" string="Order Source" widget="selection" required="True"/>
                         </group>
                     </group>
                     <group>
@@ -39,56 +39,68 @@
                             <field name="saleorder_date"/>
                             <field name="requested_date" string="Delivery Date"/>
                             <field name="kitchen_sale_order_print_selection" invisible="1"/>
+                            <field name="journal_id" widget="selection" required="True"/>
                         </group>
                         <group>
-                            <field name="journal_id" widget="selection" required="True"/>
                             <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                             <label for="price_unit" string="Price" attrs="{'invisible': [('manual_price', '&gt;', 0)]}"/>
                             <div class="oe_title" attrs="{'invisible': [('manual_price', '&gt;', 0)]}">
-                                <h3>
-                                    <strong>
-                                        <field name="price_unit"/>
-                                    </strong>
-                                </h3>
+                                <strong>
+                                    <field name="price_unit"/>
+                                </strong>
                             </div>
                             <label for="manual_price" string="Manual Price"/>
                             <div class="oe_title">
-                                <h3>
-                                    <strong>
-                                        <field name="manual_price"/>
-                                    </strong>
-                                </h3>
+                                <strong>
+                                    <field name="manual_price"/>
+                                </strong>
                             </div>
                             <field name="discount" attrs="{'invisible': [('fix_discount', '&gt;', 0)]}"/>
                             <field name="fix_discount" attrs="{'invisible': [('discount', '&gt;', 0)]}"/>
                             <label for="amount" string="Advance"/>
                             <div class="oe_title" name="advance_amount">
-                                <h2 style="color:red;">
-                                    <strong><field name="amount" widget="monetary"/></strong>
-                                </h2>
+                                <h3 style="color:red;">
+                                    <strong>
+                                        <field name="amount" widget="monetary"/>
+                                    </strong>
+                                </h3>
                             </div>
                             <field name="tax_id" widget="many2many_tags" readonly="1" invisible="1"/>
+                            <div class="oe_title" colspan="2">
+                                <label for="price_total" string="Total"/>
+                                <h2 style="color:blue;">
+                                    <strong>
+                                        <field name="price_total" widget="monetary"/>
+                                    </strong>
+                                </h2>
+                            </div>
                         </group>
                     </group>
-                    <group>
-                     <field name="product_addon_lines" mode="tree">
-                      <tree string="Addon Lines" editable="bottom">
-                          <field name="sequence" widget="handle"/>
-                          <field name="addon_id" string="Extra Addons" options="{&quot;always_reload&quot;: True, &quot;no_quick_create&quot;: True, &quot;no_create&quot;: True}"/>
-                          <field name="quantity"/>
-                          <field name="unit_price"/>
-                          <field name="amount"/>
-                      </tree>
-                    </field>
-                   </group>
-                   <group>
-                      <div class="oe_title" colspan="2">
-                        <label for="price_total" string="Total"/>
-                        <h1 style="color:blue;">
-                            <strong><field name="price_total" widget="monetary"/></strong>
-                        </h1>
-                      </div>
-                   </group>
+                    <notebook>
+                        <page string="Addon Lines" name="addon_lines">
+                            <group>
+                                <field name="product_addon_lines" mode="tree">
+                                    <tree string="Addon Lines" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="addon_id" string="Extra Addons" options="{&quot;always_reload&quot;: True, &quot;no_quick_create&quot;: True, &quot;no_create&quot;: True}"/>
+                                        <field name="quantity"/>
+                                        <field name="unit_price"/>
+                                        <field name="amount"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                        <page string="Reference Images" name="reference_images" invisible="1">
+                            <group>
+                                <group>
+                                    <field name="ref_image" widget="image" class="oe_avatar"/>
+                                </group>
+                                <group>
+                                    <field name="ref_image_secondary" widget="image" class="oe_avatar"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
                 <footer>
                     <button type="object" name="action_order_config_done" class="oe_highlight" string="Order and Close"/>
@@ -127,7 +139,9 @@
             <div name="advance_amount" position="replace">
                 <div class="oe_title" name="advance_amount" invisible="1">
                     <h2 style="color:red;">
-                        <strong><field name="amount" widget="monetary" invisible="1"/></strong>
+                        <strong>
+                            <field name="amount" widget="monetary" invisible="1"/>
+                        </strong>
                     </h2>
                 </div>
             </div>
@@ -157,13 +171,13 @@
 
     <!--Action to order now-->
     <record id="action_order_now" model="ir.actions.act_window">
-      <field name="name">Order Now</field>
-      <field name="res_model">product.configurator.ordernow.ko</field>
-      <field name="type">ir.actions.act_window</field>
-      <field name="view_type">form</field>
-      <field name="view_mode">form</field>
-      <field name="view_id" ref="product_configurator_ordernow_ko_form"/>
-      <field name="target">new</field>
+        <field name="name">Order Now</field>
+        <field name="res_model">product.configurator.ordernow.ko</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="product_configurator_ordernow_ko_form"/>
+        <field name="target">new</field>
     </record>
 
     <!-- Product Order Details Wizard View -->

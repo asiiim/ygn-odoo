@@ -60,7 +60,13 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
     price_unit = fields.Float(string="Price", digits=dp.get_precision('Unit Price'), oldname="price", compute="_compute_price")
     product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
-    
+    ref_image = fields.Binary(
+        "Reference Image", attachment=True,
+        help="This field holds the image used as image for the product, limited to 1024x1024px.")
+    ref_image_secondary = fields.Binary(
+        "Reference Image Secondary", attachment=True,
+        help="This field holds the image used as image for the product, limited to 1024x1024px.")
+
     # discount styles
     discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
     fix_discount = fields.Float(string='Fixed Discount', default=0.0)
