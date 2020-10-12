@@ -26,6 +26,7 @@
         'security/ir.model.access.csv',
         'data/ir_sequence.xml',
         'data/kitchen_order_stage.xml',
+        'views/res_config_settings.xml',
         'views/kitchen_order.xml',
         'views/kitchen_order_stage.xml',
         'views/kitchen_message.xml',

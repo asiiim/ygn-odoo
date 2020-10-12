@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">Res Config Settings Kitchen Order Lead Time Form View</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="50"/>
+            <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Kitchen Order" string="KITCHEN ORDER" data-key="ygen_sms">
+                        <h2>Kitchen Order Configurations</h2>
+                        <div class="row mt16 o_settings_container" id="kitchen_order_settings">
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="kitchen_order_lead_time_settings">
+                                <div class="o_setting_right_pane">
+                                    <div class="text-muted">Kitchen Order Settings</div>
+                                </div>
+                                <div class="row mt16 o_settings_container">
+                                    <div class="o_setting_right_pane">
+                                        <div class="mt16 row">
+                                            <label class="col-xs-3 col-md-3 o_light_label" string="Lead Time (In Hours)" for="lead_time"/>
+                                            <field name="lead_time"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

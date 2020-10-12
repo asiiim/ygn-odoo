@@ -48,11 +48,24 @@ class KitchenOrder(models.Model):
         'Product Unit of Measure'), readonly=1, required=True, default=1.0, track_visibility='onchange')
     uom = fields.Many2one(related="product_id.uom_id", string='Unit of Measure', readonly=1,
                           required=True, track_visibility='onchange')
+    finish_date = fields.Datetime('Finish Date', copy=False, track_visibility='onchange')
+
+    def _get_finish_date(self, vals):
+        DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+        lead_time = float(self.env['ir.config_parameter'].sudo().get_param('lead_time'))
+        
+        if vals.get('requested_date'):
+            requested = datetime.strptime(vals.get('requested_date'), DATETIME_FORMAT)
+            return requested - relativedelta(hours=lead_time)
+            
 
     @api.model
     def create(self, vals):
         vals['name'] = self.env['ir.sequence'].next_by_code(
             'kitchen.order') or _('New')
+
+        vals['finish_date'] = self._get_finish_date(vals)
+            
         result = super(KitchenOrder, self).create(vals)
         return result
 
