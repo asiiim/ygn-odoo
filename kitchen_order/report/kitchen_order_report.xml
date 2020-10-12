@@ -20,7 +20,7 @@
                             <p t-field="o.create_date" t-field-options="{&quot;format&quot;: &quot;MM/dd/y h:mm a&quot;}"/>
                             
                             <strong>DOD:</strong>
-                            <p t-field="o.requested_date" t-field-options="{&quot;format&quot;: &quot;MM/dd/y h:mm a&quot;}"/>
+                            <p t-field="o.finish_date" t-field-options="{&quot;format&quot;: &quot;MM/dd/y h:mm a&quot;}"/>
                             
                             
                         </div>
@@ -81,7 +81,7 @@
                             </div>
                             <div class="col-xs-2" style="border-left:1px solid #000; padding:2px 5px;">
                                 <strong>Delivery Date:</strong>
-                                <p style="font-size:15px;" t-field="doc.requested_date" t-field-options="{&quot;format&quot;: &quot;MM/dd/y h:mm a&quot;}"/>
+                                <p style="font-size:15px;" t-field="doc.finish_date" t-field-options="{&quot;format&quot;: &quot;MM/dd/y h:mm a&quot;}"/>
 
                                 <strong>Product:</strong>
                                 <p t-field="doc.product_id"/>
