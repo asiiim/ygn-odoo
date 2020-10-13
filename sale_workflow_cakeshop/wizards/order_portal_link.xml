@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="order_portal_link_form_view" model="ir.ui.view">
+        <field name="name">Order Portal Link Form View</field>
+        <field name="model">order.portal.link</field>
+        <field name="arch" type="xml">
+            <form string="Copy and Share the Link">
+                <h2>
+                    <field name="portal_link" autofocus="1"/>
+                </h2>
+                <footer>
+                    <button string="Close" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

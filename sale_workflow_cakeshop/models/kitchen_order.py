@@ -48,3 +48,8 @@ class KitchenOrder(models.Model):
     def print_soko_report(self):
         self.ensure_one()
         return self.env.ref('sale_workflow_cakeshop.action_report_sale_or_kitchen_order').report_action(self.saleorder_id)
+
+    # Portal SO or KO
+    @api.multi
+    def share_portal_link(self):
+        return self.saleorder_id.share_portal_link()

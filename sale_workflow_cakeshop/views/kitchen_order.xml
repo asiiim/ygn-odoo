@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <button name="print_kitchen_order" position="after">
                 <button name="print_soko_report" string="Print SO &amp; KO" type="object" class="btn-primary"/>
+                <button name="share_portal_link" string="Share" type="object" class="btn-primary"/>
             </button>
             <field name="saleorder_id" position="replace">
                 <label for="so_ref" string="Sale Order"/>

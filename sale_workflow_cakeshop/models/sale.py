@@ -202,6 +202,35 @@ class SaleOrder(models.Model):
     def print_koso_report(self):
         self.ensure_one()
         return self.env.ref('sale_workflow_cakeshop.action_report_sale_or_kitchen_order').report_action(self)
+    
+    # Portal SO or KO
+    @api.multi
+    def share_portal_link(self):
+        count = 0
+        for record in self:
+            if record:
+                count += 1
+            if count > 1:
+                raise UserError(_('Please select ONLY ONE ORDER at a time.'))
+
+        params = self.env['ir.config_parameter'].sudo()
+        base_url = params.get_param('web.base.url', default='')
+        link_url = base_url + '/order/portal/' + str(self.id)
+        
+        shareable_link_view = self.env.ref('sale_workflow_cakeshop.order_portal_link_form_view').id
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'order.portal.link',
+            'name': "Copy Shareable Link",
+            'view_mode': 'form',
+            'view_id': shareable_link_view,
+            'target': 'new',
+            'context': dict(
+                self.env.context,
+                default_portal_link=link_url,
+                wizard_model='order.portal.link'
+            ),
+        }
 
     # View related kitchen orders of the sale order
     @api.multi

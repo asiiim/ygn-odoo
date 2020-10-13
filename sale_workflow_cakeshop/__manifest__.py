@@ -34,7 +34,9 @@ good for processing one product at a time.
         'wizards/sale_requested_date.xml',
         'wizards/sale_change_advance.xml',
         'wizards/sale_change_customer.xml',
-        'report/kitchen_sale_order_report.xml'
+        'wizards/order_portal_link.xml',
+        'report/kitchen_sale_order_report.xml',
+        'report/kitchen_sale_order_portal_report.xml'
     ],
     # 'images': ['static/description/banner.png'],
 }

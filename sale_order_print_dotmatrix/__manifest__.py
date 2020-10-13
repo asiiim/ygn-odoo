@@ -12,7 +12,8 @@
     'depends': ['base', 'sale', 'sale_workflow_cakeshop'],
     'data': [
         'views/report_order_ticket.xml',
-        'views/order_ticket_report.xml'
+        'views/order_ticket_report.xml',
+        'views/sale_order_portal.xml'
     ],
     'auto_install': False,
     'installable': True,
