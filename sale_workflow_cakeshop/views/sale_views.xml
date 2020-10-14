@@ -19,6 +19,7 @@
                     attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
                 <button name="validate_picking" class="btn-primary" string="Vld Dlv" type="object" 
                     attrs="{'invisible': [('delivery_validated', '=', True)]}" confirm="Are you sure you want to validate delivery?"/>
+                <button name="share_portal_link" string="Share" type="object" class="btn-primary" attrs="{'invisible': [('has_ko', '=', False)]}"/>
             </field>
         </field>
     </record>
