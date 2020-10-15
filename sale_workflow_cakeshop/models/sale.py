@@ -204,19 +204,18 @@ class SaleOrder(models.Model):
         return self.env.ref('sale_workflow_cakeshop.action_report_sale_or_kitchen_order').report_action(self)
     
     # Portal SO or KO
-    @api.multi
-    def share_portal_link(self):
-        count = 0
-        for record in self:
-            if record:
-                count += 1
-            if count > 1:
-                raise UserError(_('Please select ONLY ONE ORDER at a time.'))
+    def generate_portal_link(self):
 
         params = self.env['ir.config_parameter'].sudo()
         base_url = params.get_param('web.base.url', default='')
-        link_url = base_url + '/order/portal/' + str(self.id)
         
+        return base_url + '/order/portal/' + str(self.id) or None
+
+    
+    @api.multi
+    def share_portal_link(self):
+        
+        portal_link = self.generate_portal_link()
         shareable_link_view = self.env.ref('sale_workflow_cakeshop.order_portal_link_form_view').id
         return {
             'type': 'ir.actions.act_window',
@@ -227,7 +226,7 @@ class SaleOrder(models.Model):
             'target': 'new',
             'context': dict(
                 self.env.context,
-                default_portal_link=link_url,
+                default_portal_link=portal_link,
                 wizard_model='order.portal.link'
             ),
         }

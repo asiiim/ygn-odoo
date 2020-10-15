@@ -14,4 +14,13 @@
             </form>
         </field>
     </record>
+    <record id="action_view_order_portal_link" model="ir.actions.act_window">
+        <field name="name">Share</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">order.portal.link</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="sale.model_sale_order" />
+    </record>
 </odoo>

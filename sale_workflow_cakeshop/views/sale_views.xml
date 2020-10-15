@@ -19,7 +19,6 @@
                     attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
                 <button name="validate_picking" class="btn-primary" string="Vld Dlv" type="object" 
                     attrs="{'invisible': [('delivery_validated', '=', True)]}" confirm="Are you sure you want to validate delivery?"/>
-                <button name="share_portal_link" string="Share" type="object" class="btn-primary" attrs="{'invisible': [('has_ko', '=', False)]}"/>
             </field>
         </field>
     </record>
@@ -94,14 +93,5 @@
                 </page>
             </xpath>
         </field>
-    </record>
-    
-    <!-- Server Action -->
-    <record id="ir_actions_server_share_order_link" model="ir.actions.server">
-        <field name="name">Share Link</field>
-        <field name="model_id" ref="sale.model_sale_order"/>
-        <field name="binding_model_id" ref="sale.model_sale_order"/>
-        <field name="state">code</field>
-        <field name="code">records.share_portal_link()</field>
     </record>
 </odoo>

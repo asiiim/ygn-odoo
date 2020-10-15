@@ -12,4 +12,9 @@ _logger = logging.getLogger(__name__)
 class OrderPortalLink(models.TransientModel):
     _name = 'order.portal.link'
 
-    portal_link = fields.Text("Order Portal Link", readonly=True, help="Copy and share this link to the customer for the order reference.")
+    @api.model
+    def _get_order_link(self):
+        sale_order = self.env['sale.order'].browse(self._context.get('active_id', []))
+        return sale_order.generate_portal_link()
+
+    portal_link = fields.Text("Order Portal Link", default=_get_order_link, readonly=True, help="Copy and share this link to the customer for the order reference.")
