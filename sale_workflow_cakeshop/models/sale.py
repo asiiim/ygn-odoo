@@ -203,11 +203,26 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return self.env.ref('sale_workflow_cakeshop.action_report_sale_or_kitchen_order').report_action(self)
     
-    # Portal SO or KO
+    # Portal SOKO
+    publish_portal = fields.Boolean('Order Published', copy=False, default=False, track_visibility='onchange', readonly=True)
+
+    @api.multi
+    def publish_order_portal(self):
+        for order in self:
+            order.write({'publish_portal': True})
+    
+    
+    @api.multi
+    def unpublish_order_portal(self):
+        for order in self:
+            order.write({'publish_portal': False})
+
+    
     def generate_portal_link(self):
 
         params = self.env['ir.config_parameter'].sudo()
         base_url = params.get_param('web.base.url', default='')
+        self.write({'publish_portal': True})
         
         return base_url + '/order/portal/' + str(self.id) or None
 

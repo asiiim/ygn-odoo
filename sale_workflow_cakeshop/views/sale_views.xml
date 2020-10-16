@@ -22,6 +22,7 @@
             </field>
         </field>
     </record>
+
     <record id="view_order_form_inherit" model="ir.ui.view">
         <field name="name">sale.order.form.tender.change</field>
         <field name="model">sale.order</field>
@@ -92,6 +93,29 @@
                     </field>
                 </page>
             </xpath>
+
+            <!-- Adding Portal Publish Button -->
+            <div class="oe_button_box" position="inside">
+                <field name="publish_portal" invisible="1"/>
+                <button name="publish_order_portal" type="object" class="oe_stat_button" icon="fa-circle-o" attrs="{'invisible': [('publish_portal', '=', True)]}" string="Publish Link"/>
+                <button name="unpublish_order_portal" type="object" class="oe_stat_button" icon="fa-circle" attrs="{'invisible': [('publish_portal', '=', False)]}" string="Published"/>
+            </div>
         </field>
+    </record>
+
+    <!-- Server Action -->
+    <record id="ir_actions_server_publish_portal_link" model="ir.actions.server">
+        <field name="name">Publish Link</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="state">code</field>
+        <field name="code">records.publish_order_portal()</field>
+    </record>
+    <record id="ir_actions_server_unpublish_portal_link" model="ir.actions.server">
+        <field name="name">Unpublish Link</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="state">code</field>
+        <field name="code">records.unpublish_order_portal()</field>
     </record>
 </odoo>

@@ -15,6 +15,9 @@ class OrderPortalController(http.Controller):
     def generate_order_portal(self, id, **kw):
 
         sale_order = request.env['sale.order'].sudo().search([('id', '=', id)])
-        return http.request.render('sale_workflow_cakeshop.sale_kitchen_order_portal_report', {
-            'docs': sale_order
-        })
+        if not sale_order.publish_portal:
+            return http.request.render('sale_workflow_cakeshop.report_not_published_information')
+        else:
+            return http.request.render('sale_workflow_cakeshop.sale_kitchen_order_portal_report', {
+                'docs': sale_order
+            })
