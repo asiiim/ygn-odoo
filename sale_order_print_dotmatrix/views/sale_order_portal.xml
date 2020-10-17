@@ -103,6 +103,7 @@
                         <div class="row">
                             <div name="invoice_address" class="col-xs-12">
                                 <div><strong>Customer:</strong><span t-esc="o.partner_id.name"/></div>
+                                <div><strong>Mobile:</strong><span t-esc="o.partner_id.mobile"/></div>
                             </div>
                         </div>
 
