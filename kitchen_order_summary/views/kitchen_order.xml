@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="ko_zoom_view" model="ir.ui.view">
+			<field name="name">KO Zoom View</field>
+			<field name="model">kitchen.order</field>
+			<field name="arch" type="xml">
+				<form string="Image Zoom" readonly="1">
+					<sheet>
+						<group name="static_form">
+							<field name="custom_image" widget="image" />
+							<field name="secondary_custom_image" widget="image" />
+						</group>
+						<footer>
+						</footer>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id="ko_summarized_view" model="ir.ui.view">
+			<field name="name">KO Summarized View</field>
+			<field name="model">kitchen.order</field>
+			<field name="arch" type="xml">
+				<form string="KO Summary">
+					<header>
+						<field name="active" invisible="1" />
+						<field name="stage_name" invisible="1" />
+						<field name="related_template_message" invisible="1" />
+					</header>
+					<sheet>
+						<group name="static_form">
+							<field name="custom_image" widget="image" />
+							<field name="secondary_custom_image" widget="image" />
+						</group>
+						<div class="oe_title">
+							<h1>
+								<field name="name" readonly="1" />
+							</h1>
+						</div>
+						<group>
+							<group>
+								<field name="product_id" readonly="1" options="{&quot;always_reload&quot;: True, &quot;no_create&quot;: True, &quot;no_create_edit&quot;: True}" />
+								<field name="product_uom_qty" />
+								<field name="uom" />
+								<field name="saleorder_id" options="{&quot;always_reload&quot;: True}" readonly="1" />
+								<field name="ref_product_id" options="{&quot;always_reload&quot;: True, &quot;no_create&quot;: True, &quot;no_create_edit&quot;: True}" />
+								<field name="ref_image" widget="image" class="oe_avatar" />
+							</group>
+							<group>
+								<field name="image" widget="image" class="oe_avatar" string="Base Image" />
+								<field name="legend_red" invisible="1" />
+								<field name="legend_grey" invisible="1" />
+								<field name="legend_green" invisible="1" />
+								<field name="finish_date" />
+								<field name="product_description" invisible="1" />
+								<field name="message_id" string="Message Template" invisible="1" />
+								<field name="name_for_message" invisible="1" />
+								<field name="message" attrs="{'invisible': [('name_for_message', '=', False)]}" />
+								<field name="ko_note" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+        
+		<!-- Override and Update Kitchen Order Kanban View -->
+		<record id="kitchen_order.view_kitchen_order_kanban" model="ir.ui.view">
+			<field name="name">Kitchen Order Kanban View</field>
+			<field name="model">kitchen.order</field>
+			<field name="arch" type="xml">
+				<kanban class="oe_background_grey o_emphasize_colors o_kanban_kitchen_orders o_kanban_mobile" quick_create="false" create="false" edit="false">
+					<field name="name" />
+					<field name="active" />
+					<field name="image" />
+					<field name="kanban_state" />
+					<field name="kanban_state_label" />
+					<field name="stage_name" />
+					<field name="priority" />
+					<field name="message_id" />
+					<field name="invoice_ids" />
+					<field name="stage_id" />
+					<field name="product_id" />
+					<field name="product_description" />
+					<field name="name_for_message" />
+					<field name="related_template_message" />
+					<field name="ko_note" />
+					<field name="saleorder_id" />
+					<field name="requested_date" />
+					<field name="finish_date" />
+					<field name="legend_red" invisible="1" />
+					<field name="legend_grey" invisible="1" />
+					<field name="legend_green" invisible="1" />
+					<templates>
+						<t t-name="kanban-box">
+							<div class="oe_kanban_global_click">
+								<div class="row">
+									<div class="col-xs-6 o_kanban_primary_left">
+										<span class="o_kanban_record_subtitle">
+											<h2>
+												<field name="name" />
+											</h2>
+										</span>
+									</div>
+									<div class="col-xs-6 text-right">
+										<button class="btn btn-primary" name="action_view_ko_summary" type="object">
+											Summary
+										</button>
+										<button class="btn btn-alpha" name="action_zoom_ko" type="object">
+											<i class="fa fa-search-plus" aria-hidden="true" />
+										</button>
+									</div>
+								</div>
+								<span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle">
+									<h3>
+										<b>
+											<field name="saleorder_id" />
+										</b>
+									</h3>
+								</span>
+								<div class="oe_kanban_details">
+									<div class="o_kanban_record_top">
+										<div class="o_kanban_record_headings">
+											<div class="row">
+												<div class="col-xs-12">
+													<b>
+														<field name="product_id" />
+													</b>
+												</div>
+											</div>
+											<br />
+											<div class="row">
+												<div class="col-xs-6 o_kanban_primary_left">
+													<span t-if="record.product_uom_qty.raw_value" class="o_kanban_record_subtitle">
+														<h3>
+															<field name="product_uom_qty" />
+															<field name="uom" />
+														</h3>
+													</span>
+												</div>
+												<div class="col-xs-6">
+													<span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle">
+														<b>
+															Finish Date:
+														</b>
+													</span>
+													<b>
+														<field name="finish_date" />
+													</b>
+												</div>
+											</div>
+											<br />
+										</div>
+									</div>
+								</div>
+								<br />
+								<div class="row">
+									<div class="col-xs-6 o_kanban_primary_left">
+										<button t-if="record.stage_name.raw_value == 'New'" type="object" name="start_kitchen_order" class="btn btn-primary btn-sm">
+											<span>
+												Start
+											</span>
+										</button>
+										<button t-if="record.stage_name.raw_value == 'In Progress'" type="object" name="finish_kitchen_order" class="btn btn-primary btn-sm">
+											<span>
+												Finish
+											</span>
+										</button>
+									</div>
+									<div class="col-xs-6 text-right">
+										<field name="priority" widget="priority" />
+									</div>
+								</div>
+								<br />
+							</div>
+						</t>
+					</templates>
+				</kanban>
+			</field>
+		</record>
+
+		<!-- Inherit Kitchen Order Form View -->
+		<record id="summary_kitchen_order_form_inherit" model="ir.ui.view">
+			<field name="name">Kitchen Order Inherit from Summary View</field>
+			<field name="model">kitchen.order</field>
+			<field name="inherit_id" ref="kitchen_order.view_kitchen_order_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//sheet" position="inside">
+					<notebook>
+						<page string="Custom Images" name="custom_img">
+							<field name="custom_image" widget="image" class="oe_avatar"/>
+							<field name="secondary_custom_image" widget="image" class="oe_avatar"/>
+						</page>
+					</notebook>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>

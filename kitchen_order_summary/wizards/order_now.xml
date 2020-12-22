@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+        <!-- Inherit Order Now Wizard View -->
+		<record id="ordernow_inherit_form_view" model="ir.ui.view">
+            <field name="name">Inherit Order Now Form View</field>
+            <field name="model">product.configurator.ordernow.ko</field>
+            <field name="inherit_id" ref="sale_workflow_cakeshop.product_configurator_ordernow_ko_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Custom Images" name="custom_img">
+                        <field name="custom_image" widget="image" class="oe_avatar"/>
+                        <field name="secondary_custom_image" widget="image" class="oe_avatar"/>
+                    </page>
+				</xpath>
+            </field>
+        </record>
+	</data>
+</odoo>
