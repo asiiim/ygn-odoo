@@ -19,7 +19,4 @@ class SaleOrder(models.Model):
         # Unlink custom images of kitchen orders
         for ko in self.kitchen_order_ids:
             if ko.custom_image or ko.secondary_custom_image:
-                ko.write({
-                    'custom_image': None,
-                    'secondary_custom_image': None
-                })
+                ko.write({'flush_custom_images': True})

@@ -12,12 +12,15 @@ class KitchenOrder(models.Model):
     _inherit = "kitchen.order"
 
     custom_image = fields.Binary(
-        "Custom Image", attachment=True,
+        "Custom Image",
         help="This field holds the custom image for the kitchen order.")
 
     secondary_custom_image = fields.Binary(
-        "Secondary Custom Image", attachment=True,
+        "Secondary Custom Image",
         help="This field holds the secondary custom image for the kitchen order.")
+
+    flush_custom_images = fields.Boolean("To Flush Images", default=False)
+    
 
     @api.multi
     def action_zoom_ko(self):

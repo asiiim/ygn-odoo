@@ -188,8 +188,15 @@
 				<xpath expr="//sheet" position="inside">
 					<notebook>
 						<page string="Custom Images" name="custom_img">
-							<field name="custom_image" widget="image" class="oe_avatar"/>
-							<field name="secondary_custom_image" widget="image" class="oe_avatar"/>
+							<group colspan="2">
+								<group>
+									<field name="flush_custom_images"/>
+									<field name="custom_image" widget="image" class="oe_avatar"/>
+								</group>
+								<group>
+									<field name="secondary_custom_image" widget="image" class="oe_avatar"/>
+								</group>
+							</group>
 						</page>
 					</notebook>
 				</xpath>
