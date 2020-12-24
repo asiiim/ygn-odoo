@@ -94,74 +94,77 @@
 					<templates>
 						<t t-name="kanban-box">
 							<div class="oe_kanban_global_click">
-								<div class="row">
+							<style>
+							.mt-4 {
+							margin-top: 4px;
+							margin-bottom: 4px;
+							}
+							.txt-custom-style {
+							color: #4A0072;
+						font-weight: bolder;
+						font-size: 1.1em;
+							}
+						</style>
+								<div class="row mt-4">
 									<div class="col-xs-6 o_kanban_primary_left">
 										<span class="o_kanban_record_subtitle">
-											<h2>
+											<b>
 												<field name="name" />
-											</h2>
+											</b>
 										</span>
 									</div>
 									<div class="col-xs-6 text-right">
-										<button class="btn btn-primary" name="action_view_ko_summary" type="object">
+										<button class="btn btn-alpha" name="action_view_ko_summary" type="object">
 											Summary
 										</button>
-										<button class="btn btn-alpha" name="action_zoom_ko" type="object">
+										<button class="btn btn-secondary" name="action_zoom_ko" type="object">
 											<i class="fa fa-search-plus" aria-hidden="true" />
 										</button>
 									</div>
 								</div>
-								<span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle">
-									<h3>
+								<div class="row mt-4">
+									<div class="col-xs-7 o_kanban_primary_left">
+										<span style="font-size:1.5em;" t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle">
+												<b>
+													<field name="saleorder_id" />
+												</b>
+										</span>
+									</div>
+									<div class="col-xs-5 text-right">
+										<span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle">
+										</span>
 										<b>
-											<field name="saleorder_id" />
+											<field name="finish_date" />
 										</b>
-									</h3>
-								</span>
+									</div>
+								</div>
 								<div class="oe_kanban_details">
 									<div class="o_kanban_record_top">
 										<div class="o_kanban_record_headings">
-											<div class="row">
-												<div class="col-xs-12">
+											<div class="row mt-4">
+												<div class="col-xs-8 o_kanban_primary_left">
 													<b>
 														<field name="product_id" />
 													</b>
 												</div>
-											</div>
-											<br />
-											<div class="row">
-												<div class="col-xs-6 o_kanban_primary_left">
-													<span t-if="record.product_uom_qty.raw_value" class="o_kanban_record_subtitle">
-														<h3>
+								<div class="col-xs-4 text-right">
+													<span t-if="record.product_uom_qty.raw_value" class="o_kanban_record_subtitle txt-custom-style">
 															<field name="product_uom_qty" />
 															<field name="uom" />
-														</h3>
 													</span>
-												</div>
-												<div class="col-xs-6">
-													<span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle">
-														<b>
-															Finish Date:
-														</b>
-													</span>
-													<b>
-														<field name="finish_date" />
-													</b>
 												</div>
 											</div>
-											<br />
 										</div>
 									</div>
 								</div>
-								<br />
 								<div class="row">
 									<div class="col-xs-6 o_kanban_primary_left">
-										<button t-if="record.stage_name.raw_value == 'New'" type="object" name="start_kitchen_order" class="btn btn-primary btn-sm">
+										<button t-if="record.stage_name.raw_value == 'New'" type="object" name="start_kitchen_order" class="btn btn-primary">
 											<span>
 												Start
 											</span>
 										</button>
-										<button t-if="record.stage_name.raw_value == 'In Progress'" type="object" name="finish_kitchen_order" class="btn btn-primary btn-sm">
+										<button t-if="record.stage_name.raw_value == 'In Progress'" type="object" name="finish_kitchen_order" class="btn btn-gamma">
 											<span>
 												Finish
 											</span>
@@ -171,7 +174,6 @@
 										<field name="priority" widget="priority" />
 									</div>
 								</div>
-								<br />
 							</div>
 						</t>
 					</templates>
