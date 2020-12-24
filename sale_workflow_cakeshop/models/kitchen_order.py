@@ -11,6 +11,7 @@ class KitchenOrder(models.Model):
     _inherit = "kitchen.order"
 
     so_ref = fields.Char(related='saleorder_id.name', string='Sale Order')
+    so_memo = fields.Char(related='saleorder_id.memo', string='SO Memo')
 
     # Order again
     @api.multi

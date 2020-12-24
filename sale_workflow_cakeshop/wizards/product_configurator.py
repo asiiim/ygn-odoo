@@ -177,6 +177,9 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
     # select print option for KO & SO
     kitchen_sale_order_print_selection = fields.Selection([('ko', 'Kitchen Order'), ('so', 'Sale Order'), ('both', 'Both')], string="Print SO/KO", default="both")
 
+    # Sale Order Memo
+    saleorder_memo = fields.Char('Memo')
+
     @api.multi
     def _prepare_order(self):
         """
@@ -192,7 +195,8 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
             'team_id': self.team_id.id,
             'source_id': self.source_id.id,
             'company_id': self.company_id.id,
-            'kitchen_sale_order_print_selection': self.kitchen_sale_order_print_selection
+            'kitchen_sale_order_print_selection': self.kitchen_sale_order_print_selection,
+            'memo': self.saleorder_memo
         }
         return order_vals
 
