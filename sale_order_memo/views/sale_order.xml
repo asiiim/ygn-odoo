@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_tree_view_inherit_memo" model="ir.ui.view">
+        <field name="name">Sale Inherit Tree View Memo</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="memo"/>
+            </field>
+        </field>
+    </record>
+    <record id="sale_form_view_inherit_memo" model="ir.ui.view">
+        <field name="name">Sale Inherit Form View Memo</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+				<h2>
+					<label for="memo" string="Memo "/>
+            		<field name="memo"/>
+				</h2>
+            </field>
+        </field>
+    </record>
+    <record id="sale_search_view_inherit_memo" model="ir.ui.view">
+        <field name="name">Sale Inherit Search View Memo</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="memo"/>
+            </field>
+        </field>
+    </record>
+</odoo>
