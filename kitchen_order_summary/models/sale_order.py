@@ -17,6 +17,7 @@ class SaleOrder(models.Model):
         super(SaleOrder, self).validate_picking()
         
         # Unlink custom images of kitchen orders
-        for ko in self.kitchen_order_ids:
-            if ko.custom_image or ko.secondary_custom_image:
-                ko.write({'flush_custom_images': True})
+        for so in self:
+            for ko in so.kitchen_order_ids:
+                if ko.custom_image or ko.secondary_custom_image:
+                    ko.write({'flush_custom_images': True})
