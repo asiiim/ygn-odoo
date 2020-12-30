@@ -70,9 +70,12 @@
 			<field name="model">kitchen.order</field>
 			<field name="arch" type="xml">
 				<kanban class="oe_background_grey o_emphasize_colors o_kanban_kitchen_orders o_kanban_mobile" quick_create="false" create="false" edit="false">
+					<field name="id"/>
 					<field name="name"/>
 					<field name="active"/>
 					<field name="image"/>
+					<field name="custom_image"/>
+					<field name="secondary_custom_image"/>
 					<field name="kanban_state"/>
 					<field name="kanban_state_label"/>
 					<field name="stage_name"/>
@@ -104,10 +107,13 @@
 						font-weight: bolder;
 						font-size: 1.1em;
 							}
+							.icon-size{
+							  height: 25px;
+							}
 						</style>
-								<div class="row mt-4">
+								<div class="row mt-5">
 									<div class="col-xs-6 o_kanban_primary_left">
-										<span class="o_kanban_record_subtitle">
+										<span>
 											<b>
 												<field name="name"/>
 											</b>
@@ -119,12 +125,12 @@
 										</span>
 									</div>
 									<div class="col-xs-6 text-right">
-										<button class="btn btn-alpha" name="action_view_ko_summary" type="object">
-											Summary
-										</button>
-										<button class="btn btn-secondary" name="action_zoom_ko" type="object">
-											<i class="fa fa-search-plus" aria-hidden="true"/>
-										</button>
+										<span>
+                <img t-att-src="kanban_image('kitchen.order', 'custom_image', record.id.raw_value)" class="icon-size"/>
+            </span>
+									  <span>
+                <img t-att-src="kanban_image('kitchen.order', 'secondary_custom_image', record.id.raw_value)" class="icon-size"/>
+            </span>
 									</div>
 								</div>
 								<div class="row mt-4">
@@ -163,7 +169,7 @@
 									</div>
 								</div>
 								<div class="row">
-									<div class="col-xs-6 o_kanban_primary_left">
+									<div class="col-xs-9 o_kanban_primary_left">
 										<button t-if="record.stage_name.raw_value == 'New'" type="object" name="start_kitchen_order" class="btn btn-primary">
 											<span>
 												Start
@@ -174,8 +180,14 @@
 												Finish
 											</span>
 										</button>
+										<button class="btn btn-secondary" name="action_zoom_ko" type="object">
+											<i class="fa fa-search-plus" aria-hidden="true"/>
+										</button>
+										<button class="btn btn-alpha" name="action_view_ko_summary" type="object">
+											MORE
+										</button>
 									</div>
-									<div class="col-xs-6 text-right">
+									<div class="col-xs-3 text-right">
 										<field name="priority" widget="priority"/>
 									</div>
 								</div>
