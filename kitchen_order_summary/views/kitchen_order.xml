@@ -70,27 +70,27 @@
 			<field name="model">kitchen.order</field>
 			<field name="arch" type="xml">
 				<kanban class="oe_background_grey o_emphasize_colors o_kanban_kitchen_orders o_kanban_mobile" quick_create="false" create="false" edit="false">
-					<field name="name" />
-					<field name="active" />
-					<field name="image" />
-					<field name="kanban_state" />
-					<field name="kanban_state_label" />
-					<field name="stage_name" />
-					<field name="priority" />
-					<field name="message_id" />
-					<field name="invoice_ids" />
-					<field name="stage_id" />
-					<field name="product_id" />
-					<field name="product_description" />
-					<field name="name_for_message" />
-					<field name="related_template_message" />
-					<field name="ko_note" />
-					<field name="saleorder_id" />
-					<field name="requested_date" />
-					<field name="finish_date" />
-					<field name="legend_red" invisible="1" />
-					<field name="legend_grey" invisible="1" />
-					<field name="legend_green" invisible="1" />
+					<field name="name"/>
+					<field name="active"/>
+					<field name="image"/>
+					<field name="kanban_state"/>
+					<field name="kanban_state_label"/>
+					<field name="stage_name"/>
+					<field name="priority"/>
+					<field name="message_id"/>
+					<field name="invoice_ids"/>
+					<field name="stage_id"/>
+					<field name="product_id"/>
+					<field name="product_description"/>
+					<field name="name_for_message"/>
+					<field name="related_template_message"/>
+					<field name="ko_note"/>
+					<field name="saleorder_id"/>
+					<field name="requested_date"/>
+					<field name="finish_date"/>
+					<field name="legend_red" invisible="1"/>
+					<field name="legend_grey" invisible="1"/>
+					<field name="legend_green" invisible="1"/>
 					<templates>
 						<t t-name="kanban-box">
 							<div class="oe_kanban_global_click">
@@ -109,7 +109,12 @@
 									<div class="col-xs-6 o_kanban_primary_left">
 										<span class="o_kanban_record_subtitle">
 											<b>
-												<field name="name" />
+												<field name="name"/>
+											</b>
+										</span>
+										<span class="o_kanban_record_subtitle">
+											<b class="txt-custom-style">
+												<field name="saleorder_id"/>
 											</b>
 										</span>
 									</div>
@@ -118,7 +123,7 @@
 											Summary
 										</button>
 										<button class="btn btn-secondary" name="action_zoom_ko" type="object">
-											<i class="fa fa-search-plus" aria-hidden="true" />
+											<i class="fa fa-search-plus" aria-hidden="true"/>
 										</button>
 									</div>
 								</div>
@@ -126,7 +131,7 @@
 									<div class="col-xs-7 o_kanban_primary_left">
 										<span style="font-size:1.5em;" t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle">
 												<b>
-													<field name="saleorder_id" />
+													<field name="so_memo"/>
 												</b>
 										</span>
 									</div>
@@ -134,7 +139,7 @@
 										<span t-if="record.saleorder_id.raw_value" class="o_kanban_record_subtitle">
 										</span>
 										<b>
-											<field name="finish_date" />
+											<field name="finish_date"/>
 										</b>
 									</div>
 								</div>
@@ -144,13 +149,13 @@
 											<div class="row mt-4">
 												<div class="col-xs-8 o_kanban_primary_left">
 													<b>
-														<field name="product_id" />
+														<field name="product_id"/>
 													</b>
 												</div>
 								<div class="col-xs-4 text-right">
 													<span t-if="record.product_uom_qty.raw_value" class="o_kanban_record_subtitle txt-custom-style">
-															<field name="product_uom_qty" />
-															<field name="uom" />
+															<field name="product_uom_qty"/>
+															<field name="uom"/>
 													</span>
 												</div>
 											</div>
@@ -171,7 +176,7 @@
 										</button>
 									</div>
 									<div class="col-xs-6 text-right">
-										<field name="priority" widget="priority" />
+										<field name="priority" widget="priority"/>
 									</div>
 								</div>
 							</div>

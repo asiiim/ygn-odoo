@@ -18,7 +18,7 @@
     'version': '11.0.0.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['sale_workflow_cakeshop'],
+    'depends': ['sale_workflow_cakeshop', 'sale_order_memo'],
 
     # always loaded
     'data': [
