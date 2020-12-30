@@ -21,6 +21,14 @@ class KitchenOrder(models.Model):
 
     flush_custom_images = fields.Boolean("To Flush Images", default=False)
     
+    @api.model
+    def flush_images(self):
+        for ko in self.env['kitchen.order'].search([]):
+            if ko.flush_custom_images:
+                ko.write({
+                    'custom_image': None,
+                    'secondary_custom_image': None
+                })
 
     @api.multi
     def action_zoom_ko(self):
