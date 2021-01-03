@@ -283,8 +283,8 @@
             <field name="help" type="html">
                 <p style="font-size: 20px;">
                     No <b><i>Kitchen Orders</i></b> found !<br/>
-                    <span style="color: #ff7600;">Browser might have been refreshed.</span>
-                    <br/>Please click on the menu <span style="color: #00ff43;"><b>'Todays Request'</b></span> to see today's orders.
+                    <span style="color: #ff7600;">You <b>Reloaded</b> the Browser.</span>
+                    <br/>Please click on the menu '<span style="color: #00ff43;"><b>Today's Requests</b></span>' to see today's orders.
                 </p>
             </field>
         </record>
