@@ -209,11 +209,11 @@
                     <filter string="Cancelled Orders" name="inactive" domain="[('stage_name','=','Cancel')]"/>
                     
                     <separator/>
-                    <filter string="Today's Order" name="today_kitchen_order" domain="[('create_date', '&gt;', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('create_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
+                    <filter string="Today's Order" name="today_kitchen_order" domain="[('create_date', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('create_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
                     <filter name="late_kitchen_order" string="Late Orders" domain="[('create_date','&lt;', datetime.datetime.now().replace(hour=0, minute=0, second=0))]"/>
                     
                     <separator/>
-                    <filter string="Today's Requested Order" name="today_requested_kitchen_order" domain="[('requested_date', '&gt;', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('requested_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
+                    <filter string="Today's Requested Order" name="today_requested_kitchen_order" domain="[('requested_date', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('requested_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
                     <filter string="Tomorrow's Requested Order" name="tomorrow_requested_kitchen_order" domain="[('requested_date', '&gt;', datetime.datetime.now().replace(hour=23, minute=59, second=59)),('requested_date', '&lt;=',(datetime.datetime.now().replace(hour=23, minute=59, second=59) + datetime.timedelta(days=1)))]"/>
                     
                     <separator/>
@@ -272,19 +272,30 @@
         </record>
 
         <!-- Action to view today's kitchen orders -->
-        <record id="action_today_kitchen_orders" model="ir.actions.act_window">
-            <field name="name">Today's Kitchen Orders</field>
+        <record id="action_today_requested_kitchen_orders" model="ir.actions.act_window">
+            <field name="name">Today's Requested Kitchen Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">kitchen.order</field>
             <field name="view_type">form</field>
+            <field name="domain">[('create_date', '>', datetime.datetime.now().replace(hour=23, minute=59, second=59))]</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">[('create_date', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('create_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]</field>
             <field name="search_view_id" ref="view_kitchen_order_search"/>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    No <i>Kitchen Orders</i> found !
+                <p style="font-size: 20px;">
+                    No <b><i>Kitchen Orders</i></b> found !<br/>
+                    <span style="color: #ff7600;">Browser might have been refreshed.</span>
+                    <br/>Please click on the menu <span style="color: #00ff43;"><b>'Todays Request'</b></span> to see today's orders.
                 </p>
             </field>
+        </record>
+
+        <!-- Server Action -->
+        <record id="ir_actions_server_today_ko" model="ir.actions.server">
+            <field name="name">Today's KO</field>
+            <field name="model_id" ref="kitchen_order.model_kitchen_order"/>
+            <field name="binding_model_id" ref="kitchen_order.model_kitchen_order"/>
+            <field name="state">code</field>
+            <field name="code">action = model.action_today_requested_orders()</field>
         </record>
 
         <menuitem id="main_menu_kitchen_order" 
@@ -292,9 +303,9 @@
                     sequence="5"
                     web_icon="kitchen_order,static/src/img/default_image.png"
                     groups="kitchen_order.group_kitchen_user"/>
-        <menuitem id="menu_today_kitchen_order"
-                    name="Today's Kitchen Orders"
-                    action="action_today_kitchen_orders"
+        <menuitem id="menu_today_requested_kitchen_order"
+                    name="Today's Requests"
+                    action="ir_actions_server_today_ko"
                     parent="main_menu_kitchen_order"
                     sequence="1"/>
         <menuitem id="menu_kitchen_order"

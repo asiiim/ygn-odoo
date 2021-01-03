@@ -174,3 +174,13 @@ class KitchenOrder(models.Model):
         track_visibility='onchange'
     )
     ref_image = fields.Binary(related='ref_product_id.image', string='Reference Image', attachment=True, track_visibility='onchange')
+
+    # Filter view to get today's requested orders by default.
+    @api.model
+    def action_today_requested_orders(self):
+        action = self.env.ref('kitchen_order.action_today_requested_kitchen_orders').read()[0]
+
+        # Get domain of today's kitchen orders
+        action['domain'] = [('finish_date', '>=', datetime.now().replace(hour=0, minute=0, second=0)),('finish_date', '<=', datetime.now().replace(hour=23, minute=59, second=59))]
+
+        return action
