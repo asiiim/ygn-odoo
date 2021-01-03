@@ -271,11 +271,32 @@
             </field>
         </record>
 
+        <!-- Action to view today's kitchen orders -->
+        <record id="action_today_kitchen_orders" model="ir.actions.act_window">
+            <field name="name">Today's Kitchen Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">kitchen.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('create_date', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('create_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]</field>
+            <field name="search_view_id" ref="view_kitchen_order_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    No <i>Kitchen Orders</i> found !
+                </p>
+            </field>
+        </record>
+
         <menuitem id="main_menu_kitchen_order" 
                     name="Kitchen Orders" 
                     sequence="5"
                     web_icon="kitchen_order,static/src/img/default_image.png"
                     groups="kitchen_order.group_kitchen_user"/>
+        <menuitem id="menu_today_kitchen_order"
+                    name="Today's Kitchen Orders"
+                    action="action_today_kitchen_orders"
+                    parent="main_menu_kitchen_order"
+                    sequence="1"/>
         <menuitem id="menu_kitchen_order"
                     name="Orders"
                     action="action_kitchen_orders"
