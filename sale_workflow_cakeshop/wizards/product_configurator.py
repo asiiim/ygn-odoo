@@ -438,9 +438,9 @@ class ProductConfiguratorSaleOrderKO(models.TransientModel):
                 payment = Payment.create(self._prepare_payment(self.order_id.amount_total))
                 # For the purpose of advance amount for respective sale order
                 payment.write({
-                    'adv_sale_id': sale_order.id
+                    'adv_sale_id': self.order_id.id
                 })
-                sale_order.is_adv = True
+                self.order_id.is_adv = True
                 payment.post()
                 # self.payment_id = payment
                 # self.order_id.payment_id = payment
